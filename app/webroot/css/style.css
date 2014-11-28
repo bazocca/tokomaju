@@ -1,0 +1,1127 @@
+div.loading {width: 32px; height: 150px; overflow: hidden; background: transparent url('/fondevi/images/lightbox-ico-loading.gif') 0 0 no-repeat; margin: 170px auto 0;}
+/*general class*/
+.fr{ float; right; }
+.fl{ float: left; }
+
+.transparent{ opacity: 0; }
+.opaque{ opacity: 1; }
+
+.frame{ overflow: hidden; }
+.clickable{ cursor: pointer; }
+
+.black{ color: #000; }
+
+.bg-black{ background: #000; }
+.bg-white{ background: #fff !important; }
+
+.line{	background: #75767c; }
+
+.hide{ display: none;}
+.show{ display: block;}
+
+.no-bg{ background: none !important; -webkit-box-shadow: none !important;-moz-box-shadow: none !important;box-shadow: none !important; }
+
+#mcs_container .dragger, .have_mcs .dragger{
+	background: #e78b08;
+}
+
+#mcs_container .dragger_container{ height: 100% !important; }
+
+#mcs_container .customScrollBox .content, .have_mcs .customScrollBox .content{ padding-right: 10px; }
+
+.extra-bg-black{
+	background: #000;
+	opacity: 0.7;
+	width: 100%;
+	position: absolute;
+}
+
+/*layout*/
+b{ font-weight: bold; }
+
+@font-face{
+	font-family: 'gotham-book';
+	src: url('/fondevi/fonts/gotham-book.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face{
+	font-family: 'gotham-black';
+	src: url('/fondevi/fonts/gotham-black.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face{
+	font-family: 'gotham-light';
+	src: url('/fondevi/fonts/gotham-light.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face{
+	font-family: 'gotham-xlight';
+	src: url('/fondevi/fonts/gotham-xlight.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+html{
+	min-height: 100%;
+	min-width: 100%;
+}
+
+a{ text-decoration: none; }
+
+body{
+	height: 100%;
+	width: 100%;
+}
+
+div.wrapper, div#canvas{
+	width: 960px;
+	margin: 0 auto;
+	height: 100%;
+	z-index: 10;
+	position: relative;
+}
+
+div.wrapper-middle{
+	margin-top: 26%; 
+}
+
+div.header{
+	text-align: center;
+}
+
+div.wrapper > div > div.content, div.wrapper > div.content{
+	float: left;
+	width: 100%;
+	margin: 20px auto;
+	height: 100%;
+	position: relative;
+}
+
+.about > .wrapper > .content{
+	min-height: 0px !important;
+}
+
+div.wrapper div.center{
+	margin: 0 auto;
+	width: 840px;
+}
+
+div.footer{
+	text-align: center;
+	color: #75767c;
+	font-size: 12px;
+	font-family: 'gotham-light';
+}
+
+div.bg2{
+	width: 100%;
+	position: absolute;
+	bottom: 0px;
+	height: 160px;
+	z-index: 0;
+}
+
+div.nav-menu{
+	text-align: center;
+	margin-bottom: 50px;
+}
+
+div.nav-menu ul li a:hover{
+	color: #f4aa3f;
+}
+
+div.nav-menu ul li a{
+	text-shadow: 1px 1px 2px #75767c;
+	filter: dropshadow(color=#75767c, offx=2, offy=1);
+	color: #75767C;
+	font-weight: bold;
+	font-family: 'gotham-book';
+}
+
+div.nav-menu ul li{
+	display: inline;
+	font-size: 14px;
+	margin-right: 30px;
+	//width: 300px;
+	position: relative;
+}
+
+/*intro*/
+body.intro{
+	background: #000;
+}
+
+body.intro .wrapper{ display: none; }
+body.intro .bg2{ display: none; }
+body.intro div.animation img{ 
+	display: none; 
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
+body.after-intro{
+	background: rgb(255,255,255); /* Old browsers */
+	//background: -moz-radial-gradient(center, ellipse cover,  rgb(255,255,255) 70%, rgb(234,234,234) 100%); /* FF3.6+ */
+	//background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(70%,rgb(255,255,255)), color-stop(100%,rgb(234,234,234))); /* Chrome,Safari4+ */
+	//background: -webkit-radial-gradient(center, ellipse cover,  rgb(255,255,255) 70%,rgb(234,234,234) 100%); /* Chrome10+,Safari5.1+ */
+	//background: -o-radial-gradient(center, ellipse cover,  rgb(255,255,255) 70%,rgb(234,234,234) 100%); /* Opera 12+ */
+	//background: -ms-radial-gradient(center, ellipse cover,  rgb(255,255,255) 70%,rgb(234,234,234) 100%); /* IE10+ */
+	//background: radial-gradient(center, ellipse cover,  rgb(255,255,255) 70%,rgb(234,234,234) 100%); /* W3C */
+	//filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#eaeaea',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+}
+
+body.intro div.bg2{
+	width: 100%;
+	background: url('/fondevi/images/bg-intro.png') repeat;
+	position: absolute;
+	bottom: 0px;
+	height: 160px;
+	z-index: 0;
+}
+
+body.intro div.nav-menu{
+	text-align: center;
+	margin-bottom: 50px;
+}
+
+body.intro div.nav-menu-description{
+	display: none;
+	position: absolute;
+	background: #F4AA3F;
+	padding: 25px 10px;
+	width: 150px;
+	top: -110px;
+	left: 100px;
+}
+
+body.intro div.nav-menu-description p{
+	color: #fff;
+	margin-bottom: 5px;
+	text-align: left;
+}
+
+body.intro div.nav-menu ul li a:hover{
+	color: #f4aa3f;
+}
+
+body.intro div.nav-menu ul li a{
+	text-shadow: 1px 1px 2px #75767c;
+	filter: dropshadow(color=#75767c, offx=2, offy=1);
+	color: #75767C;
+	font-weight: bold;
+}
+
+body.intro div.nav-menu ul li{
+	display: inline-block;
+	font-size: 14px;
+	margin-right: 8px;
+	width: 300px;
+	position: relative;
+}
+
+body.intro div.nav-menu ul li:nth-last-child(1){
+	margin-top: 100px;
+}
+
+body.intro div.nav-menu ul li:nth-last-child(1) a{
+	font-weight: normal;
+	text-shadow: none;
+}
+
+body.intro div.content{
+	height: 200px;
+}
+
+/*class not-intro*/
+body.not-intro{
+	background: #494949;
+}
+
+body.not-intro div.bg2{
+	background: url('/fondevi/images/bg-imagination.png') repeat;
+}
+
+body.not-intro div.content img{
+	float: left;
+	margin-right: 30px;
+}
+
+body.not-intro div.content div.context > h3{
+	margin-top: 150px;
+}
+
+body.not-intro div.content div.context h3{
+	font-size: 24px;
+	color: #f28e00;
+	margin-bottom: 10px;
+	font-family: 'gotham-book';
+}
+
+body.not-intro div.content div.context h4{
+	font-size: 18px;
+	color: #fff;
+	margin-bottom: 20px;
+	font-family: 'gotham-book';
+	font-weight: normal;
+}
+
+body.not-intro div.content p{
+	font-family: 'gotham-light';
+	color: #fff;
+}
+
+body.not-intro div.nav-menu ul li a:hover, body.not-intro div.nav-menu ul li a.active{
+	color: #f28e00;
+}
+body.not-intro div.nav-menu ul li a{
+	text-shadow: 0px 0px 5px #f28e00;
+	filter: dropshadow(color=#f28e00, offx=0, offy=0);
+	color: #fff;
+}
+
+body.not-intro div.content div.context{
+	background: #66666b;
+	padding: 70px 30px 50px 40px;
+	height: 255px;
+}
+
+/*slideshow*/
+.not-intro  div.slideshow, .context-right{
+	width: 200px;
+	display: inline-block;
+	position: relative;
+	overflow: hidden;
+}
+
+.not-intro div.slideshow .next{
+	background: url('/fondevi/images/btn-slideshow.png') no-repeat -65px 0px;
+	bottom: 0px;
+}
+
+.not-intro div.slideshow .prev{
+	background: url('/fondevi/images/btn-slideshow.png') no-repeat 0px 0px;
+	top: 0px;
+}
+
+.not-intro div.slideshow .btn{
+	height: 43px;
+	cursor: pointer;
+	width: 55px;
+	position: absolute;
+	left: 65px;
+	opacity: 0.5;
+	z-index: 10;
+}
+
+.not-intro div.slideshow .btn:hover{
+	opacity: 1;
+}
+
+.not-intro div.slideshow .img{
+	margin-bottom: 10px;
+	overflow: hidden;
+	width: 200px;
+	height: 100px;
+	position: relative;
+}
+
+.not-intro div.slideshow img{
+	margin: 0px;
+}
+
+/*imagination*/
+
+/*imagination - concept*/
+
+.imagination div.concept{
+	float: left;
+}
+
+.imagination div.concept .center{
+	width: 840px;
+}
+
+.imagination div.concept .slideshow .img img{ max-width: 200px; }
+
+.imagination div.concept div.context{
+	padding-top: 50px !important;
+	height: 275px !important;
+}
+
+.imagination div.concept div.context .content img{
+	max-width: 520px;
+	float: none !important;
+}
+
+.imagination div.concept div.context .content h4{
+	margin-top: 10px;
+	/*float: left;*/
+	color: #fff;
+	font-weight: bold;
+}
+
+.imagination div.concept div.context .content h3{
+	margin-top: 10px;
+	//float: left;
+}
+
+.imagination div.concept div.context .content p{
+	//float: left;
+}
+
+.imagination div.concept div.context > h3{
+	margin-top: 0px !important;
+}
+
+.imagination div.concept div.context, .context-left{
+	float: left;
+	width: 560px;
+	margin-right: 10px;
+	height: 335px;
+}
+
+.imagination div.slideshow{
+	height: 375px;
+}
+
+/*portfolio*/
+div.portfolio .show-detail{
+	float: left;
+	width: 560px;
+	height: 335px;
+	overflow: hidden;
+	margin-right: 10px;
+	position: relative;
+	background: #000;
+}
+
+body.not-intro div.content div.portfolio div.show-detail img{ float: none; display: block; }
+
+div.portfolio div.show-detail img{
+	max-width: 560px;
+	max-height: 335px;
+	margin: 0 auto;
+	margin-right: auto !important;
+}
+
+div.portfolio .show-detail div.description{
+	padding: 10px 30px;
+	background-color: rgba(0, 0, 0, 0.7);
+	position: absolute;
+	z-index: 10;
+	width: 420px;
+	bottom: 15px;
+}
+
+div.portfolio .show-detail p{
+	color: #fff;
+	font-family: 'gotham-light';
+	font-size: 13px;
+}
+
+div.portfolio .show-detail h3{
+	color: #f28e00;
+	font-size: 13px;
+}
+
+div.portfolio .slideshow{
+	min-height: 335px;
+	max-height: 335px;
+}
+
+/*creation-showcase*/
+.creation .content{
+	height: 335px;
+}
+
+.creation .img_wrapper{
+	overflow: hidden;
+	position: relative;
+}
+
+.creation .picture-gallery{
+	position: relative;
+	width: 900px;
+	margin: 0 auto;
+	height: 330px;
+	overflow: hidden;
+}
+
+.creation .picture-gallery .btn{
+	width: 43px;
+	height: 50px;
+	cursor: pointer;
+	position: absolute;
+	top: 140px;
+	z-index: 10;
+	opacity: 0.5;
+}
+
+.creation .picture-gallery .btn:hover{
+	opacity: 1;
+}
+
+.creation .picture-gallery .prev{ 
+	background: url('/fondevi/images/btn-creation.png') no-repeat 0px 0px;
+	left: 20px;
+}
+.creation .picture-gallery .next{ 
+	background: url('/fondevi/images/btn-creation.png') no-repeat 0px -60px;
+	right: 25px;
+}
+
+.creation .picture-gallery div.column{
+	position: relative;
+	float: left;
+}
+
+.creation .picture-gallery .img{
+	overflow: hidden;
+	width: 193px;
+	height: 165px;
+	float:left;
+	cursor: pointer;
+}
+
+.creation .picture-gallery img{
+	margin: 0px !important;
+}
+
+.creation .picture-gallery .pic-container{
+	overflow: hidden;
+	width: 768px;
+	margin-left: 63px;
+}
+
+#lightbox-secNav-btnClose{
+	position: absolute;
+	top: 0px;
+	right: -22px;
+	width: auto !important;
+}
+
+/*creation portfolio*/
+.creation .picture-gallery div.fullcol{
+	height: 330px;
+	width: 157px;
+	position: relative;
+}
+
+.creation .picture-gallery div.fullcol div.description{
+	width: 157px;
+	padding: 15px 20px;
+	background-color: rgba(0,0,0,0.5);
+	font-family: 'Lucida Sans';
+	position: absolute;
+	top: 50px;
+	z-index: 10;
+}
+
+.creation .picture-gallery div.fullcol div.description h3{
+	color: #fff;
+	font-size: 36px;
+}
+
+.creation .picture-gallery div.fullcol div.description p{
+	font-size: 12px;
+}
+
+.creation .custom-picture-popup{
+	display: none;
+	position: absolute;
+	z-index: 20;
+}
+
+.custom-picture-popup-overlay{
+	opacity: 0.8;
+	width: 100%;
+	height: 330px;
+	position: absolute;
+}
+
+.custom-picture-popup .picture-show, .custom-picture-popup .picture-description{
+	float: left;
+	position: relative;
+}
+
+.custom-picture-popup .picture-show-container{
+	width: 560px;
+	float: left;
+	position: relative;
+	overflow: hidden;
+	background: #000;
+}
+
+.custom-picture-popup .picture-show-container .prev{ left: 0px;}
+.custom-picture-popup .picture-show-container .next{ right: 0px;}
+
+.custom-picture-popup .picture-show .picture-frame{
+	float: left;
+	overflow: hidden;
+	width: 560px;
+	height: 330px;
+}
+
+.custom-picture-popup .picture-description{
+	padding: 15px;
+	width: 180px;
+	background: #3f3f3f;
+	position: relative;
+	z-index: 20;
+}
+
+.custom-picture-popup .picture-description h3{
+	color: #f28e00;
+	font-size: 13px;
+	font-family: 'gotham-book';
+	margin-bottom: 10px;
+}
+
+.custom-picture-popup .picture-description p{
+	font-size: 11px;
+	font-family: 'gotham-xlight';
+	line-height: 15px;
+	height: 300px;
+}
+
+/*inspiration*/
+.context-left{
+	width: 490px;
+}
+
+.inspiration .quotes h4{
+	margin-bottom: 0px !important;
+}
+
+.inspiration .quotes p.author{
+	font-size: 18px !important;
+	color: #000 !important;
+	font-family: 'gotham-light' !important;
+	text-align: right;
+}
+
+.inspiration .quotes p.author-detail{
+	color: #a0a1a1 !important;
+	font-size: 12px !important;
+	font-family: 'gotham-xlight' !important;
+	text-align: right;
+	margin-top: 0px !important;
+}
+
+.inspiration .style h4{
+	margin-bottom: 0px !important;
+	font-family: 'gotham-xlight' !important;
+	color: #000 !important;
+}
+
+.inspiration .style img{
+	border: none !important;
+	margin-left: 10px !important;
+	float: right !important;
+}
+
+.inspiration .lessons .context{
+	background: #61666b !important;
+	float: left;
+}
+
+.inspiration .context-left{
+	margin-right: 0px;
+}
+
+.inspiration .context-right{
+	background: #3f3f3f;
+	padding: 90px 20px;
+	width: 160px;
+	height: 195px;
+}
+
+.inspiration .lessons .center{
+	width: 760px !important;
+}
+
+.inspiration .context-right ul li{
+	display: block;
+	color: #75767b;
+	font-size: 13px;
+	font-family: 'gotham-book';
+	margin-bottom: 15px;
+	cursor: pointer;
+	line-height: 15px;
+}
+
+.inspiration .context-right ul li:hover, .inspiration .context-right ul li.active{ color: #000; }
+.inspiration .context-left .content{ display: none; }
+
+/*about*/
+body.about{ background: #fff; }
+.about .nav-menu ul li{ 
+	width: 75px; 
+	display: inline-block !important; 
+	margin-right: -60px;
+	padding: 10px 50px;
+	height: 20px;
+	vertical-align: bottom;
+}
+
+.about .content{ min-height: 375px; }
+
+.about .nav-menu ul li:nth-last-child(1){ 
+	margin-right: 0px;
+}
+
+.about .nav-menu ul li a{
+	color: #75767c !important;
+	font-size: 10px;
+	text-shadow: none !important;
+	font-weight: 200 !important;
+}
+
+.about .nav-menu ul li:hover a, .about .nav-menu ul li.active a{
+	color: #fff !important;
+}
+
+.about .nav-menu ul li:hover, .about .nav-menu ul li.active{
+	background: url('/fondevi/images/bg-menu-hover.png') no-repeat 20px 5px;
+}
+
+.about .content .context{
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	
+	-webkit-box-shadow:  0px 0px 10px 3px rgba(102, 102, 107, 0.5);
+	-moz-box-shadow:  0px 0px 10px 3px rgba(102, 102, 107, 0.5);
+	box-shadow:  0px 0px 10px 3px rgba(102, 102, 107, 0.5);
+}
+
+body.about div.content div.context > h3{
+	margin-top: 0px;
+	font-size: 22px;
+	font-family: 'gotham-light';
+}
+
+body.about div.content div.context > p{
+	font-size: 13px;
+	margin-bottom: 30px;
+	line-height: 17px;
+}
+
+body.about div.content div.context > p > span{
+	margin-bottom: 5px;
+	display: inline-block;
+}
+
+.about .milestone div.center{
+	width: 750px;
+}
+
+.about .milestone ul.timeline{
+	width: 100%;
+}
+
+.about .milestone ul.timeline li{ 
+	position: relative; 
+	height: 320px;
+	width: 120px;
+	float: left;
+}
+
+.about .milestone ul.timeline li div.mark{
+	background: url('/fondevi/images/btn-milestone.png') no-repeat;
+	background-size: 100% 100%;
+	width: 11px;
+	height: 11px;
+	position: absolute;
+	top: 150px;
+	left: 50px;
+	cursor: pointer;
+	z-index: 100;
+}
+
+.about .milestone ul.timeline li div.mark:hover{
+	width: 17px;
+	height: 17px;
+	left: 46px;
+}
+
+.about .milestone ul.timeline li div.year{
+	position: absolute;
+	left: 60px;
+}
+
+.about .milestone ul.timeline li div.year i{
+	font-family: 'gotham-black';
+	color: #f28e00;
+	font-size: 23px;
+}
+
+.about .milestone ul.timeline li div.year p{
+	color: #75767c;
+	margin: 0px;
+}
+
+.about .milestone ul.timeline li div.year hr{
+	border: none;
+	border-bottom: 1px solid #f28e00;
+	margin: 2px 0px;
+}
+
+.about .milestone .description{
+	background-color: rgba(242, 142, 0, 0.7);
+	padding: 15px 10px;
+	width: 110px;
+	//min-height: 90px;
+	position: absolute;
+	font-size: 12px;
+	color: #fff;
+	font-family: 'gotham-light';
+	display: none;
+	position: absolute;
+	z-index: 20;
+}
+
+.about .milestone .year-detail{ //display: none; width: 100%; height: 100%; }
+.about .have_mcs { height: 270px !important; }
+
+#custom-popup .year-detail{
+	z-index: 100;
+	background: #75767c;
+	width: 715px;
+	height: 270px;
+	padding: 75px 50px 60px 65px;
+	
+	-webkit-box-shadow: 5px 5px 7px 1px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 5px 5px 7px 1px rgba(0, 0, 0, 0.5);
+	box-shadow: 5px 5px 7px 1px rgba(0, 0, 0, 0.5);
+}
+
+body.about div.content img{
+	float: right;
+	margin-right: 0px !important;
+	margin-left: 20px;
+}
+
+.about #custom-popup .content{
+	min-height: 270px;
+}
+
+.about #custom-popup .content h2{
+	color: #f7901e;
+	font-size: 31px;
+	font-family: 'gotham-book';
+}
+
+.about #custom-popup .content h3{
+	color: #fff;
+	font-family: 17px;
+	font-family: 'gotham-light';
+	margin-bottom: 20px;
+}
+
+.about #custom-popup .content p{
+	color: #000;
+	font-family: 'gotham-light';
+}
+
+#cboxClose {
+	position: absolute;
+	top: 0px;
+	z-index: 100;
+	cursor: pointer;
+	right: 0px;
+}
+
+.about #custom-popup{
+	display: none;
+	position: absolute;
+	z-index: 1000;
+	top: 60px;
+	left: 50px;
+}
+
+.about #custom-popup h2 {
+	color: #F7901E;
+	font-size: 31px;
+	font-family: 'gotham-book';
+}
+
+.about #custom-popup h3 {
+	color: white;
+	font-family: 17px;
+	font-family: 'gotham-light';
+	margin-bottom: 20px;
+}
+
+.about #custom-popup p {
+	color: black;
+	font-family: 'gotham-light';
+	margin: 10px 0;
+	font-size: 13px;
+	line-height: 20px;
+}
+
+#custom-popup-close {
+	position: absolute;
+	top: 0px;
+	z-index: 1000;
+	cursor: pointer;
+	right: 0px;
+}
+
+/*people*/
+.about .people .content{ min-height: 0px !important; }
+
+.about .people .center{
+	width: 800px;
+}
+
+.about .people div.people-frame{
+	background: #76767c;
+	width: 200px;
+	float: left;
+}
+
+.about .people div.people-frame .picture{
+	border-bottom: 3px solid #f28e00;
+	width: 200px;
+	height: 115px;
+	position: relative;
+}
+
+.about .people div.people-frame .picture img{
+	margin-left: 0px;
+}
+
+.about .people div.people-frame h3, .people-popup .people-popup-footer h3{
+	font-size: 14px;
+	font-family: 'gotham-light';
+	color: #fff;
+	padding: 5px 10px 0px;
+}
+
+.about .people div.people-frame p, .people-popup .people-popup-footer p.position{
+	font-size: 12px;
+	color: #f1910a !important;
+	padding: 5px 10px;
+}
+
+.about .people div.people-frame p.description{ display: none; }
+
+.about div.people-popup .have_mcs{ height: 100% !important; }
+.people-popup{
+	position: absolute;
+	z-index: 1000;
+	display: none;
+	width: 800px;
+	height: 320px;
+}
+
+div.people-popup img{
+	float: left !important;
+	margin-left: 0px !important;
+}
+
+.people-popup .people-popup-header{
+	background-color: rgba(0,0,0,0.8);
+	border-bottom: 3px solid #f28e00;
+	height: 275px;
+}
+
+.people-popup .people-popup-header .picture{
+	width: 200px;
+	height: 275px;
+	float: left;
+}
+
+.people-popup .people-popup-header div.description{
+	float: left;
+	width: 500px;
+	height: 215px;
+	overflow: hidden;
+	margin: 40px 50px 20px 50px;
+}
+
+.people-popup .people-popup-footer{
+	background: #000;
+	width: 100%;
+}
+
+/*consultant*/
+.about .consultant .center{ width: 790px; }
+.about .consultant .content{ min-height: 0px !important; }
+.about .consultant .have_mcs{ height: 215px !important; position: absolute !important; }
+
+.about .consultant .context-menu{
+	width: 260px;
+	height: 220px;
+	overflow: hidden;
+}
+
+.about .consultant .context{
+	width: 350px;
+	padding: 0px !important;
+	height: 215px !important;
+	position: relative;
+	overflow: hidden;
+}
+
+.about .consultant .content-header{
+	margin-bottom: 10px;
+}
+
+.about .consultant .content-header h3{
+	font-family: 'gotham-book' !important;
+	font-size: 18px;
+	color: #f28e00;
+	margin-bottom: 15px;
+}
+
+.about .consultant span, .about .consultant p, .about .consultant #mcs_container .content li{
+	color: #75767c !important;
+	font-family: 'gotham-light' !important;
+	font-size: 13px;
+}
+
+.about .consultant li{
+	margin-bottom: 10px;
+}
+
+.about .consultant #mcs_container .content ul{
+	list-style-type: disc;
+	margin-left: 20px;
+}
+
+.about .consultant .context-pic{
+	margin-left: 20px;
+	width: 260px;
+	height: 215px;
+	overflow: hidden;
+}
+
+.about .consultant .context-menu{
+	padding: 20px 10px;
+	width: 120px;
+	background: #d5d6d7;
+	margin-left: 20px;
+	height: 175px;
+}
+
+.about .consultant .context-menu ul li{
+	height: 23px;
+	color: #686868;
+	font-size: 11px;
+	background: url('/fondevi/images/btn-list-architecture.png') no-repeat;
+	background-position: 0px -25px;
+	margin-bottom: 10px;
+	padding-left: 20px;
+	line-height: 13px;
+}
+
+.about .consultant .context-menu ul li:hover, .about .consultant .context-menu ul li.active{
+	color: #000;
+	background-position: 0px 0px;
+}
+
+/*products*/
+.about .products #mcs_container img{
+	float: none !important;
+	margin-left: 0px !important;
+	border: none !important;
+}
+
+/*awards*/
+.about .awards .content{ min-height: 0px !important; }
+.about .awards .center{ width: 775px; }
+
+/*career*/
+.about .career .context{
+	-moz-column-count: 2;
+	-moz-column-gap: 60px;
+	-webkit-column-count: 2;
+	-webkit-column-gap: 60px;
+	column-count: 2;
+	column-gap: 60px;
+	
+	padding-bottom: 0px !important;
+	height: auto !important;
+}
+
+.about .career .context h4{ font-family: 'gotham-book'; line-height: 20px; }
+.about .career .context h3{ font-family: 'gotham-book' !important;}
+.about .career .context ul{ list-style-type: disc; margin-left: 20px; }
+.about .career .context ul li{ font-family: 'gotham-light'; line-height: 20px; }
+.about .career .context h4, .about .career .context ul li{
+	color: #75767c !important;
+	font-size: 13px;
+	margin-bottom: 10px !important;
+}
+
+/*contact*/
+.about .contact .form{ width: 500px; float: left; }
+.about .contact .action{ float: left; text-align: right; }
+.about .contact .action a{
+	color: #f28e00;
+	display: block;
+	font-family: 'gotham-book';
+	font-size: 13px;
+	margin-bottom: 20px;
+}
+
+.about .contact .field{
+	width: 210px;
+	height: 40px;
+	margin-right: 40px;
+	float: left;
+	margin-bottom: 15px;
+}
+
+.about .contact .center{ width: 730px !important; }
+.about .contact .full{
+	width: 460px;
+	height: 100%;
+}
+
+.about .contact label{ display: block; margin-bottom: 5px; }
+.about .contact label, .about .contact p{
+	font-family: 'gotham-light';
+	font-size: 12px;
+	color: #75767c;
+}
+
+.about .contact sup{
+	font-family: 'gotham-light';
+	color: #ff0000;
+}
+
+.about .contact textarea{ height: 100px; }
+.about .contact input, .about .contact textarea{ border: none; }
+.about .contact input[type="text"], .about .contact textarea{
+	width: 100%;
+	background: #dedddd;
+}
+
+.about .contact .description p span{ color: #ff9500;}
+.about .contact .description p{
+	font-family: 'gotham-light';
+	font-size: 12px;
+	color: #75767c;
+	margin-bottom: 20px;
+	line-height: 20px;
+}
+
+.about .contact #custom-popup{
+	padding: 30px;
+	background: #767678;
+	-webkit-box-shadow: 5px 5px 7px 1px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 5px 5px 7px 1px rgba(0, 0, 0, 0.5);
+	box-shadow: 5px 5px 7px 1px rgba(0, 0, 0, 0.5);
+}

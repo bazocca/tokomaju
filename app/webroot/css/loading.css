@@ -1,0 +1,31 @@
+/* responsive images */
+img{
+  max-width: 100%;
+  height : auto;
+}
+
+/* prevent reCaptcha anomaly */
+iframe[src="about:blank"]{
+  display:none !important;
+}
+
+/* general frontend css */
+textarea{
+  resize: none;
+}
+
+div.loading {
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  background: transparent url('../img/loading.gif') 50% 50% no-repeat;
+}
+
+a.disabled{
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}

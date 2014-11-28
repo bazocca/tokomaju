@@ -1,0 +1,58 @@
+@import url('core.css');
+
+/* CUSTOM CONFIGURATION INSERT HERE !!! */
+html{ min-height: 100%; }
+body{ /*font-family: monospace,'arial','sans-serif';*/ padding-top: 10px;	/*padding-bottom: 40px;*/
+background: rgb(0,0,0); /* Old browsers */
+background: -moz-linear-gradient(top, rgb(0,0,0) 0%, rgb(50,50,50) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgb(0,0,0)), color-stop(100%,rgb(50,50,50))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, rgb(0,0,0) 0%,rgb(50,50,50) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, rgb(0,0,0) 0%,rgb(50,50,50) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, rgb(0,0,0) 0%,rgb(50,50,50) 100%); /* IE10+ */
+background: linear-gradient(top, rgb(0,0,0) 0%,rgb(50,50,50) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e4f7fb', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+}
+
+/* responsive images */
+img{
+	max-width: 100%;
+	height : auto;
+}
+
+/* ------------------------------------- */
+/* CUSTOM CONFIGURATION INSERT HERE !!!! */
+/* ------------------------------------- */
+
+/* TOOLS */
+.clear {clear:both !important;}
+.sort-symbol {color: red;}
+
+/* ABAS CSS */
+.normal-checkbox{float:left; position: relative; top: 10px}
+.group-checkbox{margin-bottom: 5px !important;}
+.label-checkbox{text-align:left !important;}
+.autoscroll{overflow-x: auto !important;}
+.live-time{float:right; margin-top: -30px; margin-right: 20px;}
+
+.input-append input[class*="span"], .input-append .uneditable-input[class*="span"], .input-prepend input[class*="span"], .input-prepend .uneditable-input[class*="span"], .row-fluid .input-prepend [class*="span"], .row-fluid .input-append [class*="span"]{ margin-left: -4px; margin-top: 9px;}
+
+.layout-body .content .inner-header{ position: relative; }
+.input-prepend, .input-append{float:right; text-align: right; margin-top:-9px;}
+.bottom-spacer {margin-bottom: 10px;}
+
+/* TABLE WITH BORDER */
+table.bordered , table.bordered tbody tr
+{
+	border: 1px solid black;
+}
+table.bordered thead tr
+{
+	border-bottom: 3px double black;
+}
+table.bordered tr:hover td{ background: none !important;}
+table.bordered tr td{ vertical-align: middle !important; }
+table.bordered tr td:nth-last-child(1){ width: 30px; text-align: left; }
+table.bordered tr td{ min-width: 50px;}
+
+/* Extra small devices (phones, less than 768px) */
+@media all and (max-width: 768px) {  .container-fluid { width:940px !important;} }
