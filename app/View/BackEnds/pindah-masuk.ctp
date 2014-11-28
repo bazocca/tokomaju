@@ -29,17 +29,9 @@
         var content = '<div style="margin:0 !important" class="clear"></div>';
         content += '<div class="fr">';
         content += '<span style="vertical-align: 20%;padding-right: 5px;font-weight:bold;">Tanggal :</span> ';
-        content += '<input id="tanggal" class="input-small dpicker" type="text" placeholder="MM/DD/YYYY" />';
+        content += '<input id="tanggal" class="input-medium" type="date" />';
         content += '</div>';
         $('input#searchMe').closest('div').after(content);
-        
-        // init date picker function
-		$('input.dpicker').datepicker({
-		    changeMonth: true,
-            changeYear: true,
-            showButtonPanel: true,
-            yearRange: "-80:+20",
-		});
         
 		$('#tanggal').change(function(){
 			$('a.searchMeLink').click();
