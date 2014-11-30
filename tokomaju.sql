@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 28, 2014 at 05:22 PM
+-- Generation Time: Nov 30, 2014 at 10:30 PM
 -- Server version: 5.1.37
 -- PHP Version: 5.3.0
 
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `cms_accounts` (
 --
 
 INSERT INTO `cms_accounts` (`id`, `user_id`, `role_id`, `username`, `email`, `password`, `last_login`, `created`, `created_by`, `modified`, `modified_by`) VALUES
-(1, 1, 1, 'admin', 'admin@yahoo.com', '169e781bd52860b584879cbe117085da596238f3', '2014-11-28 13:53:41', '2013-01-04 00:00:00', 1, '2013-01-04 00:00:00', 1);
+(1, 1, 1, 'admin', 'admin@yahoo.com', '169e781bd52860b584879cbe117085da596238f3', '2014-11-30 21:27:30', '2013-01-04 00:00:00', 1, '2013-01-04 00:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -197,7 +197,7 @@ INSERT INTO `cms_entry_metas` (`id`, `entry_id`, `key`, `value`) VALUES
 (84, 36, 'form-status_bayar', 'Tunggak'),
 (85, 36, 'form-status_kirim', 'Diproses'),
 (86, 36, 'form-nama_pegawai', 'Bejo'),
-(87, 36, 'form-total_biaya', '150000');
+(87, 36, 'form-total_harga', '150000');
 
 -- --------------------------------------------------------
 
@@ -280,7 +280,7 @@ CREATE TABLE IF NOT EXISTS `cms_types` (
   `modified_by` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=25 ;
 
 --
 -- Dumping data for table `cms_types`
@@ -301,7 +301,14 @@ INSERT INTO `cms_types` (`id`, `name`, `slug`, `description`, `parent_id`, `coun
 (14, 'Purchase Detail', 'purchase-detail', 'Seluruh barang yg terdaftar di faktur pembelian.', 13, 0, '2014-11-28 15:49:50', 1, '2014-11-28 15:49:50', 1),
 (15, 'Barang Masuk', 'barang-masuk', 'Seluruh pencatatan barang yang masuk dari supplier berdasarkan faktur pembelian.', 13, 0, '2014-11-28 16:06:25', 1, '2014-11-28 16:06:25', 1),
 (16, 'Hutang', 'hutang', 'Catatan beban hutang terhadap supplier (Rekening Koran)', 13, 0, '2014-11-28 16:21:10', 1, '2014-11-28 16:21:10', 1),
-(17, 'Retur Beli', 'retur-beli', 'Seluruh catatan barang pembelian yang diretur ke supplier.', 13, 0, '2014-11-28 17:12:52', 1, '2014-11-28 17:12:52', 1);
+(17, 'Retur Beli', 'retur-beli', 'Seluruh catatan barang pembelian yang diretur ke supplier.', 13, 0, '2014-11-28 17:12:52', 1, '2014-11-28 17:12:52', 1),
+(18, 'Sales Order', 'sales-order', 'Dokumen konfirmasi order penjualan terhadap customer.', 0, 3, '2014-11-30 12:27:50', 1, '2014-11-30 13:08:54', 1),
+(19, 'Sales Detail', 'sales-detail', 'Seluruh barang yg terdaftar di faktur penjualan.', 18, 0, '2014-11-30 12:43:20', 1, '2014-11-30 12:43:20', 1),
+(20, 'Piutang', 'piutang', 'Catatan pendapatan piutang dari customer (Rekening Koran)', 18, 0, '2014-11-30 12:52:14', 1, '2014-11-30 12:52:14', 1),
+(21, 'Retur Jual', 'retur-jual', 'Seluruh catatan barang penjualan yang diretur dari customer.', 18, 0, '2014-11-30 13:08:54', 1, '2014-11-30 13:08:54', 1),
+(22, 'Surat Jalan', 'surat-jalan', 'Surat Jalan untuk pengiriman barang ke customer / supplier.', 0, 1, '2014-11-30 13:29:28', 1, '2014-11-30 22:06:22', 1),
+(23, 'Barang Surat Jalan', 'barang-surat-jalan', 'Seluruh detail barang dlm suatu surat jalan.', 22, 0, '2014-11-30 22:06:22', 1, '2014-11-30 22:06:22', 1),
+(24, 'Resi', 'resi', 'Pemberian keterangan resi pada setiap Surat Jalan.', 0, 0, '2014-11-30 22:18:22', 1, '2014-11-30 22:18:22', 1);
 
 -- --------------------------------------------------------
 
@@ -318,7 +325,7 @@ CREATE TABLE IF NOT EXISTS `cms_type_metas` (
   `validation` text,
   `instruction` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=72 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=118 ;
 
 --
 -- Dumping data for table `cms_type_metas`
@@ -378,7 +385,7 @@ INSERT INTO `cms_type_metas` (`id`, `type_id`, `key`, `value`, `input_type`, `va
 (52, 13, 'form-status_bayar', 'Tunggak\r\nLunas', 'radio', 'not_empty|', 'Status pembayaran lunas atau belum.'),
 (53, 13, 'form-status_kirim', 'Diproses\r\nTerkirim', 'radio', 'not_empty|', 'Status pengiriman barang selesai atau belum.'),
 (54, 13, 'form-nama_pegawai', '', 'text', '', 'Pegawai toko yang mengeluarkan invoice.'),
-(55, 13, 'form-total_biaya', '', 'text', 'not_empty|is_numeric|', 'Harga total biaya pembelian barang.'),
+(55, 13, 'form-total_harga', '', 'text', 'not_empty|is_numeric|', 'Harga total pembelian barang.'),
 (56, 14, 'title_key', 'Barang Dagang', NULL, NULL, NULL),
 (57, 14, 'form-jumlah', '', 'text', 'not_empty|is_numeric|', ''),
 (58, 14, 'form-harga', '', 'text', 'not_empty|is_numeric|', ''),
@@ -394,7 +401,50 @@ INSERT INTO `cms_type_metas` (`id`, `type_id`, `key`, `value`, `input_type`, `va
 (68, 16, 'form-mutasi_debet', '', 'text', 'is_numeric|', ''),
 (69, 16, 'form-mutasi_kredit', '', 'text', 'is_numeric|', ''),
 (70, 16, 'form-saldo', '', 'text', 'is_numeric|', 'Saldo akhir perhitungan.'),
-(71, 17, 'title_key', 'Surat Jalan', NULL, NULL, NULL);
+(71, 17, 'title_key', 'Surat Jalan', NULL, NULL, NULL),
+(72, 18, 'title_key', 'Kode Invoice', NULL, NULL, NULL),
+(73, 18, 'form-tanggal', '', 'datepicker', 'not_empty|', ''),
+(74, 18, 'form-customer', '', 'browse', 'not_empty|', ''),
+(75, 18, 'form-status_bayar', 'Tunggak\r\nLunas', 'radio', 'not_empty|', 'Status pembayaran lunas atau belum.'),
+(76, 18, 'form-status_kirim', 'Diproses\r\nTerkirim', 'radio', 'not_empty|', 'Status pengiriman barang selesai atau belum.'),
+(77, 18, 'form-nama_pegawai', '', 'text', '', 'Pegawai toko yang mengeluarkan invoice.'),
+(78, 18, 'form-diskon_nota', '', 'text', 'is_numeric|', 'Diskon langsung dlm satuan rupiah.'),
+(79, 18, 'form-total_harga', '', 'text', 'not_empty|is_numeric|', 'Harga total penjualan barang.'),
+(80, 18, 'form-uang_muka', '', 'text', 'is_numeric|', 'Uang Muka yg dibayarkan.'),
+(81, 18, 'form-ongkos_tambahan', '', 'text', 'is_numeric|', 'Ongkos Lain-lain (biaya bensin, jasa supir, portal, dll)'),
+(82, 18, 'form-laba_bersih', '', 'text', 'is_numeric|', 'Keuntungan bersih yang didapat.'),
+(83, 19, 'title_key', 'Barang Dagang', NULL, NULL, NULL),
+(84, 19, 'form-jumlah', '', 'text', 'not_empty|is_numeric|', ''),
+(85, 19, 'form-harga', '', 'text', 'not_empty|is_numeric|', ''),
+(86, 19, 'form-diskon', '', 'text', 'is_numeric|', 'Diskon langsung dlm satuan rupiah.'),
+(87, 19, 'form-profit', '', 'text', 'is_numeric|', ''),
+(88, 19, 'form-terkirim', '', 'text', 'is_numeric|', 'Jumlah barang yg sudah terkirim.'),
+(89, 19, 'form-retur', '', 'text', 'is_numeric|', 'Jumlah barang yg diretur.'),
+(90, 20, 'title_key', 'Kode Referensi', NULL, NULL, NULL),
+(91, 20, 'form-tanggal', '', 'datepicker', 'not_empty|', ''),
+(92, 20, 'form-mutasi_debet', '', 'text', 'is_numeric|', ''),
+(93, 20, 'form-mutasi_kredit', '', 'text', 'is_numeric|', ''),
+(94, 20, 'form-saldo', '', 'text', 'is_numeric|', 'Saldo akhir perhitungan.'),
+(95, 21, 'title_key', 'Barang Dagang', NULL, NULL, NULL),
+(96, 21, 'form-tanggal', '', 'datepicker', 'not_empty|', 'Tanggal pengiriman barang.'),
+(97, 21, 'form-jumlah', '', 'text', 'not_empty|is_numeric|', 'jumlah barang yg diretur.'),
+(98, 21, 'form-gudang', '', 'browse', 'not_empty|', 'Gudang tempat pengiriman.'),
+(99, 22, 'title_key', 'Kode', NULL, NULL, NULL),
+(106, 22, 'form-purchase_order', '', 'browse', '', 'Surat Jalan untuk meretur barang supplier sesuai PO yg dipilih.'),
+(105, 22, 'form-customer', '', 'browse', '', 'Tujuan Surat Jalan.'),
+(103, 22, 'form-tanggal', '', 'datepicker', 'not_empty|', 'Tanggal kirim / jalan.'),
+(104, 22, 'form-sales_order', '', 'browse', '', 'Surat Jalan untuk mengirim pesanan barang customer sesuai SO yg dipilih.'),
+(107, 22, 'form-supplier', '', 'browse', '', 'Tujuan Surat Jalan.'),
+(108, 22, 'form-ekspedisi', '', 'browse', '', 'Kosongkan bila mengantar sendiri tanpa jasa ekspedisi.'),
+(109, 23, 'title_key', 'Barang Dagang', NULL, NULL, NULL),
+(110, 23, 'form-jumlah', '', 'text', 'not_empty|is_numeric|', ''),
+(111, 23, 'form-gudang', '', 'browse', '', 'Tempat pengambilan barang.'),
+(112, 24, 'title_key', 'Nomer Resi', NULL, NULL, NULL),
+(113, 24, 'form-tanggal', '', 'datepicker', 'not_empty|', ''),
+(114, 24, 'form-surat_jalan', '', 'browse', 'not_empty|', ''),
+(115, 24, 'form-pihak_bayar', 'Tujuan\r\nPengirim', 'radio', 'not_empty|', 'Pihak yang membayar pengiriman.'),
+(116, 24, 'form-sistem_bayar', 'Gratis\r\nTagih', 'radio', 'not_empty|', ''),
+(117, 24, 'form-harga', '', 'text', 'is_numeric|', 'Harga biaya yg dikeluarkan.');
 
 -- --------------------------------------------------------
 
