@@ -15,30 +15,6 @@ class EntriesController extends AppController {
 	
 	/**
 	 * fork our target routes for entry view (pages, entry, list of entries) in Front End web
-	 * FYI : (Front End Default URL Structure)
-	 * en.domainmu.com		-->		Home web pages (auto detect for language selection)
-	 * www.domainmu.com/en	-->		--//--
-	 * www.domainmu.com		-->		--//--
-	 * filename: home.ctp
-	 * 
-	 * en.domainmu.com/about-us							-->		view pages
-	 * filename: about-us.ctp (always parent language slug) !!
-	 * 
-	 * en.domainmu.com/books/							-->		view all lists of books entries
-	 * en.domainmu.com/books/3							-->		same as above, but that is in page 3
-	 * en.domainmu.com/books/?key=author&value=abas		-->		same as above, but only entries that have certain key and certain value defined (value in URL must be already slugged)
-	 * filename: books.ctp
-	 * 
-	 * en.domainmu.com/books/sport				-->		view the detail of the 'Sport' book
-	 * filename: books_detail.ctp
-	 * 
-	 * en.domainmu.com/books/sport/?type=news 	-->		view all child lists from certain parent entry and certain entry type
-	 * en.domainmu.com/books/sport/3?type=news						-->	same as above, but that is in page 3
-	 * en.domainmu.com/books/sport/?type=news&key=author&value=abas	-->	same as above, but only entries that have certain key and certain value defined
-	 * filename: news.ctp
-	 *
-	 * en.domainmu.com/books/sport/easy-bicycle		-->	view the detail of the 'Easy Bicycle' entry
-	 * filename: news_detail.ctp
 	 * @return void
 	 * @public
 	 **/
