@@ -15,6 +15,11 @@
 ?>
 <script>
 	$(document).ready(function(){
+        if("<?php echo (empty($value)?'kosong':'berisi'); ?>"=="kosong" && $('input[type=text].tanggal').length > 0)
+		{
+			$('input[type=text].tanggal').change();
+		}
+        
 		// init date picker function
 		$('input.dpicker.<?php echo $shortkey; ?>').datepicker({
 		    changeMonth: true,

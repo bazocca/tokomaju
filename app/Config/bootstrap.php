@@ -669,3 +669,26 @@ function Zip($source, $destination, $include_dir = false)
 		return false;
 	} 
 }
+
+function getFrontCodeId($myTypeSlug)
+{
+    $result = '';
+    switch ($myTypeSlug) 
+    {
+        case 'resi':
+            $result = "RSI";		break;
+        case 'surat-jalan':
+            $result = "SRJ";		break;
+        case 'purchase-order':
+            $result = "PUR";		break;
+        case 'sale-order':
+            $result = "SAL";		break;
+        case 'hutang':
+            $result = "HUT";		break;
+        case 'piutang':
+            $result = "PIU";		break;
+        default:
+            $result = "UNK";		break;
+    }
+    return $result;
+}

@@ -10,7 +10,7 @@ class EntriesController extends AppController {
 	
 	public function beforeFilter(){
         parent::beforeFilter();
-		$this->Auth->allow('index','get_list_entry','get_detail_entry');
+		$this->Auth->allow('index','get_list_entry','get_detail_entry','ajax_title_counter');
     }
 	
 	/**
@@ -1078,6 +1078,10 @@ class EntriesController extends AppController {
 			// set parent_id
 			$this->request->data['Entry']['parent_id'] = (empty($myEntry)?0:$myEntry['Entry']['id']);
 			$this->request->data['Entry']['lang_code'] = strtolower(empty($lang_code)?$this->request->data['language']:$lang_code);
+            if($myType['Type']['slug'] == 'surat-jalan')
+			{
+				$this->request->data['Entry']['status'] = 0; // pending, whereas resi number still not be created.
+			}
 			
 			// PREPARE FOR ADDITIONAL LINK OPTIONS !!
 			$myChildTypeLink = (!empty($myEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug']?'?type='.$myChildType['Type']['slug']:'');
@@ -1991,6 +1995,47 @@ class EntriesController extends AppController {
 		{			
 			$this->Entry->id = $key;
 			$this->Entry->saveField('sort_order' , $value);
+		}
+	}
+    
+    function ajax_title_counter($localCall = NULL)
+	{
+		$this->autoRender = FALSE;
+		$options['conditions']['Entry.entry_type'] = $this->request->data['myTypeSlug'];
+		$options['conditions']['Entry.title LIKE'] = $this->request->data['frontTitle'].'%';
+		
+		$options['order'] = 'Entry.id DESC';
+		
+		$temp = $this->Entry->find('first',$options);
+		if(empty($temp))
+		{
+			if(empty($localCall))
+			{
+				echo '001';
+				return;
+			}
+			else
+			{
+				return '001';
+			}
+		}
+
+		$code = '1'.substr($temp['Entry']['title'], (is_numeric(substr($temp['Entry']['title'], 3))?9:6));
+		$code++;
+		
+		$temp2 = substr($code, 0,1);
+		$temp2--;
+		
+		$result = ($temp2 == 0?substr($code, 1): '1'.substr($code, 1) );
+		
+		if(empty($localCall))
+		{
+			echo $result;
+			return;
+		}
+		else
+		{
+			return $result;
 		}
 	}
 	

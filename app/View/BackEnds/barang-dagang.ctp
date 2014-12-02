@@ -161,6 +161,18 @@
                     {
                         $('span.stock-satuan').html($(this).find('td.form-satuan').html());
                     }
+                    
+                    // update jenis barang ...
+                    if($('input#jenis-barang').length > 0)
+                    {
+                        $('input#jenis-barang').val($(this).find('td.form-jenis_barang h5').html());
+                    }
+                    
+                    // ADD DEFAULT PRICE !!
+                    if($('input[type=hidden]#myTypeSlug').val() == 'purchase-order')
+                    {					
+                        $("input[type=text].price").val( $(this).find("td.form-harga_beli input[type=hidden]").val() );
+                    }
 
 					$.colorbox.close();
 				}
@@ -407,6 +419,7 @@
 							else if($shortkey == 'price' || $shortkey == "harga_beli" || $shortkey == "harga_jual")
 							{
 								echo 'Rp '.str_replace(',', '.', toMoney($outputResult  , true , true) ).',-';
+                                echo '<input type="hidden" value="'.$outputResult.'">';
 							}
 							else if($shortkey == 'weight')
 							{

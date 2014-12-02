@@ -317,7 +317,7 @@ table.cke_editor tr td:nth-child(1){ padding: 0px !important; }
 .control-action{ border-top: 1px solid lightGrey; padding-top: 10px; float: left; width: 100%; }
 
 form .control-label span{ color: red; }
-form .notes.important{ color: #959595; font-size: 11px; }
+form .notes.important{ color: #959595; font-size: 12px; }
 
 /* css for timepicker */
 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }

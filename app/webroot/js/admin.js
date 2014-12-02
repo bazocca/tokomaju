@@ -2,6 +2,24 @@ var jcrop_api = new Array();
 (function($){
 	$(document).ready(function()
 	{
+        // Auto generate Code !!
+        $('input[type=text].tanggal').change(function(){
+	    	if($('input[type=text]#entry_id').length > 0)
+            {
+                var temp = $(this).val().split("/");
+                var dateCode = temp[2].substr(temp[2].length-2).toString() + temp[0].toString() + temp[1].toString();            
+                var frontId = $('input[type=hidden]#frontId').val();
+
+                // NOW do the AJAX !!
+                $.post(site+'entries/ajax_title_counter',{
+                    myTypeSlug: $('input[type=hidden]#myTypeSlug').val(),
+                    frontTitle: frontId+dateCode
+                },function(result){
+                    $('input[type=text]#entry_id').val(frontId+dateCode+result);
+                });
+            }
+	    });
+        
 		// colorbox initialization !!
 		if($('.cboxElement').length > 0)
 		{

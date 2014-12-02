@@ -39,6 +39,7 @@
             echo $this->Html->script('jquery-ui-timepicker-addon');
 			echo $this->Html->script('bootstrap.min');
 			
+            echo $this->Html->script('number_format');
 			echo $this->Html->script('admin');
             echo $this->Html->script('ajax');
             echo $scripts_for_layout;

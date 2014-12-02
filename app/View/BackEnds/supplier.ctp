@@ -155,6 +155,16 @@
 						}
 						
 					}
+                    
+                    // update browse id add-invoice-barang...
+                    if($('#add-invoice-barang').length > 0)
+                    {
+                        $('#add-invoice-barang').removeClass('disabled');
+                        $('#add-invoice-barang').attr('data-supplier' , $(this).find("input.slug-code").val() );
+                        // refresh barang-dagang !!
+                        $("input[type=text]#barang-dagang").val("");
+                        $("input[type=text]#barang-dagang").change();
+                    }
 
 					$.colorbox.close();
 				}
@@ -400,7 +410,6 @@
 							else if($shortkey == 'price' || $shortkey == "harga_beli" || $shortkey == "harga_jual")
 							{
 								echo 'Rp '.str_replace(',', '.', toMoney($outputResult  , true , true) ).',-';
-                                echo '<input type="hidden" value="'.$outputResult.'">';
 							}
 							else if($shortkey == 'weight')
 							{
