@@ -220,7 +220,7 @@ table.list .thumbs img{ max-height: 50px; }
 table.list tr td a.insert-into-post{ position: absolute; top: 20px; left: 0px; display: none; }
 table.list tr td.offbutt{ text-align: left; }
 
-table.list th.action{ width: 100px !important; }
+table.list th.action{ min-width: 100px !important; }
 
 table.list-field .dropdown-menu{ min-width: 85px; }
 table.list-field .dropdown-menu a{ text-align: left; padding: 3px 5px !important; }
