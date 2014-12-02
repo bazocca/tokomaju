@@ -218,8 +218,6 @@ table.list .thumbs{ float: left; width: 50px; height: 50px; overflow: hidden; ma
 table.list .thumbs img{ max-height: 50px; }
 
 table.list tr td a.insert-into-post{ position: absolute; top: 20px; left: 0px; display: none; }
-/*table.list tr td .btn{ display: none; }*/
-table.list tr td:nth-last-child(1){ min-width: 150px; /*text-align: right;*/ }
 table.list tr td.offbutt{ text-align: left; }
 
 table.list th.action{ width: 100px !important; }

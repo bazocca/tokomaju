@@ -223,7 +223,7 @@
 			if(empty($popup))
 			{
 				?>
-		<th>
+		<th class="action">
 			<form id="global-action" style="margin: 0;" action="#" accept-charset="utf-8" method="post" enctype="multipart/form-data">
 				<select REQUIRED name="data[action]" class="input-small">
 					<option style="font-weight: bold;" value="">Action :</option>
