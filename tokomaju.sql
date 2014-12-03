@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 30, 2014 at 10:30 PM
+-- Generation Time: Dec 03, 2014 at 08:50 AM
 -- Server version: 5.1.37
 -- PHP Version: 5.3.0
 
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `cms_accounts` (
 --
 
 INSERT INTO `cms_accounts` (`id`, `user_id`, `role_id`, `username`, `email`, `password`, `last_login`, `created`, `created_by`, `modified`, `modified_by`) VALUES
-(1, 1, 1, 'admin', 'admin@yahoo.com', '169e781bd52860b584879cbe117085da596238f3', '2014-11-30 21:27:30', '2013-01-04 00:00:00', 1, '2013-01-04 00:00:00', 1);
+(1, 1, 1, 'admin', 'admin@yahoo.com', '169e781bd52860b584879cbe117085da596238f3', '2014-12-02 13:20:57', '2013-01-04 00:00:00', 1, '2013-01-04 00:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -385,7 +385,7 @@ INSERT INTO `cms_type_metas` (`id`, `type_id`, `key`, `value`, `input_type`, `va
 (52, 13, 'form-status_bayar', 'Tunggak\r\nLunas', 'radio', 'not_empty|', 'Status pembayaran lunas atau belum.'),
 (53, 13, 'form-status_kirim', 'Diproses\r\nTerkirim', 'radio', 'not_empty|', 'Status pengiriman barang selesai atau belum.'),
 (54, 13, 'form-nama_pegawai', '', 'text', '', 'Pegawai toko yang mengeluarkan invoice.'),
-(55, 13, 'form-total_harga', '', 'text', 'not_empty|is_numeric|', 'Harga total pembelian barang.'),
+(55, 13, 'form-total_harga', '', 'text', 'is_numeric|', 'Harga total pembelian barang.'),
 (56, 14, 'title_key', 'Barang Dagang', NULL, NULL, NULL),
 (57, 14, 'form-jumlah', '', 'text', 'not_empty|is_numeric|', ''),
 (58, 14, 'form-harga', '', 'text', 'not_empty|is_numeric|', ''),
