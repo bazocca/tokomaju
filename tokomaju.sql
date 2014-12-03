@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 03, 2014 at 08:50 AM
+-- Generation Time: Dec 03, 2014 at 11:17 PM
 -- Server version: 5.1.37
 -- PHP Version: 5.3.0
 
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `cms_accounts` (
 --
 
 INSERT INTO `cms_accounts` (`id`, `user_id`, `role_id`, `username`, `email`, `password`, `last_login`, `created`, `created_by`, `modified`, `modified_by`) VALUES
-(1, 1, 1, 'admin', 'admin@yahoo.com', '169e781bd52860b584879cbe117085da596238f3', '2014-12-02 13:20:57', '2013-01-04 00:00:00', 1, '2013-01-04 00:00:00', 1);
+(1, 1, 1, 'admin', 'admin@yahoo.com', '169e781bd52860b584879cbe117085da596238f3', '2014-12-03 20:28:33', '2013-01-04 00:00:00', 1, '2013-01-04 00:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `cms_entries` (
   `lang_code` varchar(10) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=37 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=39 ;
 
 --
 -- Dumping data for table `cms_entries`
@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `cms_entry_metas` (
   `key` varchar(500) NOT NULL,
   `value` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=88 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=98 ;
 
 --
 -- Dumping data for table `cms_entry_metas`
@@ -400,7 +400,6 @@ INSERT INTO `cms_type_metas` (`id`, `type_id`, `key`, `value`, `input_type`, `va
 (67, 16, 'form-tanggal', '', 'datepicker', 'not_empty|', ''),
 (68, 16, 'form-mutasi_debet', '', 'text', 'is_numeric|', ''),
 (69, 16, 'form-mutasi_kredit', '', 'text', 'is_numeric|', ''),
-(70, 16, 'form-saldo', '', 'text', 'is_numeric|', 'Saldo akhir perhitungan.'),
 (71, 17, 'title_key', 'Surat Jalan', NULL, NULL, NULL),
 (72, 18, 'title_key', 'Kode Invoice', NULL, NULL, NULL),
 (73, 18, 'form-tanggal', '', 'datepicker', 'not_empty|', ''),
@@ -424,7 +423,6 @@ INSERT INTO `cms_type_metas` (`id`, `type_id`, `key`, `value`, `input_type`, `va
 (91, 20, 'form-tanggal', '', 'datepicker', 'not_empty|', ''),
 (92, 20, 'form-mutasi_debet', '', 'text', 'is_numeric|', ''),
 (93, 20, 'form-mutasi_kredit', '', 'text', 'is_numeric|', ''),
-(94, 20, 'form-saldo', '', 'text', 'is_numeric|', 'Saldo akhir perhitungan.'),
 (95, 21, 'title_key', 'Barang Dagang', NULL, NULL, NULL),
 (96, 21, 'form-tanggal', '', 'datepicker', 'not_empty|', 'Tanggal pengiriman barang.'),
 (97, 21, 'form-jumlah', '', 'text', 'not_empty|is_numeric|', 'jumlah barang yg diretur.'),

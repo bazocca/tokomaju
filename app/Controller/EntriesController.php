@@ -1299,7 +1299,9 @@ class EntriesController extends AppController {
     
     function _add_update_id_meta($myTypeSlug , $myChildTypeSlug = NULL , $myParentEntry = array() , $myEntry = array())
 	{
-		// $this->request->data['EntryMeta']['entry_id'] => not needed to be set, coz it's already set in parent func !!
+		// $this->request->data['EntryMeta']['entry_id'] => not needed to be set, coz it's already set in parent function !!
+        $this->request->data = breakEntryMetas($this->request->data);
+        $this->request->data['Entry']['id'] = $this->request->data['EntryMeta']['entry_id'];
         
         if($myTypeSlug == "purchase-order" && empty($myChildTypeSlug) && empty($myEntry)) // ADD ONLY!!
         {

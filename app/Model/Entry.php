@@ -794,6 +794,27 @@ class Entry extends AppModel {
     // ------------------------- >>
     // Inventory Function !!
     // ------------------------- >>
+    function ajax_title_counter($myTypeSlug , $frontTitle)
+	{	
+		$options['conditions']['Entry.entry_type'] = $myTypeSlug;		
+		$options['conditions']['Entry.title LIKE'] = $frontTitle.'%';		
+		$options['order'] = 'Entry.id DESC';
+		
+		$temp = $this->find('first',$options);
+		if(empty($temp))
+		{
+			return '001';
+		}
+
+		$code = '1'.substr($temp['Entry']['title'], (is_numeric(substr($temp['Entry']['title'], 3))?9:6));
+		$code++;
+		
+		$temp2 = substr($code, 0,1);
+		$temp2--;
+		
+		return ($temp2 == 0?substr($code, 1): '1'.substr($code, 1) );
+	}
+    
     public function addSaleDetails($data = array())
 	{		
 		$nota = $this->meta_details($data['Entry']['0']['value'] , "sale");		
@@ -807,7 +828,7 @@ class Entry extends AppModel {
 		$year = $nowDate['year'];
 		$month = $nowDate['mon'];
 		$day = $nowDate['mday'];
-		$frontTitle = "PIU".substr($year, strlen($year)-2).$month.$day;
+		$frontTitle = "PIU".substr($year, 2).$month.$day;
 		
 		foreach ($data['barang']['id'] as $key => $value)
 		{
@@ -816,8 +837,8 @@ class Entry extends AppModel {
 			$input['Entry']['title'] = $detailbarang['Entry']['title'];
 			$input['Entry']['entry_type'] = "sale-detail";
 			$input['Entry']['slug'] = "sal-".strtolower($detailbarang['Entry']['title']);
-			$input['Entry']['created_by'] = $myCreator['Account']['user_id'];
-			$input['Entry']['modified_by'] = $myCreator['Account']['user_id'];			
+			$input['Entry']['created_by'] = $myCreator['id'];
+			$input['Entry']['modified_by'] = $myCreator['id'];			
 			$input['Entry']['parent_id'] = $nota['Entry']['id'];
 			$this->create();
 			$this->save($input);
@@ -855,26 +876,26 @@ class Entry extends AppModel {
 			$buy_price = $data['barang']['jumlah'][$key] * $detailbarang['EntryMeta']['buy_price'];
 			$kulakan += $buy_price;
 			// ------------------------------------------------------------------------------------- //
-			// AUTO ADD FOR CREDITS !!
+			// AUTO ADD FOR piutang !!
 			// ------------------------------------------------------------------------------------- //
 			unset($input);			
-			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("credits",$nota['Entry']['id'] , $frontTitle);
-			$input['Entry']['description'] = "Jual ".$detailbarang['EntryMeta']['name']." (".$detailbarang['Entry']['title'].") sebanyak ".$data['barang']['jumlah'][$key]." ".$detailbarang['EntryMeta']['satuan']." @Rp.".str_replace(',', '.', toMoney( $data['barang']['harga'][$key] , true , true) ).",-".(empty($data['barang']['discount'][$key])?"":" dengan total diskon Rp.".str_replace(',', '.', toMoney( $data['barang']['discount'][$key] , true , true) ).",-");
-			$input['Entry']['entry_type'] = "credits";
+			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("piutang", $frontTitle);
+			$input['Entry']['description'] = "Jual ".$detailbarang['Entry']['title']." (".$detailbarang['Entry']['title'].") sebanyak ".$data['barang']['jumlah'][$key]." ".$detailbarang['EntryMeta']['satuan']." @Rp.".str_replace(',', '.', toMoney( $data['barang']['harga'][$key] , true , true) ).",-".(empty($data['barang']['discount'][$key])?"":" dengan total diskon Rp.".str_replace(',', '.', toMoney( $data['barang']['discount'][$key] , true , true) ).",-");
+			$input['Entry']['entry_type'] = "piutang";
 			$input['Entry']['slug'] = strtolower($input['Entry']['title']);
-			$input['Entry']['created_by'] = $myCreator['Account']['user_id'];
-			$input['Entry']['modified_by'] = $myCreator['Account']['user_id'];
+			$input['Entry']['created_by'] = $myCreator['id'];
+			$input['Entry']['modified_by'] = $myCreator['id'];
 			$input['Entry']['parent_id'] = $nota['Entry']['id'];
 			$this->create();
 			$this->save($input);
 			
 			$input['EntryMeta']['entry_id'] = $this->id;
-			$input['EntryMeta']['key'] = "form-date";
+			$input['EntryMeta']['key'] = "form-tanggal";
 			$input['EntryMeta']['value'] = $month."/".$day."/".$year;
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
 			
-			$input['EntryMeta']['key'] = "form-debit";
+			$input['EntryMeta']['key'] = "form-mutasi_debet";
 			$input['EntryMeta']['value'] = $subtotal;
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
@@ -882,25 +903,25 @@ class Entry extends AppModel {
 		// UPDATE BALANCE !!
 		$balance = $grandtotal - $down_payment;
 		unset($input);
-		$input['Entry']['entry_type'] = "credits";
-		$input['Entry']['created_by'] = $myCreator['Account']['user_id'];
-		$input['Entry']['modified_by'] = $myCreator['Account']['user_id'];
+		$input['Entry']['entry_type'] = "piutang";
+		$input['Entry']['created_by'] = $myCreator['id'];
+		$input['Entry']['modified_by'] = $myCreator['id'];
 		$input['Entry']['parent_id'] = $nota['Entry']['id'];
 		if(!empty($basic_discount))
 		{			
-			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("credits",$nota['Entry']['id'] , $frontTitle);
+			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("piutang" , $frontTitle);
 			$input['Entry']['description'] = "Mendapat potongan diskon global.";			
 			$input['Entry']['slug'] = strtolower($input['Entry']['title']);			
 			$this->create();
 			$this->save($input);
 			
 			$input['EntryMeta']['entry_id'] = $this->id;
-			$input['EntryMeta']['key'] = "form-date";
+			$input['EntryMeta']['key'] = "form-tanggal";
 			$input['EntryMeta']['value'] = $month."/".$day."/".$year;
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
 			
-			$input['EntryMeta']['key'] = "form-credit";
+			$input['EntryMeta']['key'] = "form-mutasi_kredit";
 			$input['EntryMeta']['value'] = $basic_discount;
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
@@ -908,19 +929,19 @@ class Entry extends AppModel {
 		// cek status pembayaran apakah sudah langsung lunas ato belum :D
 		if($nota['EntryMeta']['payment_status'] == "Complete")
 		{			
-			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("credits",$nota['Entry']['id'] , $frontTitle);
+			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("piutang", $frontTitle);
 			$input['Entry']['description'] = "Pembayaran telah lunas.";
 			$input['Entry']['slug'] = strtolower($input['Entry']['title']);
 			$this->create();
 			$this->save($input);
 			
 			$input['EntryMeta']['entry_id'] = $this->id;
-			$input['EntryMeta']['key'] = "form-date";
+			$input['EntryMeta']['key'] = "form-tanggal";
 			$input['EntryMeta']['value'] = $month."/".$day."/".$year;
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
 			
-			$input['EntryMeta']['key'] = "form-credit";
+			$input['EntryMeta']['key'] = "form-mutasi_kredit";
 			$input['EntryMeta']['value'] = $grandtotal;
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
@@ -930,19 +951,19 @@ class Entry extends AppModel {
 		}
 		else if(!empty($down_payment))
 		{
-			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("credits",$nota['Entry']['id'] , $frontTitle);
+			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("piutang" , $frontTitle);
 			$input['Entry']['description'] = "Pembayaran Uang Muka / Uang DP.";
 			$input['Entry']['slug'] = strtolower($input['Entry']['title']);
 			$this->create();
 			$this->save($input);
 			
 			$input['EntryMeta']['entry_id'] = $this->id;
-			$input['EntryMeta']['key'] = "form-date";
+			$input['EntryMeta']['key'] = "form-tanggal";
 			$input['EntryMeta']['value'] = $month."/".$day."/".$year;
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
 			
-			$input['EntryMeta']['key'] = "form-credit";
+			$input['EntryMeta']['key'] = "form-mutasi_kredit";
 			$input['EntryMeta']['value'] = $down_payment;
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
@@ -973,39 +994,38 @@ class Entry extends AppModel {
     
     public function addPurchaseDetails($data = array())
 	{
-		// find parent purchase entry :D
-		$nota = $this->findBySlug($data['Entry']['slug']);
-		$balance = 0;		
-		$nowDate = getdate();
-		$year = $nowDate['year'];
-		$month = $nowDate['mon'];
-		$day = $nowDate['mday'];
+        $balance = 0;
+        $myCreator = $this->getCurrentUser();
+        $nowDate = getdate();
+        $year = $nowDate['year'];
+        $month = sprintf("%02d",$nowDate['mon']);
+        $day = sprintf("%02d",$nowDate['mday']);
 		
 		foreach ($data['barang']['id'] as $key => $value) 
 		{
-			$detailbarang = $this->meta_details(NULL , 'barang-dagang' , NULL , NULL , NULL , NULL , $value);
+			$detailbarang = $this->meta_details(NULL , 'barang-dagang' , NULL , NULL , NULL , NULL , $value); // using title instead !!
 			$input = array();
-			$input['Entry']['title'] = $detailbarang['Entry']['title'];
+			$input['Entry']['title'] = $detailbarang['Entry']['slug']; // save slug as title !!
 			$input['Entry']['entry_type'] = "purchase-detail";
-			$input['Entry']['slug'] = "pur-".strtolower($detailbarang['Entry']['title']);
-			$input['Entry']['created_by'] = $myCreator['Account']['user_id'];
-			$input['Entry']['modified_by'] = $myCreator['Account']['user_id'];			
-			$input['Entry']['parent_id'] = $nota['Entry']['id'];
+			$input['Entry']['slug'] = get_slug($input['Entry']['title']);
+            $input['Entry']['created_by'] = $input['Entry']['modified_by'] = $myCreator['id'];
+			$input['Entry']['parent_id'] = $data['Entry']['id'];
 			$this->create();
 			$this->save($input);
 			
 			$input['EntryMeta']['entry_id'] = $this->id;
-			$input['EntryMeta']['key'] = "form-quantity";
+            
+			$input['EntryMeta']['key'] = "form-jumlah";
 			$input['EntryMeta']['value'] = $data['barang']['jumlah'][$key];
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
 			
-			$input['EntryMeta']['key'] = "form-price";
+			$input['EntryMeta']['key'] = "form-harga";
 			$input['EntryMeta']['value'] = $data['barang']['harga'][$key];
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
 			
-			$input['EntryMeta']['key'] = "form-delivered_goods";
+			$input['EntryMeta']['key'] = "form-terkirim";
 			$input['EntryMeta']['value'] = 0;
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
@@ -1020,55 +1040,57 @@ class Entry extends AppModel {
 			$balance += $subtotal;
 			
 			// ------------------------------------------------------------------------------------- //
-			// AUTO ADD FOR DEBTS !!
+			// AUTO ADD FOR hutang !!
 			// ------------------------------------------------------------------------------------- //
-			unset($input);
-			$frontTitle = "HUT".substr($year, strlen($year)-2).$month.$day;
-			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("debts",$nota['Entry']['id'] , $frontTitle);
-			$input['Entry']['description'] = "Beli ".$detailbarang['EntryMeta']['name']." (".$detailbarang['Entry']['title'].") sebanyak ".$data['barang']['jumlah'][$key]." ".$detailbarang['EntryMeta']['satuan']." @Rp.".str_replace(',', '.', toMoney( $data['barang']['harga'][$key] , true , true) ).",-";
-			$input['Entry']['entry_type'] = "debts";
-			$input['Entry']['slug'] = strtolower($input['Entry']['title']);
-			$input['Entry']['created_by'] = $myCreator['Account']['user_id'];
-			$input['Entry']['modified_by'] = $myCreator['Account']['user_id'];
-			$input['Entry']['parent_id'] = $nota['Entry']['id'];
+			$input = array();
+            $input['Entry']['entry_type'] = "hutang";
+            
+			$frontTitle = getFrontCodeId($input['Entry']['entry_type']).substr($year, 2).$month.$day;
+			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("hutang", $frontTitle);
+            $input['Entry']['slug'] = get_slug($input['Entry']['title']);
+            
+			$input['Entry']['description'] = "Beli <strong>".$detailbarang['Entry']['title']."</strong> sebanyak ".$data['barang']['jumlah'][$key]." ".$detailbarang['EntryMeta']['satuan']." @Rp ".str_replace(',', '.', toMoney( $data['barang']['harga'][$key] , true , true) ).",-";			
+			
+			$input['Entry']['created_by'] = $input['Entry']['modified_by'] = $myCreator['id'];
+			$input['Entry']['parent_id'] = $data['Entry']['id'];
 			$this->create();
 			$this->save($input);
 			
 			$input['EntryMeta']['entry_id'] = $this->id;
-			$input['EntryMeta']['key'] = "form-date";
+			$input['EntryMeta']['key'] = "form-tanggal";
 			$input['EntryMeta']['value'] = $month."/".$day."/".$year;
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
 			
-			$input['EntryMeta']['key'] = "form-credit";
+			$input['EntryMeta']['key'] = "form-mutasi_kredit";
 			$input['EntryMeta']['value'] = $subtotal;
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
 		}
 
 		$grandtotal = $balance;
-		// cek status pembayaran apakah sudah langsung lunas ato belum :D
-		if($data['EntryMeta'][4]['value'] == "Complete")
+		// cek status pembayaran apakah sudah langsung lunas ato belum :D        
+		if($data['EntryMeta']['status_bayar'] == "Lunas")
 		{
-			unset($input);
-			$frontTitle = "HUT".substr($year, strlen($year)-2).$month.$day;
-			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("debts",$nota['Entry']['id'] , $frontTitle);
-			$input['Entry']['description'] = "Pembayaran telah lunas.";
-			$input['Entry']['entry_type'] = "debts";
-			$input['Entry']['slug'] = strtolower($input['Entry']['title']);
-			$input['Entry']['created_by'] = $myCreator['Account']['user_id'];
-			$input['Entry']['modified_by'] = $myCreator['Account']['user_id'];
-			$input['Entry']['parent_id'] = $nota['Entry']['id'];
+			$input = array();
+            $input['Entry']['entry_type'] = "hutang";
+            
+			$frontTitle = getFrontCodeId($input['Entry']['entry_type']).substr($year, 2).$month.$day;
+			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("hutang" , $frontTitle);
+            $input['Entry']['slug'] = get_slug($input['Entry']['title']);            
+			$input['Entry']['description'] = "Pembayaran ".$data['Entry']['title']." telah lunas.";
+			$input['Entry']['created_by'] = $input['Entry']['modified_by'] = $myCreator['id'];
+			$input['Entry']['parent_id'] = $data['Entry']['id'];
 			$this->create();
 			$this->save($input);
 			
 			$input['EntryMeta']['entry_id'] = $this->id;
-			$input['EntryMeta']['key'] = "form-date";
+			$input['EntryMeta']['key'] = "form-tanggal";
 			$input['EntryMeta']['value'] = $month."/".$day."/".$year;
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
 			
-			$input['EntryMeta']['key'] = "form-debit";
+			$input['EntryMeta']['key'] = "form-mutasi_debet";
 			$input['EntryMeta']['value'] = $balance;
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
@@ -1077,14 +1099,14 @@ class Entry extends AppModel {
 			$balance = 0;
 		}
 		
-		unset($input);
-		$input['EntryMeta']['entry_id'] = $nota['Entry']['id'];
-		$input['EntryMeta']['key'] = "form-balance";
+		$input = array();
+		$input['EntryMeta']['entry_id'] = $data['Entry']['id'];
+		$input['EntryMeta']['key'] = "form-balance"; // tidak terdaftar di TypeMeta !!
 		$input['EntryMeta']['value'] = $balance;
 		$this->EntryMeta->create();
 		$this->EntryMeta->save($input);
 		
-		$input['EntryMeta']['key'] = "form-grand_total";
+		$input['EntryMeta']['key'] = "form-total_harga";
 		$input['EntryMeta']['value'] = $grandtotal;
 		$this->EntryMeta->create();
 		$this->EntryMeta->save($input);
@@ -1147,8 +1169,8 @@ class Entry extends AppModel {
 				)
 			));
 			$input['Entry']['slug'] = $input['Entry']['entry_type'].'-'.($temp+1);
-			$input['Entry']['created_by'] = $myCreator['Account']['user_id'];
-			$input['Entry']['modified_by'] = $myCreator['Account']['user_id'];			
+			$input['Entry']['created_by'] = $myCreator['id'];
+			$input['Entry']['modified_by'] = $myCreator['id'];			
 			$input['Entry']['parent_id'] = $idSuratJalan;
 			$this->create();
 			$this->save($input);
@@ -1199,8 +1221,8 @@ class Entry extends AppModel {
 				)
 			));
 			$input['Entry']['slug'] = $input['Entry']['entry_type'].'-'.($temp+1);
-			$input['Entry']['created_by'] = $myCreator['Account']['user_id'];
-			$input['Entry']['modified_by'] = $myCreator['Account']['user_id'];
+			$input['Entry']['created_by'] = $myCreator['id'];
+			$input['Entry']['modified_by'] = $myCreator['id'];
 			$input['Entry']['created'] = $explodeDate[2]."-".$explodeDate[0]."-".$explodeDate[1];
 			$input['Entry']['parent_id'] = $gudangku['Entry']['id'];
 			$this->create();
@@ -1258,8 +1280,8 @@ class Entry extends AppModel {
 					)
 				));
 				$input['Entry']['slug'] = $input['Entry']['entry_type'].'-'.($temp+1);
-				$input['Entry']['created_by'] = $myCreator['Account']['user_id'];
-				$input['Entry']['modified_by'] = $myCreator['Account']['user_id'];			
+				$input['Entry']['created_by'] = $myCreator['id'];
+				$input['Entry']['modified_by'] = $myCreator['id'];			
 				$input['Entry']['parent_id'] = $nota['Entry']['id'];
 				$this->create();
 				$this->save($input);
@@ -1299,7 +1321,7 @@ class Entry extends AppModel {
 			}
 		}
 
-		// AUTO ADD FOR RETUR DEBTS !!
+		// AUTO ADD FOR RETUR hutang !!
 		if(!empty($rekeningKoran))
 		{
 			$subtotal = 0;
@@ -1307,25 +1329,25 @@ class Entry extends AppModel {
 			foreach ($rekeningKoran['barang'] as $key => $value) 
 			{
 				unset($input);
-				$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("debts",$nota['Entry']['id'] , $frontTitle);
+				$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("hutang" , $frontTitle);
 				$detailbarang = $this->meta_details($value , "product-detail");
-				$input['Entry']['description'] = "Retur ".$detailbarang['EntryMeta']['name']." (".$detailbarang['Entry']['title'].") sebanyak ".$rekeningKoran['jumlah'][$key]." ".$detailbarang['EntryMeta']['satuan']." @Rp.".str_replace(',', '.', toMoney( $detailbarang['EntryMeta']['buy_price'] , true , true) ).",-";
-				$input['Entry']['entry_type'] = "debts";
+				$input['Entry']['description'] = "Retur ".$detailbarang['Entry']['title']." (".$detailbarang['Entry']['title'].") sebanyak ".$rekeningKoran['jumlah'][$key]." ".$detailbarang['EntryMeta']['satuan']." @Rp.".str_replace(',', '.', toMoney( $detailbarang['EntryMeta']['buy_price'] , true , true) ).",-";
+				$input['Entry']['entry_type'] = "hutang";
 				$input['Entry']['slug'] = strtolower($input['Entry']['title']);
-				$input['Entry']['created_by'] = $myCreator['Account']['user_id'];
-				$input['Entry']['modified_by'] = $myCreator['Account']['user_id'];
+				$input['Entry']['created_by'] = $myCreator['id'];
+				$input['Entry']['modified_by'] = $myCreator['id'];
 				$input['Entry']['parent_id'] = $nota['Entry']['id'];
 				$this->create();
 				$this->save($input);
 				
 				$input['EntryMeta']['entry_id'] = $this->id;
-				$input['EntryMeta']['key'] = "form-date";
+				$input['EntryMeta']['key'] = "form-tanggal";
 				$input['EntryMeta']['value'] = $data['EntryMeta'][3]['value'];
 				$this->EntryMeta->create();
 				$this->EntryMeta->save($input);
 				
 				$total = $rekeningKoran['jumlah'][$key] * $detailbarang['EntryMeta']['buy_price'];
-				$input['EntryMeta']['key'] = "form-debit";
+				$input['EntryMeta']['key'] = "form-mutasi_debet";
 				$input['EntryMeta']['value'] = $total;
 				$this->EntryMeta->create();
 				$this->EntryMeta->save($input);
@@ -1441,8 +1463,8 @@ class Entry extends AppModel {
 				)
 			));
 			$input['Entry']['slug'] = $input['Entry']['entry_type'].'-'.($temp+1);
-			$input['Entry']['created_by'] = $myCreator['Account']['user_id'];
-			$input['Entry']['modified_by'] = $myCreator['Account']['user_id'];			
+			$input['Entry']['created_by'] = $myCreator['id'];
+			$input['Entry']['modified_by'] = $myCreator['id'];			
 			$input['Entry']['parent_id'] = $myEntry['Entry']['id'];
 			$this->create();
 			$this->save($input);
@@ -1492,8 +1514,8 @@ class Entry extends AppModel {
 				$input['Entry']['description'] = "Retur dari customer.";
 				$input['Entry']['entry_type'] = "barang-gudang";
 				$input['Entry']['slug'] = "gud-".$key;
-				$input['Entry']['created_by'] = $myCreator['Account']['user_id'];
-				$input['Entry']['modified_by'] = $myCreator['Account']['user_id'];
+				$input['Entry']['created_by'] = $myCreator['id'];
+				$input['Entry']['modified_by'] = $myCreator['id'];
 				$input['Entry']['parent_id'] = $gudangku['Entry']['id'];
 				$this->create();
 				$this->save($input);
@@ -1553,8 +1575,8 @@ class Entry extends AppModel {
 				)
 			));
 			$input['Entry']['slug'] = $input['Entry']['entry_type'].'-'.($temp+1);
-			$input['Entry']['created_by'] = $myCreator['Account']['user_id'];
-			$input['Entry']['modified_by'] = $myCreator['Account']['user_id'];
+			$input['Entry']['created_by'] = $myCreator['id'];
+			$input['Entry']['modified_by'] = $myCreator['id'];
 			$input['Entry']['created'] = $explodeDate[2]."-".$explodeDate[0]."-".$explodeDate[1];
 			$input['Entry']['parent_id'] = $gudangku['Entry']['id'];
 			$this->create();
@@ -1576,7 +1598,7 @@ class Entry extends AppModel {
 			}
 		}
 
-		// AUTO ADD FOR RETUR CREDITS !!
+		// AUTO ADD FOR RETUR piutang !!
 		if(!empty($rekeningKoran))
 		{
 			$subtotal = 0;
@@ -1585,25 +1607,25 @@ class Entry extends AppModel {
 			foreach ($rekeningKoran['barang'] as $key => $value) 
 			{
 				unset($input);				
-				$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("credits",$myEntry['Entry']['id'] , $frontTitle);
+				$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("piutang", $frontTitle);
 				$detailbarang = $this->meta_details($value , "product-detail");
-				$input['Entry']['description'] = "Retur ".$detailbarang['EntryMeta']['name']." (".$detailbarang['Entry']['title'].") sebanyak ".$rekeningKoran['jumlah'][$key]." ".$detailbarang['EntryMeta']['satuan']." @Rp.".str_replace(',', '.', toMoney( $rekeningKoran['harga'][$key] , true , true) ).",-";
-				$input['Entry']['entry_type'] = "credits";
+				$input['Entry']['description'] = "Retur ".$detailbarang['Entry']['title']." (".$detailbarang['Entry']['title'].") sebanyak ".$rekeningKoran['jumlah'][$key]." ".$detailbarang['EntryMeta']['satuan']." @Rp.".str_replace(',', '.', toMoney( $rekeningKoran['harga'][$key] , true , true) ).",-";
+				$input['Entry']['entry_type'] = "piutang";
 				$input['Entry']['slug'] = strtolower($input['Entry']['title']);
-				$input['Entry']['created_by'] = $myCreator['Account']['user_id'];
-				$input['Entry']['modified_by'] = $myCreator['Account']['user_id'];
+				$input['Entry']['created_by'] = $myCreator['id'];
+				$input['Entry']['modified_by'] = $myCreator['id'];
 				$input['Entry']['parent_id'] = $myEntry['Entry']['id'];
 				$this->create();
 				$this->save($input);
 				
 				$input['EntryMeta']['entry_id'] = $this->id;
-				$input['EntryMeta']['key'] = "form-date";
+				$input['EntryMeta']['key'] = "form-tanggal";
 				$input['EntryMeta']['value'] = $data['Entry']['tanggal'];
 				$this->EntryMeta->create();
 				$this->EntryMeta->save($input);
 				
 				$total = $rekeningKoran['jumlah'][$key] * $rekeningKoran['harga'][$key];
-				$input['EntryMeta']['key'] = "form-credit";
+				$input['EntryMeta']['key'] = "form-mutasi_kredit";
 				$input['EntryMeta']['value'] = $total;
 				$this->EntryMeta->create();
 				$this->EntryMeta->save($input);
@@ -1694,8 +1716,8 @@ class Entry extends AppModel {
 				)
 			));
 			$input['Entry']['slug'] = $input['Entry']['entry_type'].'-'.($temp+1);
-			$input['Entry']['created_by'] = $myCreator['Account']['user_id'];
-			$input['Entry']['modified_by'] = $myCreator['Account']['user_id'];			
+			$input['Entry']['created_by'] = $myCreator['id'];
+			$input['Entry']['modified_by'] = $myCreator['id'];			
 			$input['Entry']['parent_id'] = $myEntry['Entry']['id'];
 			$this->create();
 			$this->save($input);
@@ -1766,8 +1788,8 @@ class Entry extends AppModel {
 				$input['Entry']['description'] = "Masukan dari supplier.";
 				$input['Entry']['entry_type'] = "barang-gudang";
 				$input['Entry']['slug'] = "gud-".$key;
-				$input['Entry']['created_by'] = $myCreator['Account']['user_id'];
-				$input['Entry']['modified_by'] = $myCreator['Account']['user_id'];
+				$input['Entry']['created_by'] = $myCreator['id'];
+				$input['Entry']['modified_by'] = $myCreator['id'];
 				$input['Entry']['parent_id'] = $gudangku['Entry']['id'];
 				$this->create();
 				$this->save($input);
@@ -1827,8 +1849,8 @@ class Entry extends AppModel {
 				)
 			));
 			$input['Entry']['slug'] = $input['Entry']['entry_type'].'-'.($temp+1);
-			$input['Entry']['created_by'] = $myCreator['Account']['user_id'];
-			$input['Entry']['modified_by'] = $myCreator['Account']['user_id'];
+			$input['Entry']['created_by'] = $myCreator['id'];
+			$input['Entry']['modified_by'] = $myCreator['id'];
 			$input['Entry']['created'] = $explodeDate[2]."-".$explodeDate[0]."-".$explodeDate[1];
 			$input['Entry']['parent_id'] = $gudangku['Entry']['id'];
 			$this->create();

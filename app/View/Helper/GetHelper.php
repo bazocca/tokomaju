@@ -677,8 +677,12 @@ class GetHelper extends AppHelper
                 $echothis = '<strong>'.$result.'</strong>';
                 break;
             case 'price':
+            case 'harga':
             case 'harga_beli':
             case 'harga_jual':
+            case 'total_harga':
+            case 'mutasi_debet':
+            case 'mutasi_kredit':
                 $echothis = 'Rp '.str_replace(',', '.', toMoney($result  , true , true) ).',-';
                 $echothis .= '<input type="hidden" value="'.$result.'">';
                 break;
