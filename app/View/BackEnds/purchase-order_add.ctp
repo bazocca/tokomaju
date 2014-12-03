@@ -77,6 +77,7 @@
                     $('tbody#myInputWrapper').append(content).each(function(){
                         $("input[type=text]#barang-dagang").val("");                        
                         $("input[type=text]#barang-dagang").change();
+                        $('input#supplier').nextAll('a.cboxElement').addClass('disabled');
 
                         var grandtotal = parseInt($("#grandtotal > input[type=hidden]").val());
                         grandtotal += subtotal;                        
@@ -93,6 +94,12 @@
                         $("#grandtotal > input[type=hidden]").val(grandtotal);                        
                         $("#grandtotal > strong").html('Rp '+number_format(grandtotal, 0, ',', '.')+',-');
                         $(this).detach();
+                        
+                        // re-enable browse supplier !!
+                        if($('tbody#myInputWrapper tr').length == 0)
+                        {
+                            $('input#supplier').nextAll('a.cboxElement').removeClass('disabled');
+                        }
                     });
                 });
                 

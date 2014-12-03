@@ -397,38 +397,23 @@
 							{
 								$outputResult = (empty($entrydetail['EntryMeta']['name'])?$entrydetail['Entry']['title']:$entrydetail['EntryMeta']['name']);
 								echo '<h5 style="margin: 0;">'.(empty($popup)?$this->Form->Html->link($outputResult,array("controller"=>"entries","action"=>$entrydetail['Entry']['entry_type']."/edit/".$entrydetail['Entry']['slug']),array('target'=>'_blank')):$outputResult).'</h5>';							
-                            	$description = strip_tags($entrydetail['Entry']['description']);
-                            	echo '<p>'.(strlen($description) > 30? substr($description,0,30)."..." : $description).'</p>';
+                            	echo '<p>';
+                                // Try to use Primary EntryMeta first !!
+                                if(!empty($entrydetail['EntryMeta'][0]['value']))
+                                {
+                                    echo $entrydetail['EntryMeta'][0]['value'];
+                                }
+                                else
+                                {
+                                    $description = strip_tags($entrydetail['Entry']['description']);
+                            	    echo (strlen($description) > 30 ? substr($description,0,30)."..." : $description);
+                                }                                
+                                echo '</p>';
 							}
                         }
                         else
                         {
-                        	$outputResult = $this->Get->outputConverter($value10['TypeMeta']['input_type'] , $displayValue , $myImageTypeList);
-							
-                        	if($shortkey == 'name')
-							{
-								echo '<strong>'.$outputResult.'</strong>';
-							}
-							else if($shortkey == 'price' || $shortkey == "harga_beli" || $shortkey == "harga_jual")
-							{
-								echo 'Rp '.str_replace(',', '.', toMoney($outputResult  , true , true) ).',-';
-							}
-							else if($shortkey == 'weight')
-							{
-								echo $outputResult.' kg';
-							}
-							else if($shortkey == 'discount')
-							{
-								echo $outputResult.'% OFF';
-							}
-                            else if($shortkey == 'stock')
-                            {
-                                echo '<h5>'.$outputResult.'</h5>';
-                            }
-							else
-							{
-								echo $outputResult;
-							}
+                        	echo $this->Get->outputConverter($value10['TypeMeta']['input_type'] , $displayValue , $myImageTypeList , $shortkey);
                         }
                         echo "</td>";
 					}

@@ -1051,6 +1051,9 @@ class EntriesController extends AppController {
 		// if form submit is taken...
 		if (!empty($this->request->data)) 
 		{
+//            dpr($this->request->data);
+//            exit;
+            
 			if(empty($lang_code) && !empty($myEntry) && substr($myEntry['Entry']['lang_code'], 0,2) != $this->request->data['language'])
 			{
 				$myEntry = $this->Entry->findByLangCode($this->request->data['language'].substr($myEntry['Entry']['lang_code'], 2));
@@ -1297,34 +1300,15 @@ class EntriesController extends AppController {
     function _add_update_id_meta($myTypeSlug , $myChildTypeSlug = NULL , $myParentEntry = array() , $myEntry = array())
 	{
 		// $this->request->data['EntryMeta']['entry_id'] => not needed to be set, coz it's already set in parent func !!
-		
-		if(($myTypeSlug == "sale" || $myTypeSlug == "purchase") && empty($myChildTypeSlug))
-		{	
-			if(!empty($this->request->data['Entry']['id-customer']))
-			{
-				$this->request->data['EntryMeta']['key'] = "id-customer";
-				$this->request->data['EntryMeta']['value'] = $this->request->data['Entry']['id-customer'];
-				$this->EntryMeta->create();
-				$this->EntryMeta->save($this->request->data);
-				// this means sale section :D
-				if(empty($myEntry))
-				{
-					$this->Entry->addSaleDetails($this->request->data);
-				}
-			}	
-			if(!empty($this->request->data['Entry']['id-supplier']))
-			{
-				$this->request->data['EntryMeta']['key'] = "id-supplier";
-				$this->request->data['EntryMeta']['value'] = $this->request->data['Entry']['id-supplier'];
-				$this->EntryMeta->create();
-				$this->EntryMeta->save($this->request->data);
-				// this means purchase section :D
-				if(empty($myEntry))
-				{
-					$this->Entry->addPurchaseDetails($this->request->data);
-				}
-			}
-		}
+        
+        if($myTypeSlug == "purchase-order" && empty($myChildTypeSlug) && empty($myEntry)) // ADD ONLY!!
+        {
+            $this->Entry->addPurchaseDetails($this->request->data);
+        }
+        else if($myTypeSlug == "sales-order" && empty($myChildTypeSlug) && empty($myEntry)) // ADD ONLY!!
+        {
+            $this->Entry->addSaleDetails($this->request->data);
+        }
 		else if($myChildTypeSlug == "product-detail" && !empty($this->request->data['Entry']['id-supplier']))
 		{	
 			$this->request->data['EntryMeta']['key'] = "id-supplier";

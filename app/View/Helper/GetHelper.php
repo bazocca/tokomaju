@@ -604,7 +604,7 @@ class GetHelper extends AppHelper
 		return $result;
 	}
 	
-	function outputConverter($inputType , $value , $myImageTypeList = NULL)
+	function outputConverter($inputType , $value , $myImageTypeList = NULL , $shortkey = NULL)
 	{
 		$maxLength = 100;
 		$maxLineBreak = 5;
@@ -667,9 +667,34 @@ class GetHelper extends AppHelper
 				break;
 			default:
 				$result = $value;
-				break;
 		}
-		return $result;
+		
+        // Second Filter !!
+        $echothis = '';
+        switch($shortkey)
+        {
+            case 'name':
+                $echothis = '<strong>'.$result.'</strong>';
+                break;
+            case 'price':
+            case 'harga_beli':
+            case 'harga_jual':
+                $echothis = 'Rp '.str_replace(',', '.', toMoney($result  , true , true) ).',-';
+                $echothis .= '<input type="hidden" value="'.$result.'">';
+                break;
+            case 'weight':
+                $echothis = $result.' kg';
+                break;
+            case 'discount':
+                $echothis = $result.'% OFF';
+                break;
+            case 'stock':
+                $echothis = '<h5>'.$result.'</h5>';
+                break;
+            default:
+                $echothis = $result;
+        }
+		return $echothis;
 	}
 	
 	function staggingAdd($class = NULL)
