@@ -6,17 +6,6 @@
 			<div class="pagination fr">
 				<ul>
 					<?php
-						$extensionPaging = array();
-						if(!empty($myEntry) && $myType['Type']['slug'] != $myChildType['Type']['slug'])
-						{
-							$extensionPaging['type'] = $myChildType['Type']['slug'];
-						}
-
-						if(!empty($popup))
-						{
-							$extensionPaging['popup'] = 'ajax';
-						}
-						
 						echo '<li id="myPagingFirst" class="'.($paging<=1?"disabled":"").'">';
 						echo $this->Form->Html->link("First",array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index','1','?'=>$extensionPaging) , array("class"=>"ajax_mypage"));
 						echo '</li>';

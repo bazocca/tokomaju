@@ -290,7 +290,7 @@ class EntriesController extends AppController {
 	 **/
 	function admin_index() 
 	{
-		// DEFINE THE ORDER...
+        // DEFINE THE ORDER...
 		if(!empty($this->request->data['order_by']))
 		{	
 			switch ($this->request->data['order_by']) 

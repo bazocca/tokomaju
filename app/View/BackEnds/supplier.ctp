@@ -2,7 +2,7 @@
 	$this->Get->create($data);
 	if(is_array($data)) extract($data , EXTR_SKIP);
     // initialize $extensionPaging for URL Query ...
-    $extensionPaging = array();	
+    $extensionPaging = $this->request->query;
 	if(!empty($myEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug'])
 	{
 		$extensionPaging['type'] = $myChildType['Type']['slug'];
@@ -179,10 +179,10 @@
 		// ---------------------------------------------------------------------- >>>
 		
 		// UPDATE SEARCH LINK !!
-		$('a.searchMeLink').attr('href',site+'admin/entries/<?php echo $myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']); ?>/index/1<?php echo (!empty($myEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug']?'?type='.$myChildType['Type']['slug']:'').(empty($popup)?'':'?popup=ajax'); ?>');
+		$('a.searchMeLink').attr('href',site+'admin/entries/<?php echo $myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']); ?>/index/1<?php echo get_more_extension($extensionPaging); ?>');
 		
 		// UPDATE ADD NEW DATABASE LINK !!
-		$('a.get-started').attr('href',site+'admin/entries/<?php echo $myType['Type']['slug'].'/'.(empty($myEntry)?'':$myEntry['Entry']['slug'].'/').'add'.(!empty($myEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug']?'?type='.$myChildType['Type']['slug']:''); ?>');
+		$('a.get-started').attr('href',site+'admin/entries/<?php echo $myType['Type']['slug'].'/'.(empty($myEntry)?'':$myEntry['Entry']['slug'].'/').'add'.(!empty($extensionPaging['type'])?'?type='.$extensionPaging['type']:''); ?>');
 		
 		// disable language selector ONLY IF one language available !!		
 		var myLangSelector = ($('#colorbox').length > 0 && $('#colorbox').is(':visible')? $('#colorbox').find('div.lang-selector:first') : $('div.lang-selector')  );
@@ -239,16 +239,13 @@
 				{
 					if(substr($value['TypeMeta']['key'], 0,5) == 'form-')
 					{
-						if($value['TypeMeta']['input_type'] == 'textarea' || $value['TypeMeta']['input_type'] == 'ckeditor')
-						{
-							echo "<th style='min-width:200px;'>";
-						}
-						else
-						{
-							echo "<th>";
-						}
-                        
-                        $entityTitle = $value['TypeMeta']['key'];
+						$entityTitle = $value['TypeMeta']['key'];
+                        $hideKeyQuery = '';
+                        if(!empty($popup) && $this->request->query['key'] == substr($entityTitle, 5))
+                        {
+                            $hideKeyQuery = 'hide';
+                        }
+                        echo "<th ".($value['TypeMeta']['input_type'] == 'textarea' || $value['TypeMeta']['input_type'] == 'ckeditor'?"style='min-width:200px;'":"")." class='".$hideKeyQuery."'>";
                         echo $this->Form->Html->link(string_unslug(substr($entityTitle, 5)).($_SESSION['order_by'] == $entityTitle.' asc'?' <span class="sort-symbol">'.$sortASC.'</span>':($_SESSION['order_by'] == $entityTitle.' desc'?' <span class="sort-symbol">'.$sortDESC.'</span>':'')),array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index',$paging,'?'=>$extensionPaging) , array("class"=>"ajax_mypage" , "escape" => false , "title" => "Click to Sort" , "alt"=>$entityTitle.($_SESSION['order_by'] == $entityTitle.' asc'?" desc":" asc") ));
 						echo "</th>";
 					}
@@ -344,8 +341,13 @@
 					{
 						$shortkey = substr($value10['TypeMeta']['key'], 5);
                         $displayValue = $value['EntryMeta'][$shortkey];
+                        $hideKeyQuery = '';
+                        if(!empty($popup) && $this->request->query['key'] == $shortkey)
+                        {
+                            $hideKeyQuery = 'hide';
+                        }
                         
-                        echo "<td class='".$value10['TypeMeta']['key']."'>";
+                        echo "<td class='".$value10['TypeMeta']['key']." ".$hideKeyQuery."'>";
                         if(empty($displayValue))
                         {
                         	if($value10['TypeMeta']['input_type'] == 'gallery' && !empty($value['EntryMeta']['count-'.$value10['TypeMeta']['key']]))
@@ -487,7 +489,7 @@
 	if($isAjax == 0 || $isAjax == 1 && $search == "yes")
 	{
 		echo '</div>';
-		echo $this->element('admin_footer');
+		echo $this->element('admin_footer', array('extensionPaging' => $extensionPaging));
 		echo '<div class="clear"></div>';
 		echo ($isAjax==0?"</div>":"");
 	}

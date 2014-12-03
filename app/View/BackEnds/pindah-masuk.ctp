@@ -2,7 +2,7 @@
 	$this->Get->create($data);
 	if(is_array($data)) extract($data , EXTR_SKIP);
     // initialize $extensionPaging for URL Query ...
-    $extensionPaging = array();	
+    $extensionPaging = $this->request->query;
 	if(!empty($myEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug'])
 	{
 		$extensionPaging['type'] = $myChildType['Type']['slug'];
@@ -186,10 +186,10 @@
 		// ---------------------------------------------------------------------- >>>
 		
 		// UPDATE SEARCH LINK !!
-		$('a.searchMeLink').attr('href',site+'admin/entries/<?php echo $myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']); ?>/index/1<?php echo (!empty($myEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug']?'?type='.$myChildType['Type']['slug']:'').(empty($popup)?'':'?popup=ajax'); ?>');
+		$('a.searchMeLink').attr('href',site+'admin/entries/<?php echo $myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']); ?>/index/1<?php echo get_more_extension($extensionPaging); ?>');
 		
 		// UPDATE ADD NEW DATABASE LINK !!
-		$('a.get-started').attr('href',site+'admin/entries/<?php echo $myType['Type']['slug'].'/'.(empty($myEntry)?'':$myEntry['Entry']['slug'].'/').'add'.(!empty($myEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug']?'?type='.$myChildType['Type']['slug']:''); ?>');
+		$('a.get-started').attr('href',site+'admin/entries/<?php echo $myType['Type']['slug'].'/'.(empty($myEntry)?'':$myEntry['Entry']['slug'].'/').'add'.(!empty($extensionPaging['type'])?'?type='.$extensionPaging['type']:''); ?>');
         // Hide Add Button !!
         $('a.get-started').addClass('hide');
 		
@@ -320,7 +320,7 @@
 	if($isAjax == 0 || $isAjax == 1 && $search == "yes")
 	{
 		echo '</div>';
-		echo $this->element('admin_footer');
+		echo $this->element('admin_footer', array('extensionPaging' => $extensionPaging));
 		echo '<div class="clear"></div>';
 		echo ($isAjax==0?"</div>":"");
 	}

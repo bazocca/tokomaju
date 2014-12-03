@@ -62,7 +62,7 @@
                     }
                     
                     var content = '<tr>';
-                    content += '<td class="jumlah">'+jumlah+' '+$('span.stock-satuan').text()+'</td>';
+                    content += '<td class="jumlah"><h5>'+jumlah+' '+$('span.stock-satuan').text()+'</h5></td>';
                     content += '<td class="nama">'+$("input#jenis-barang").val()+' / '+$('input#barang-dagang').val()+'</td>';                    
                     content += '<td class="harga">Rp '+number_format (harga, 0, ',', '.')+',-</td>';
                     content += '<td class="subtotal">Rp '+number_format (subtotal, 0, ',', '.')+',-<input type="hidden" value="'+subtotal+'"></td>';
@@ -239,6 +239,10 @@
                     {
                         $value['display'] = 'none';
                     }
+                    else if($value['key'] == 'form-nama_pegawai' && empty($myEntry))
+                    {
+                        $value['value'] = $user['User']['firstname'].' '.$user['User']['lastname'];
+                    }
 					echo $this->element('input_'.$value['input_type'] , $value);
 				}
 			}
@@ -278,7 +282,7 @@
 			<div class="controls">
 				<input id="barang-dagang" class="input-medium" type="text" value="" readonly="true"/>
 				<?php echo $this->Html->link('Browse',array('controller'=>'entries','action'=>'barang-dagang','admin'=>true, '?'=> array('popup'=>'init')),array('class'=>'btn btn-info disabled','id'=>'add-invoice-barang')); ?>
-				<p class="help-block">Barang dagang yg hendak dipesan dari Supplier.</p>
+				<p class="help-block">Barang yg hendak dipesan dari Supplier terpilih.</p>
                 <input type="hidden" id="jenis-barang">
 			</div>
 		</div>
@@ -330,7 +334,9 @@
                             $grandtotal += $subtotal;
                             ?>
                 <tr>					
-					<td class="jumlah"><?php echo $value['EntryMeta']['jumlah'].' '.$detailbarang['EntryMeta']['satuan']; ?></td>
+					<td class="jumlah">
+					    <h5><?php echo $value['EntryMeta']['jumlah'].' '.$detailbarang['EntryMeta']['satuan']; ?></h5>
+					</td>
 					<td class="nama">
 					    <?php echo $jenisbarang['Entry']['title']." / ".$detailbarang['Entry']['title']; ?>
 					</td>					

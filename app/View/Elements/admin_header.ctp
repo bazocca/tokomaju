@@ -107,7 +107,7 @@
 		<?php
 			if(!($myType['Type']['slug'] == 'pages' && $user['role_id'] >= 2 || !empty($popup)))
 			{
-				echo $this->Form->Html->link('Add '.(empty($myEntry)?$myType['Type']['name']:$myChildType['Type']['name']),array('action'=>$myType['Type']['slug'],(empty($myEntry)?'':$myEntry['Entry']['slug'].'/').'add','?'=>$extensionPaging ),array('class'=>'btn btn-primary fr right-btn get-started'));
+				echo $this->Html->link('Add '.(empty($myEntry)?$myType['Type']['name']:$myChildType['Type']['name']),array('action'=>$myType['Type']['slug'],(empty($myEntry)?'':$myEntry['Entry']['slug'].'/').'add','?'=>$extensionPaging ),array('class'=>'btn btn-primary fr right-btn get-started'));
 			}
 		?>
 		<div class="btn-group">
@@ -116,23 +116,23 @@
 			<ul class="dropdown-menu">
 				<?php
 					echo '<li>';
-					echo $this->Form->Html->link("By Order",array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index',$paging,'?'=>$extensionPaging) , array("class"=>"ajax_mypage order_by" , "alt"=>"by_order"));
+					echo $this->Html->link("By Order",array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index',$paging,'?'=>$extensionPaging) , array("class"=>"ajax_mypage order_by" , "alt"=>"by_order"));
 					echo '</li>';
 					
 					// sort by Title !!
 					echo '<li>';
-					echo $this->Form->Html->link("A To Z",array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index',$paging,'?'=>$extensionPaging) , array("class"=>"ajax_mypage order_by" , "alt"=>"a_to_z"));
+					echo $this->Html->link("A To Z",array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index',$paging,'?'=>$extensionPaging) , array("class"=>"ajax_mypage order_by" , "alt"=>"a_to_z"));
 					echo '</li>';
 					echo '<li>';
-					echo $this->Form->Html->link("Z To A",array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index',$paging,'?'=>$extensionPaging) , array("class"=>"ajax_mypage order_by" , "alt"=>"z_to_a"));
+					echo $this->Html->link("Z To A",array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index',$paging,'?'=>$extensionPaging) , array("class"=>"ajax_mypage order_by" , "alt"=>"z_to_a"));
 					echo '</li>';
 					
 					// sort by Date !!
 					echo '<li>';
-					echo $this->Form->Html->link("Latest First",array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index',$paging,'?'=>$extensionPaging) , array("class"=>"ajax_mypage order_by" , "alt"=>"latest_first"));
+					echo $this->Html->link("Latest First",array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index',$paging,'?'=>$extensionPaging) , array("class"=>"ajax_mypage order_by" , "alt"=>"latest_first"));
 					echo '</li>';
 					echo '<li>';
-					echo $this->Form->Html->link("Oldest First",array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index',$paging,'?'=>$extensionPaging) , array("class"=>"ajax_mypage order_by" , "alt"=>"oldest_first"));
+					echo $this->Html->link("Oldest First",array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index',$paging,'?'=>$extensionPaging) , array("class"=>"ajax_mypage order_by" , "alt"=>"oldest_first"));
 					echo '</li>';
 				?>
 			</ul>
@@ -154,7 +154,7 @@
 					{
 						$extensionLang['lang'] = $this_lang;
 						echo '<li>';
-						echo $this->Form->Html->link($value,array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$parent_language[$this_lang]),'index','1','?'=>$extensionLang) , array("class"=>"ajax_mypage langLink"));
+						echo $this->Html->link($value,array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$parent_language[$this_lang]),'index','1','?'=>$extensionLang) , array("class"=>"ajax_mypage langLink"));
 						echo '</li>';
 					}
 				}					
@@ -167,7 +167,7 @@
 		<div class="input-prepend" style="margin-right: 5px;">
 			<span class="add-on" style="margin-right: 3px; margin-top : 9px;">
 				<?php
-					echo $this->Form->Html->link("<i class='icon-search'></i>",array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index','1','?'=>$extensionPaging) , array("class"=>"ajax_mypage searchMeLink","escape"=>false));
+					echo $this->Html->link("<i class='icon-search'></i>",array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index','1','?'=>$extensionPaging) , array("class"=>"ajax_mypage searchMeLink","escape"=>false));
 				?>
 			</span>
 			<input style="width: 160px;" id="searchMe" class="span2" type="text" placeholder="search item here...">
