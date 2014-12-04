@@ -16,12 +16,28 @@
 	}
 ?>
 <div class="control-group" <?php echo (empty($display)?'':'style="display:none"'); ?>>            
-	<label class="control-label" <?php echo (!empty($required)?'style="color: red;"':''); ?>>
+	<label class="control-label" <?php echo (!empty($required)&&!$view_mode?'style="color: red;"':''); ?>>
         <?php echo string_unslug($shortkey); ?>
     </label>
 	<div class="controls">
-		
-		<input <?php echo $required; ?> <?php echo (empty($display)?'id="'.$browse_slug.'"':''); ?> class="targetID input-large" placeholder="<?php echo $placeholder; ?>" value="<?php echo (isset($_POST['data'][$model][$counter]['temp'])?$_POST['data'][$model][$counter]['temp']:$metaDetails['Entry']['title']); ?>" type="text" name="data[<?php echo $model; ?>][<?php echo $counter; ?>][temp]" readonly="true"/>
+        <?php
+            if($view_mode)
+            {
+                echo '<label class="view-mode"><strong>';
+                if($metaDetails['Entry']['entry_type'] == 'supplier')
+                {
+                    echo $metaDetails['Entry']['title'].' / '.$metaDetails['EntryMeta']['perusahaan'].(!empty($metaDetails['EntryMeta']['alamat'])?' / '.$metaDetails['EntryMeta']['alamat']:'').(!empty($metaDetails['EntryMeta']['kota'])?' / '.$metaDetails['EntryMeta']['kota']:'').' / '.$metaDetails['EntryMeta']['handphone'];
+                }
+                else
+                {
+                    echo '-';
+                }
+                echo '</strong></label>';
+            }
+            else
+            {
+                ?>
+        <input <?php echo $required; ?> <?php echo (empty($display)?'id="'.$browse_slug.'"':''); ?> class="targetID input-large" placeholder="<?php echo $placeholder; ?>" value="<?php echo (isset($_POST['data'][$model][$counter]['temp'])?$_POST['data'][$model][$counter]['temp']:$metaDetails['Entry']['title']); ?>" type="text" name="data[<?php echo $model; ?>][<?php echo $counter; ?>][temp]" readonly="true"/>
         <?php
             echo $this->Form->Html->link('Browse',array('controller'=>'entries','action'=>$browse_slug,'admin'=>true,'?'=>array('popup'=>'init')),array('class'=>'btn btn-info get-from-table'));
         ?>
@@ -35,6 +51,9 @@
 			Want to create new one? Click <?php echo $this->Form->Html->link('here<img alt="External Icon" src="'.$imagePath.'img/external-icon.gif">',array('controller'=>'entries','action'=>$browse_slug.'/add'),array("target"=>"SingleSecondaryWindowName","onclick"=>"javascript:openRequestedSinglePopup(this.href); return false;","escape"=>false)); ?>.<br/>
             <?php echo $p; ?>
         </p>
+                <?php
+            }
+        ?>
 	</div>
 	<input type="hidden" value="<?php echo $key; ?>" name="data[<?php echo $model; ?>][<?php echo $counter; ?>][key]"/>
 	<input type="hidden" value="<?php echo $input_type; ?>" name="data[<?php echo $model; ?>][<?php echo $counter; ?>][input_type]"/>

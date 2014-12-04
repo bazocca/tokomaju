@@ -30,19 +30,28 @@
 	});
 </script>
 <div class="control-group" <?php echo (empty($display)?'':'style="display:none"'); ?>>
-	<label class="control-label" <?php echo (!empty($required)?'style="color: red;"':''); ?>>
+	<label class="control-label" <?php echo (!empty($required)&&!$view_mode?'style="color: red;"':''); ?>>
         <?php echo string_unslug($shortkey); ?>
     </label>
 	<div class="controls">
-		<input <?php echo $required; ?> class="input-small dpicker <?php echo $shortkey; ?>" type="text" value="<?php echo (isset($_POST['data'][$model][$counter]['value'])?$_POST['data'][$model][$counter]['value']:(empty($value)?(strpos(strtolower($validation), 'not_empty') !== FALSE?$month."/".$day."/".$year:""):$value)); ?>" name="data[<?php echo $model; ?>][<?php echo $counter; ?>][value]"/>
-		<!--
-		<a href="javascript:void(0)" class="btn clear-date">Clear</a>
-		-->
-		<?php
-			if(!empty($p))
-			{
-				echo '<p class="help-block">'.$p.'</p>';
-			}
+        <?php
+            if($view_mode)
+            {
+                echo '<label class="view-mode"><strong>';
+                echo (empty($value)?'-':date_converter($value , $mySetting['date_format']));
+                echo '</strong></label>';
+            }
+            else
+            {
+                ?>
+<input <?php echo $required; ?> class="input-small dpicker <?php echo $shortkey; ?>" type="text" value="<?php echo (isset($_POST['data'][$model][$counter]['value'])?$_POST['data'][$model][$counter]['value']:(empty($value)?(strpos(strtolower($validation), 'not_empty') !== FALSE?$month."/".$day."/".$year:""):$value)); ?>" name="data[<?php echo $model; ?>][<?php echo $counter; ?>][value]"/>
+                <?php
+                
+                if(!empty($p))
+                {
+                    echo '<p class="help-block">'.$p.'</p>';
+                }
+            }
 		?>
 	</div>
 	<input type="hidden" value="<?php echo $key; ?>" name="data[<?php echo $model; ?>][<?php echo $counter; ?>][key]"/>

@@ -1544,7 +1544,10 @@ class EntriesController extends AppController {
 			}
 			$data['parent_language'] = $parent_language;
 		}
-		// ------------------------------------------ END OF LANGUAGE OPTION LINK -------------------------------------- //
+		// ------------------------------------------ END OF LANGUAGE OPTION LINK -------------------------------------- //        
+        // check if this is a view entity mode or not !!
+        $data['view_mode'] = ($myType['Type']['slug']=="surat-jalan" || ($myType['Type']['slug']=="purchase-order"||$myType['Type']['slug']=="sales-order") && empty($myChildType));
+        
 		$this->set('data' , $data);
 		
 		// if form submit is taken...

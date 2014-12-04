@@ -18,7 +18,7 @@
 	}
 	else
 	{
-		$this->Html->addCrumb('Edit '.$myEntry['Entry']['title'], '/admin/entries/'.(empty($myType)?'pages':$myType['Type']['slug']).(empty($myChildType)?'':'/'.$myParentEntry['Entry']['slug']).'/edit/'.$myEntry['Entry']['slug'].(!empty($myChildType)&&$myType['Type']['slug']!=$myChildType['Type']['slug']?'?type='.$myChildType['Type']['slug']:''));
+		$this->Html->addCrumb(($view_mode?'View':'Edit').' '.$myEntry['Entry']['title'], '/admin/entries/'.(empty($myType)?'pages':$myType['Type']['slug']).(empty($myChildType)?'':'/'.$myParentEntry['Entry']['slug']).'/edit/'.$myEntry['Entry']['slug'].(!empty($myChildType)&&$myType['Type']['slug']!=$myChildType['Type']['slug']?'?type='.$myChildType['Type']['slug']:''));
 	}	
 ?>
 <script type="text/javascript">
@@ -76,7 +76,7 @@
 			}
 			else
 			{
-				echo '<h2 id="form-title-entry">'.(empty($lang)?'':'TRANSLATE (').$myEntry['Entry']['title'].(empty($lang)?'':')').'</h2>';
+				echo '<h2 id="form-title-entry">'.(empty($lang)?'':'TRANSLATE (').$myEntry['Entry']['title'].(empty($lang)?'':')').($view_mode?' (view mode)':'').'</h2>';
                 echo '<p id="id-title-description" class="title-description"></p>';
 			}
 		?>

@@ -9,30 +9,60 @@
 	}
 ?>
 <div class="control-group" <?php echo (empty($display)?'':'style="display:none"'); ?>>            
-	<label class="control-label" <?php echo (!empty($required)?'style="color: red;"':''); ?>>
+	<label class="control-label" <?php echo (!empty($required)&&!$view_mode?'style="color: red;"':''); ?>>
         <?php echo string_unslug($shortkey); ?>
     </label>
-	<div class="controls radio">
+	<div class="controls <?php echo ($view_mode?'':'radio'); ?>">
 		<?php
-			$pertama = 1;
-			$value = isset($_POST['data'][$model][$counter]['value'])?$_POST['data'][$model][$counter]['value']:$value;
-			foreach ($list as $key10 => $value10)
-			{
-				$labelfor = 'data-'.$model.'-'.$counter.'-'.$value10['id'];
-				if(strtolower($value10['id']) == strtolower($value) || $pertama == 1)
-				{
-					$pertama = 0;
-					echo "<input id='".$labelfor."' class='".$shortkey."' ".$required." CHECKED value='".$value10['id']."' name='data[".$model."][".$counter."][value]' type='radio' /><label for='".$labelfor."'>".$value10['name']."</label>";
-				}
-				else
-				{
-					echo "<input id='".$labelfor."' class='".$shortkey."' ".$required." value='".$value10['id']."' name='data[".$model."][".$counter."][value]' type='radio' /><label for='".$labelfor."'>".$value10['name']."</label>";
-				}
-			}
-			if(!empty($p))
-			{
-				echo '<p class="help-block">'.$p.'</p>';
-			}
+            if($view_mode)
+            {
+                ?>
+        <label class="view-mode">
+            <strong>
+                <?php
+                    if($shortkey == 'status_bayar')
+                    {
+                        echo '<span class="label '.($value=='Lunas'?'label-success':'label-important').'">';
+                        echo $value;
+                        echo '</span>';                        
+                    }
+                    else if($shortkey == 'status_kirim')
+                    {
+                        echo '<span class="label '.($value=='Terkirim'?'label-success':'label-important').'">';
+                        echo $value;
+                        echo '</span>';
+                    }
+                    else
+                    {
+                        echo '-';
+                    }
+                ?>
+            </strong>
+        </label>
+                <?php
+            }
+            else
+            {
+                $pertama = 1;
+                $value = isset($_POST['data'][$model][$counter]['value'])?$_POST['data'][$model][$counter]['value']:$value;
+                foreach ($list as $key10 => $value10)
+                {
+                    $labelfor = 'data-'.$model.'-'.$counter.'-'.$value10['id'];
+                    if(strtolower($value10['id']) == strtolower($value) || $pertama == 1)
+                    {
+                        $pertama = 0;
+                        echo "<input id='".$labelfor."' class='".$shortkey."' ".$required." CHECKED value='".$value10['id']."' name='data[".$model."][".$counter."][value]' type='radio' /><label for='".$labelfor."'>".$value10['name']."</label>";
+                    }
+                    else
+                    {
+                        echo "<input id='".$labelfor."' class='".$shortkey."' ".$required." value='".$value10['id']."' name='data[".$model."][".$counter."][value]' type='radio' /><label for='".$labelfor."'>".$value10['name']."</label>";
+                    }
+                }
+                if(!empty($p))
+                {
+                    echo '<p class="help-block">'.$p.'</p>';
+                }
+            }
 		?>
 	</div>
 	<input type="hidden" value="<?php echo $key; ?>" name="data[<?php echo $model; ?>][<?php echo $counter; ?>][key]"/>

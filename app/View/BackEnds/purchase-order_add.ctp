@@ -169,7 +169,7 @@
 				});
 			});
 		</script>
-		<p class="notes important" style="color: red;font-weight: bold;">* Red input MUST NOT be empty.</p>
+		<p class="notes important <?php echo ($view_mode?'hide':''); ?>" style="color: red;font-weight: bold;">* Red input MUST NOT be empty.</p>
 		<input type="hidden" value="<?php echo (isset($_POST['data']['language'])?$_POST['data']['language']:(empty($lang)?substr($myEntry['Entry']['lang_code'], 0,2):$lang)); ?>" name="data[language]" id="myLanguage"/>
 		<input type="hidden" value="<?php echo (isset($_POST['data']['Entry'][2]['value'])?$_POST['data']['Entry'][2]['value']:(empty($myEntry)?'0':$myEntry['Entry']['main_image'])); ?>" name="data[Entry][2][value]" id="mySelectCoverId"/>
 		<input type='hidden' id="entry_image_type" value="<?php echo $myImageTypeList[isset($_POST['data']['Entry'][2]['value'])?$_POST['data']['Entry'][2]['value']:(empty($myEntry)?'0':$myEntry['Entry']['main_image'])]; ?>" />
@@ -242,14 +242,14 @@
 					}
                     
                     // custom function !!
-                    if($value['key'] == 'form-status_kirim' || $value['key'] == 'form-total_harga')
+                    if($value['key'] == 'form-status_kirim' && empty($myEntry) || $value['key'] == 'form-total_harga')
                     {
                         $value['display'] = 'none';
                     }
                     else if($value['key'] == 'form-nama_pegawai' && empty($myEntry))
                     {
                         $value['value'] = $user['User']['firstname'].' '.$user['User']['lastname'];
-                    }
+                    }                    
 					echo $this->element('input_'.$value['input_type'] , $value);
 				}
 			}
@@ -347,7 +347,7 @@
 					<td class="nama">
 					    <?php echo $jenisbarang['Entry']['title']." / ".$detailbarang['Entry']['title']; ?>
 					</td>					
-					<td class="harga">Rp <?php echo str_replace(',', '.', toMoney($value['EntryMeta']['price'] , true , true) ); ?>,-</td>
+					<td class="harga">Rp <?php echo str_replace(',', '.', toMoney($value['EntryMeta']['harga'] , true , true) ); ?>,-</td>
 					<td class="subtotal">Rp <?php echo str_replace(',', '.', toMoney($subtotal , true , true) ); ?>,-</td>
 					<td class="terkirim"><?php echo (empty($value['EntryMeta']['terkirim'])?'-':$value['EntryMeta']['terkirim']); ?></td>
 					<?php echo (empty($myEntry)?"":"<td class='retur'>".(empty($value['EntryMeta']['retur'])?'-':$value['EntryMeta']['retur'])."</td>"); ?>
