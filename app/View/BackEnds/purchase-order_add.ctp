@@ -362,12 +362,12 @@
 		</div>
 		
 		<div class="control-group">
-			<label class="control-label">Grand Total</label>
+			<label class="control-label">Total Harga</label>
 			<div class="controls">
-				<label style="margin-top: 5px;" id="grandtotal">
+				<div class="view-mode" id="grandtotal">
 				    <strong>Rp <?php echo str_replace(',', '.', toMoney($grandtotal , true , true) ); ?>,-</strong>
                     <input type="hidden" value="<?php echo $grandtotal; ?>">
-				</label>
+				</div>
 			</div>
 		</div>
 		
@@ -390,14 +390,14 @@
 			<!-- always use submit button to submit form -->
 			<button class="hide" type="submit"></button>
 
-			<button id="save-button" type="button" class="btn btn-primary"><?php echo $saveButton; ?></button>
+			<button id="save-button" type="button" class="btn btn-primary <?php echo ($view_mode?'hide':''); ?>"><?php echo $saveButton; ?></button>
 			<?php
 				if(empty($myEntry))
 				{
 					echo '<button id="save-as-draft" type="button" class="btn btn-inverse hide">Save as Draft</button>';
 				}
 			?>
-        	<button type="button" class="btn" onclick="javascript: window.location=site+'admin/entries/<?php echo (empty($myType)?'pages':$myType['Type']['slug']).(empty($myChildType)?'':'/'.$myParentEntry['Entry']['slug']).$myChildTypeLink.(empty($myEntry)?'':(empty($myChildTypeLink)?'?':'&').'lang='.(empty($lang)?substr($myEntry['Entry']['lang_code'], 0,2):$lang)); ?>'">Cancel</button>
+        	<button type="button" class="btn" onclick="javascript: window.location=site+'admin/entries/<?php echo (empty($myType)?'pages':$myType['Type']['slug']).(empty($myChildType)?'':'/'.$myParentEntry['Entry']['slug']).$myChildTypeLink.(empty($myEntry)?'':(empty($myChildTypeLink)?'?':'&').'lang='.(empty($lang)?substr($myEntry['Entry']['lang_code'], 0,2):$lang)); ?>'"><?php echo ($view_mode?'&laquo; Back':'Cancel'); ?></button>
 		</div>
 	</fieldset>
 <?php echo $this->Form->end(); ?>

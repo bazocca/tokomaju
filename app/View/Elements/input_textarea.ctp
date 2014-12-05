@@ -27,16 +27,28 @@
 	}
 ?>
 <div class="control-group" <?php echo (empty($display)?'':'style="display:none"'); ?>>            
-	<label class="control-label" <?php echo (!empty($required)?'style="color: red;"':''); ?>>
+	<label class="control-label" <?php echo (!empty($required)&&!$view_mode?'style="color: red;"':''); ?>>
         <?php echo string_unslug($shortkey); ?>
     </label>
-	<div class="controls">
-		<textarea rows="5" <?php echo ($maxchar > 0?'maxlength="'.$maxchar.'"':''); ?> <?php echo $required; ?> class="<?php echo ($shortkey=='keterangan'?'large':'medium').' '.$shortkey; ?>" type="text" placeholder="<?php echo $placeholder; ?>" name="data[<?php echo $model; ?>][<?php echo $counter; ?>][value]"><?php echo (isset($_POST['data'][$model][$counter]['value'])?$_POST['data'][$model][$counter]['value']:$value); ?></textarea>
+	<div class="controls">		
 		<?php
-			if(!empty($p))
-			{
-				echo '<p class="help-block">'.$p.'</p>';
-			}
+            if($view_mode)
+            {
+                echo '<div class="view-mode">';
+                echo (empty($value)?'-':str_replace(chr(10) , '<br/>' , $value));
+                echo '</div>';
+            }
+            else
+            {
+                ?>
+        <textarea rows="5" <?php echo ($maxchar > 0?'maxlength="'.$maxchar.'"':''); ?> <?php echo $required; ?> class="<?php echo ($shortkey=='keterangan'?'large':'medium').' '.$shortkey; ?>" type="text" placeholder="<?php echo $placeholder; ?>" name="data[<?php echo $model; ?>][<?php echo $counter; ?>][value]"><?php echo (isset($_POST['data'][$model][$counter]['value'])?$_POST['data'][$model][$counter]['value']:$value); ?></textarea>
+                <?php
+                
+                if(!empty($p))
+                {
+                    echo '<p class="help-block">'.$p.'</p>';
+                }
+            }
 		?>
 	</div>
 	<input type="hidden" value="<?php echo $key; ?>" name="data[<?php echo $model; ?>][<?php echo $counter; ?>][key]"/>

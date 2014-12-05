@@ -16,30 +16,24 @@
 		<?php
             if($view_mode)
             {
-                ?>
-        <label class="view-mode">
-            <strong>
-                <?php
-                    if($shortkey == 'status_bayar')
-                    {
-                        echo '<span class="label '.($value=='Lunas'?'label-success':'label-important').'">';
-                        echo $value;
-                        echo '</span>';                        
-                    }
-                    else if($shortkey == 'status_kirim')
-                    {
-                        echo '<span class="label '.($value=='Terkirim'?'label-success':'label-important').'">';
-                        echo $value;
-                        echo '</span>';
-                    }
-                    else
-                    {
-                        echo '-';
-                    }
-                ?>
-            </strong>
-        </label>
-                <?php
+                echo '<div class="view-mode">';
+                if($shortkey == 'status_bayar')
+                {
+                    echo '<span class="label '.($value=='Lunas'?'label-success':'label-important').'">';
+                    echo $value;
+                    echo '</span>';                        
+                }
+                else if($shortkey == 'status_kirim')
+                {
+                    echo '<span class="label '.($value=='Terkirim'?'label-success':'label-important').'">';
+                    echo $value;
+                    echo '</span>';
+                }
+                else
+                {
+                    echo '-';
+                }
+                echo '</div>';
             }
             else
             {

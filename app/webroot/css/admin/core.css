@@ -294,7 +294,7 @@ form .container-box{ border: 1px solid lightGrey; margin-bottom: 18px;margin-lef
 .form-horizontal .help-block{ margin-top: 2px !important; color: black; font-size: 11px; }
 .form-horizontal .control-label{ width: 135px; font-size: 13px; }
 .form-horizontal .controls{ margin-left: 150px; }
-.form-horizontal .controls label.view-mode { margin-top: 5px; }
+.form-horizontal .controls .view-mode { font-weight: bold; padding-top: 5px; }
 .alert{ font-family: 'helvetica'; }
 .ui-datepicker{ z-index: 100; }
 

@@ -53,11 +53,11 @@
 		$inputsize = 'input-xlarge';
 	}
 	
-	if($shortkey == 'discount' || $shortkey == 'weight' || $shortkey == 'qty' || $shortkey == 'stock')
+	if($shortkey == 'diskon' || $shortkey == 'berat' || $shortkey == 'jumlah' || $shortkey == 'stock')
 	{
 		$inputsize = 'input-mini';
 	}
-	else if($shortkey == "price" || $shortkey == "harga_beli" || $shortkey == "harga_jual")
+	else if($shortkey == "harga" || $shortkey == "harga_beli" || $shortkey == "harga_jual" || $shortkey == "total_harga" || $shortkey == "mutasi_debet" || $shortkey == "mutasi_kredit")
 	{
 		$inputsize = 'input-small';
 	}
@@ -68,16 +68,17 @@
     </label>
 	<div class="controls">
 		<?php
-			if($shortkey == "price" || $shortkey == "harga_beli" || $shortkey == "harga_jual")
+            if($view_mode)  echo '<div class="view-mode">';
+
+            // header string !!
+            if($shortkey == "harga" || $shortkey == "harga_beli" || $shortkey == "harga_jual" || $shortkey == "total_harga" || $shortkey == "mutasi_debet" || $shortkey == "mutasi_kredit")
 			{
-				echo 'Rp';
+				echo 'Rp ';
 			}
 
             if($view_mode)
             {
-                echo '<label class="view-mode"><strong>';
                 echo (empty($value)?'-':$value);
-                echo '</strong></label>';
             }
             else
             {
@@ -86,26 +87,29 @@
                 <?php
             }
 		
-			if($shortkey == 'discount')
+            // footer string !!
+			if($shortkey == 'diskon')
 			{
 				echo '% OFF';
 			}
-			else if($shortkey == "price" || $shortkey == "harga_beli" || $shortkey == "harga_jual")
+			else if($shortkey == "harga" || $shortkey == "harga_beli" || $shortkey == "harga_jual" || $shortkey == "total_harga" || $shortkey == "mutasi_debet" || $shortkey == "mutasi_kredit")
 			{
 				echo ',-';
 			}
-			else if($shortkey == 'weight')
+			else if($shortkey == 'berat')
 			{
 				echo 'kg';
 			}
-			else if($shortkey == 'qty')
+			else if($shortkey == 'jumlah')
 			{
 				echo 'unit(s)';
 			}
             else if($shortkey == 'stock')
             {
-                echo '<span class="stock-satuan"></span>';
+                echo '<span class="stock-satuan">unit(s)</span>';
             }
+
+            if($view_mode)  echo '</div>';
 		?>
 		<p class="help-block">
             <?php echo ($view_mode?'':$p); ?>

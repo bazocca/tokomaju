@@ -673,10 +673,15 @@ class GetHelper extends AppHelper
         $echothis = '';
         switch($shortkey)
         {
+            case 'status_bayar':
+                $echothis = '<span class="label '.($result=='Lunas'?'label-success':'label-important').'">'.$result.'</span>';
+                break;
+            case 'status_kirim':
+                $echothis = '<span class="label '.($result=='Terkirim'?'label-success':'label-important').'">'.$result.'</span>';
+                break;            
             case 'name':
                 $echothis = '<strong>'.$result.'</strong>';
                 break;
-            case 'price':
             case 'harga':
             case 'harga_beli':
             case 'harga_jual':
@@ -686,10 +691,10 @@ class GetHelper extends AppHelper
                 $echothis = 'Rp '.str_replace(',', '.', toMoney($result  , true , true) ).',-';
                 $echothis .= '<input type="hidden" value="'.$result.'">';
                 break;
-            case 'weight':
+            case 'berat':
                 $echothis = $result.' kg';
                 break;
-            case 'discount':
+            case 'diskon':
                 $echothis = $result.'% OFF';
                 break;
             case 'stock':

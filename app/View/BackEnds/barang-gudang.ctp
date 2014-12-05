@@ -3,6 +3,7 @@
 	if(is_array($data)) extract($data , EXTR_SKIP);
     // initialize $extensionPaging for URL Query ...
     $extensionPaging = $this->request->query;
+    unset($extensionPaging['lang']);
 	if(!empty($myEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug'])
 	{
 		$extensionPaging['type'] = $myChildType['Type']['slug'];

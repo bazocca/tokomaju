@@ -37,9 +37,9 @@
         <?php
             if($view_mode)
             {
-                echo '<label class="view-mode"><strong>';
+                echo '<div class="view-mode">';
                 echo (empty($value)?'-':date_converter($value , $mySetting['date_format']));
-                echo '</strong></label>';
+                echo '</div>';
             }
             else
             {

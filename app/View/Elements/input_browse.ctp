@@ -23,7 +23,7 @@
         <?php
             if($view_mode)
             {
-                echo '<label class="view-mode"><strong>';
+                echo '<div class="view-mode">';
                 if($metaDetails['Entry']['entry_type'] == 'supplier')
                 {
                     echo $metaDetails['Entry']['title'].' / '.$metaDetails['EntryMeta']['perusahaan'].(!empty($metaDetails['EntryMeta']['alamat'])?' / '.$metaDetails['EntryMeta']['alamat']:'').(!empty($metaDetails['EntryMeta']['kota'])?' / '.$metaDetails['EntryMeta']['kota']:'').' / '.$metaDetails['EntryMeta']['handphone'];
@@ -32,7 +32,7 @@
                 {
                     echo '-';
                 }
-                echo '</strong></label>';
+                echo '</div>';
             }
             else
             {

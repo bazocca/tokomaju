@@ -142,31 +142,38 @@
 								echo $this->Html->link('Accounts',array('controller'=>'accounts','action'=>'index'),array('id'=>'accounts'));
 							?>
 						</li>
-						<li>
+						<li class="hide">
 							<?php 
 								echo $this->Html->link('Media Library',array('controller'=>'entries','action'=>'media'),array('id'=>'media')); 
 							?>
 						</li>						
-						<li>
+						<li class="<?php echo ($user['role_id'] > 1?'hide':''); ?>">
 							<?php 
 								echo $this->Html->link('Pages',array('controller'=>'entries','action'=>'pages'),array('id'=>'pages')); 
 							?>
 						</li>												
 												
-						<li class='separator'><?php echo $this->Html->link('Databases','#'); ?></li>
-						
-						<?php
-							foreach ($types as $key => $value) 
-							{
-								if($value['Type']['slug'] != 'media')
-								{
-									echo "<li>";
-									echo $this->Html->link($value['Type']['name'] ,array('controller'=>'entries','action'=>$value['Type']['slug']) ,array('id'=>$value['Type']['slug']));
+						<li class='separator hide'><?php echo $this->Html->link('Databases','#'); ?></li>
+                        <?php
+                            // define database sequence !!
+                            $dbseq = $this->Get->meta_details('database-sequence' , 'pages');
+                            $dbseq = explode(chr(10) , $dbseq['Entry']['description']);
+
+                            foreach($dbseq as $key => $value)
+                            {
+                                if(substr($value , 0 , 1) == '#') // separator
+                                {
+                                    echo '<li class="separator"><a class="sidebar-menu" href="#">'.substr($value , 1).'</a></li>';
+                                }
+                                else
+                                {
+                                    $dbslug = get_slug($value);
+                                    echo "<li>";
+									echo $this->Html->link($value,array('controller'=>'entries','action'=>$dbslug) ,array('id'=>$dbslug));
 									echo "</li>";
-								}
-							}								
+                                }
+                            }
 						?>
-						
 						<li class='separator'><?php echo $this->Html->link('Others','#'); ?></li>
 						<?php
 							echo "<li>";

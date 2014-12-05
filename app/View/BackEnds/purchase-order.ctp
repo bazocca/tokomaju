@@ -213,15 +213,6 @@
 		</th>
 		
 		<?php
-			// if this is a parent Entry !!
-			if(empty($myEntry) && empty($popup)) 
-			{
-				foreach ($myType['ChildType'] as $key10 => $value10)
-				{
-					echo '<th>'.$value10['name'].'</th>';
-				}
-			}
-			
 			// check for simple or complex table view !!
 			if($mySetting['table_view'] == "complex")
 			{
@@ -243,12 +234,6 @@
 				}
 			}	
 		?>		
-		<th class="date-field">
-            <?php
-                $entityTitle = "modified";
-                echo $this->Form->Html->link('last '.string_unslug($entityTitle).($_SESSION['order_by'] == $entityTitle.' asc'?' <span class="sort-symbol">'.$sortASC.'</span>':($_SESSION['order_by'] == $entityTitle.' desc'?' <span class="sort-symbol">'.$sortDESC.'</span>':'')),array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index',$paging,'?'=>$extensionPaging) , array("class"=>"ajax_mypage" , "escape" => false , "title" => "Click to Sort" , "alt"=>$entityTitle.($_SESSION['order_by'] == $entityTitle.' asc'?" desc":" asc") ));
-            ?>
-        </th>
 		<th class="hide">
 		    <?php
                 $entityTitle = "status";
@@ -306,23 +291,6 @@
 			</p>
 		</td>
 		<?php
-			if(empty($myEntry) && empty($popup)) // if this is a parent Entry !!
-			{
-				foreach ($myType['ChildType'] as $key10 => $value10)
-				{
-					$childCount = 0;
-					foreach ($value['EntryMeta'] as $key20 => $value20) 
-					{
-						if($value20['key'] == 'count-'.$value10['slug'])
-						{
-							$childCount = $value20['value'];
-							break;
-						}
-					}
-					echo '<td><span class="badge badge-info">'.$this->Form->Html->link($childCount,array('action'=>$myType['Type']['slug'],$value['Entry']['slug'],'?'=>array('type'=>$value10['slug'], 'lang'=>$_SESSION['lang']))).'</span></td>';
-				}
-			}
-
 			// check for simple or complex table view !!
 			if($mySetting['table_view'] == "complex")
 			{				 
@@ -405,14 +373,27 @@
                         }
                         else
                         {
+                            if($shortkey == 'status_bayar')
+                            {
+                                echo '<a href="'.$imagePath.'admin/entries/'.$value['Entry']['entry_type'].'/'.$value['Entry']['slug'].'?type=hutang'.'">';
+                            }
+                            else if($shortkey == 'status_kirim')
+                            {
+                                echo '<a href="'.$imagePath.'admin/entries/'.$value['Entry']['entry_type'].'/'.$value['Entry']['slug'].'?type=barang-masuk'.'">';
+                            }
+                            
                         	echo $this->Get->outputConverter($value10['TypeMeta']['input_type'] , $displayValue , $myImageTypeList , $shortkey);
+                            
+                            if($shortkey == 'status_bayar' || $shortkey == 'status_kirim')
+                            {
+                                echo '</a>';
+                            }
                         }
                         echo "</td>";
 					}
 				}
 			}	
 		?>
-		<td><?php echo date_converter($value['Entry']['modified'], $mySetting['date_format'] , $mySetting['time_format']); ?></td>
 		<td class="hide" style='min-width: 0px;' <?php echo (empty($popup)?'':'class="offbutt"'); ?>>
 			<span class="label <?php echo $value['Entry']['status']==0?'label-important':'label-success'; ?>">
 				<?php
