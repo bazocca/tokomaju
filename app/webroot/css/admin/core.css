@@ -77,17 +77,14 @@ form .alert-info{ border:none; border-bottom: 1px solid lightGrey; color: #46464
 
 /*Layout*/
 html{ min-height: 100%; }
+a{ text-decoration: none !important; }
 h2{ font-size: 24px; line-height: normal !important; }
 h3{ font-size: 18px; }
 h4{ font-size: 14px; }
 h5{ font-size: 12px; }
-
 h6{ font-size: 13px; display: block; border:none; border-bottom: 1px solid lightGrey; color: #464646; background: none; padding: 8px 0px; text-transform: initial !important; margin-bottom: 18px; }
 
 .header{ padding: 10px 0; position: relative;}
-
-a{ text-decoration: none; }
-a:hover{	text-decoration: none; }
 
 .username{ 
 	color: #cccccc;

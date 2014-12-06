@@ -47,38 +47,11 @@
 		
 		<!-- Le javascript
 	    ================================================== -->
-		<script src="<?php echo $imagePath; ?>js/jquery.imagesloaded.js"></script>
 		<script src="<?php echo $imagePath; ?>js/jquery.colorbox.js"></script>
 		<script src="<?php echo $imagePath; ?>js/validation.js"></script>
 		<script src="<?php echo $imagePath; ?>js/script.js"></script>
 		<script src="<?php echo $imagePath; ?>js/media.js"></script>
 		<script src="<?php echo $imagePath; ?>js/livedate.js"></script>
-		
-<!-- 		for CK Editor -->
-	    <script type="text/javascript" src="<?php echo $imagePath; ?>js/ckeditor/ckeditor.js"></script>
-	    <script type="text/javascript" src="<?php echo $imagePath; ?>js/ckeditor/adapters/jquery.js"></script>
-	    
-<!-- 		for Cropping Image -->
-		<link rel="stylesheet" href="<?php echo $imagePath; ?>css/jquery.jcrop.css" type="text/css" />	
-		<script type="text/javascript" src="<?php echo $imagePath; ?>js/jquery.jcrop.js"></script>	    
-	    
-<!-- 		for jquery uploading file -->
-		<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
-		<script src="<?php echo $imagePath; ?>js/uploadfile/vendor/jquery.ui.widget.js"></script>
-		<!-- The Templates plugin is included to render the upload/download listings -->
-		<script src="<?php echo $imagePath; ?>js/uploadfile/tmpl.min.js"></script>
-		<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-		<script src="<?php echo $imagePath; ?>js/uploadfile/load-image.min.js"></script>
-		<!-- The Canvas to Blob plugin is included for image resizing functionality -->
-		<script src="<?php echo $imagePath; ?>js/uploadfile/canvas-to-blob.min.js"></script>
-		<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-		<script src="<?php echo $imagePath; ?>js/uploadfile/jquery.iframe-transport.js"></script>
-		<!-- The basic File Upload plugin -->
-		<script src="<?php echo $imagePath; ?>js/uploadfile/jquery.fileupload.js"></script>
-		<!-- The File Upload file processing plugin -->
-		<script src="<?php echo $imagePath; ?>js/uploadfile/jquery.fileupload-fp.js"></script>
-		<!-- The File Upload user interface plugin -->
-		<script src="<?php echo $imagePath; ?>js/uploadfile/jquery.fileupload-ui.js"></script>
 	</head>
 
 	<body>
@@ -158,12 +131,17 @@
                             // define database sequence !!
                             $dbseq = $this->Get->meta_details('database-sequence' , 'pages');
                             $dbseq = explode(chr(10) , $dbseq['Entry']['description']);
-
+                            $dbslug = '';
                             foreach($dbseq as $key => $value)
                             {
                                 if(substr($value , 0 , 1) == '#') // separator
                                 {
+                                    if(!empty($dbslug))
+                                    {
+                                        echo '</div>';
+                                    }
                                     echo '<li class="separator"><a class="sidebar-menu" href="#">'.substr($value , 1).'</a></li>';
+                                    echo '<div style="display:none;">';
                                 }
                                 else
                                 {
@@ -173,13 +151,16 @@
 									echo "</li>";
                                 }
                             }
+                            echo '</div>';
 						?>
-						<li class='separator'><?php echo $this->Html->link('Others','#'); ?></li>
-						<?php
-							echo "<li>";
-							echo $this->Html->link('backup data' ,array('controller'=>'entries','action'=>'backup') ,array('id'=>'backup'));
-							echo "</li>";
-						?>
+						<li class='separator'><?php echo $this->Html->link('Others','#',array('class'=>'sidebar-menu')); ?></li>
+                        <div style="display:none;">
+                            <?php
+                                echo "<li>";
+                                echo $this->Html->link('backup data' ,array('controller'=>'entries','action'=>'backup') ,array('id'=>'backup'));
+                                echo "</li>";
+                            ?>
+                        </div>						
 					</ul>
 				</div>
 				
@@ -195,7 +176,16 @@
 		
 <!-- 		ADDITIONAL SCRIPT FOR LAYOUT -->		
 		<script>
-			$(document).ready(function(){		
+			$(document).ready(function(){
+                // Sidebar Menu Accordion !!
+                $('a.sidebar-menu').attr('title' , 'Click here to expand menu.');
+				$('a.sidebar-menu').parent('li').next("div").find('a.active').closest('div').show();
+				$('a.sidebar-menu').click(function(e){                    
+                    e.preventDefault();
+                    $('a.sidebar-menu').not(this).parent('li').next("div:visible").slideUp('fast');
+                    $(this).parent('li').next("div").slideToggle('fast');
+				});				
+                
 				// CSS HELPER FUNCTION FOR SIDEBAR POSITION !! * CK Editor height *
 				$("div.sidebar.span2 ul").css("padding-bottom" , (122 + parseInt($("div.container-fluid").height()) - parseInt($("div.sidebar.span2 ul").height())) + "px");
 		  	});

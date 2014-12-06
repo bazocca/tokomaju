@@ -15,17 +15,6 @@ function init_popup(){
 }
 
 $(document).ready(function(){
-	var imgReady = $('body').imagesLoaded();
-	imgReady.always(function(){
-		// sidebar line
-		var content_height = $('.content').height();
-		var sidebar_height = $('.sidebar').height();
-		
-		if(sidebar_height < content_height){
-			$('.sidebar').css('height', $('.content').css('height'));
-		}
-	});
-	
 	$('div#child-content').on("click", '#child-menu .btn-group .btn', function(){	
 		$('#child-menu .btn').removeClass('active');
 		$(this).addClass('active');
