@@ -38,13 +38,7 @@
             echo $this->Html->script('jquery-ui-touch-punch');
             echo $this->Html->script('jquery-ui-timepicker-addon');
 			echo $this->Html->script('bootstrap.min');
-			
-            echo $this->Html->script('number_format');
-			echo $this->Html->script('admin');
-            echo $this->Html->script('ajax');
-            echo $scripts_for_layout;
-		?>
-		
+		?>		
 		<!-- Le javascript
 	    ================================================== -->
 		<script src="<?php echo $imagePath; ?>js/jquery.colorbox.js"></script>
@@ -52,6 +46,12 @@
 		<script src="<?php echo $imagePath; ?>js/script.js"></script>
 		<script src="<?php echo $imagePath; ?>js/media.js"></script>
 		<script src="<?php echo $imagePath; ?>js/livedate.js"></script>
+        <?php
+            echo $this->Html->script('number_format');
+			echo $this->Html->script('admin');
+            echo $this->Html->script('ajax');
+            echo $scripts_for_layout;    
+        ?>
 	</head>
 
 	<body>

@@ -107,7 +107,7 @@
 			<?php
 				if(empty($popup))
 				{
-					echo "<th></th>";
+					echo "<th class='action'></th>";
 				}
 			?>
 		</tr>
