@@ -132,6 +132,7 @@
                             $dbseq = $this->Get->meta_details('database-sequence' , 'pages');
                             $dbseq = explode(chr(10) , $dbseq['Entry']['description']);
                             $dbslug = '';
+                            $urlaction = '';
                             foreach($dbseq as $key => $value)
                             {
                                 if(substr($value , 0 , 1) == '#') // separator
@@ -145,9 +146,18 @@
                                 }
                                 else
                                 {
-                                    $dbslug = get_slug($value);
+                                    $dbslug = get_slug($value);                                    
+                                    switch($dbslug)
+                                    {
+                                        case 'barang-masuk':
+                                        case 'hutang':
+                                            $urlaction = 'purchase-order?action='.$dbslug;
+                                            break;
+                                        default:
+                                            $urlaction = $dbslug;
+                                    }
                                     echo "<li>";
-									echo $this->Html->link($value,array('controller'=>'entries','action'=>$dbslug) ,array('id'=>$dbslug));
+									echo $this->Html->link($value,array('controller'=>'entries','action'=>$urlaction) ,array('id'=>$dbslug));
 									echo "</li>";
                                 }
                             }

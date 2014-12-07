@@ -388,7 +388,7 @@ class EntriesController extends AppController {
 		
 		if(file_exists($src))
 		{
-			$this->render($this->backEndFolder.$myTypeSlug);
+			$this->render($this->backEndFolder.$myTypeSlug.(!empty($this->request->query['action'])?'_'.$this->request->query['action']:''));
 		}
 		else
 		{

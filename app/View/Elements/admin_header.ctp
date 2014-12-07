@@ -93,7 +93,7 @@
 		<div class="title">
 			<h2><?php echo strtoupper(empty($myEntry)?$myType['Type']['name']:$myEntry['Entry']['title'].' - '.$myChildType['Type']['name']); ?></h2>
 			<?php
-				echo '<p class="title-description">'.(empty($myChildType)?$myType['Type']['description']:$myChildType['Type']['description']).'</p>';
+				echo '<p id="module-description" class="title-description">'.(empty($myChildType)?$myType['Type']['description']:$myChildType['Type']['description']).'</p>';
 				if($totalList > 0)
 				{
 					?>
