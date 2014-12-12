@@ -189,16 +189,8 @@
 	?>	
 	<tr class="orderlist" alt="<?php echo $value['Entry']['id']; ?>">
 		<td class="main-title">
-			<?php
-				if($imageUsed == 1)
-				{
-					echo '<div class="thumbs hide">';
-					echo (empty($popup)?$this->Html->link($this->Html->image('upload/thumb/'.$value['Entry']['main_image'].'.'.$myImageTypeList[$value['Entry']['main_image']], array('alt'=>$value['ParentImageEntry']['title'],'title' => $value['ParentImageEntry']['title'])),array('action'=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']).'/edit/'.$value['Entry']['slug'].(!empty($myEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug']?'?type='.$myChildType['Type']['slug']:'')),array("escape"=>false)):$this->Html->image('upload/thumb/'.$value['Entry']['main_image'].'.'.$myImageTypeList[$value['Entry']['main_image']], array('alt'=>$value['ParentImageEntry']['title'],'title' => $value['ParentImageEntry']['title'])));
-					echo '</div>';
-				}
-			?>
 			<input class="slug-code" type="hidden" value="<?php echo $value['Entry']['slug']; ?>" />
-			<h5 class="title-code"><?php echo (empty($popup)?$this->Form->Html->link($value['Entry']['title'],array('action'=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'edit',$value['Entry']['slug'] ,'?'=> (!empty($myEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug']?array('type'=>$myChildType['Type']['slug']):'')   )  ):$value['Entry']['title']); ?></h5>
+			<h5 class="title-code"><?php echo $value['Entry']['title']; ?></h5>
 			<p>
 				<?php
 					if($descriptionUsed == 1 && !empty($value['Entry']['description']))
@@ -235,7 +227,7 @@
                         		{
                         			$queryURL['type'] = $myChildType['Type']['slug'];
                         		}
-                        		echo '<span class="badge badge-info">'.(empty($popup)?$this->Form->Html->link($value['EntryMeta']['count-'.$value10['TypeMeta']['key']].' <i class="icon-picture icon-white"></i>',array('action'=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']) , 'edit' , $value['Entry']['slug'] , '?' => $queryURL ), array('escape'=>false,'title' => 'Click to see all images.')):$value['EntryMeta']['count-'.$value10['TypeMeta']['key']].' <i class="icon-picture icon-white"></i>').'</span>';
+                        		echo '<span class="badge badge-info">'.$value['EntryMeta']['count-'.$value10['TypeMeta']['key']].' <i class="icon-picture icon-white"></i>'.'</span>';
                         	}
                         	else
                         	{
@@ -255,7 +247,7 @@
 								{
 									$emptybrowse = 1;
 									$outputResult = (empty($mydetails['EntryMeta']['name'])?$mydetails['Entry']['title']:$mydetails['EntryMeta']['name']);
-									echo '<p>'.(empty($popup)?$this->Form->Html->link($outputResult,array('controller'=>'entries','action'=>$mydetails['Entry']['entry_type'],'edit',$mydetails['Entry']['slug']),array('target'=>'_blank')):$outputResult).'</p>';
+									echo '<p>'.$outputResult.'</p>';
 								}
 							}
 							
@@ -274,7 +266,7 @@
 							else
 							{
 								$outputResult = (empty($entrydetail['EntryMeta']['name'])?$entrydetail['Entry']['title']:$entrydetail['EntryMeta']['name']);
-								echo '<h5>'.(empty($popup)?$this->Form->Html->link($outputResult,array("controller"=>"entries","action"=>$entrydetail['Entry']['entry_type']."/edit/".$entrydetail['Entry']['slug']),array('target'=>'_blank')):$outputResult).'</h5>';
+								echo '<h5>'.$outputResult.'</h5>';
                                 
                                 echo '<p>';
                                 // Try to use Primary EntryMeta first !!

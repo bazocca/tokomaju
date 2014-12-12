@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 03, 2014 at 11:17 PM
+-- Generation Time: Dec 12, 2014 at 05:12 PM
 -- Server version: 5.1.37
 -- PHP Version: 5.3.0
 
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `cms_accounts` (
 --
 
 INSERT INTO `cms_accounts` (`id`, `user_id`, `role_id`, `username`, `email`, `password`, `last_login`, `created`, `created_by`, `modified`, `modified_by`) VALUES
-(1, 1, 1, 'admin', 'admin@yahoo.com', '169e781bd52860b584879cbe117085da596238f3', '2014-12-03 20:28:33', '2013-01-04 00:00:00', 1, '2013-01-04 00:00:00', 1);
+(1, 1, 1, 'admin', 'admin@yahoo.com', '169e781bd52860b584879cbe117085da596238f3', '2014-12-08 11:44:37', '2013-01-04 00:00:00', 1, '2014-05-05 15:15:38', 1);
 
 -- --------------------------------------------------------
 
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `cms_entries` (
   `lang_code` varchar(10) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=39 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=46 ;
 
 --
 -- Dumping data for table `cms_entries`
@@ -108,7 +108,14 @@ INSERT INTO `cms_entries` (`id`, `entry_type`, `title`, `slug`, `description`, `
 (33, 'gudang', ' Romokalisari', 'romokalisari', 'Gudang coba coba.\r\ntest oke', 0, 0, 1, 2, '2014-11-27 09:38:12', 1, '2014-11-27 09:38:39', 1, 33, 'en-33'),
 (34, 'barang-gudang', 'mesin-hardcover-maker', 'mesin-hardcover-maker-2', '', 0, 33, 1, 0, '2014-11-27 09:38:38', 1, '2014-11-27 09:38:38', 1, 34, 'en-34'),
 (35, 'pindah-masuk', 'automatic_mesin-hardcover-maker', 'automatic-mesin-hardcover-maker-9', 'Penambahan stok barang oleh administrator.', 12, 33, 1, 0, '2014-11-27 09:38:38', 1, '2014-11-27 09:38:39', 1, 35, 'en-35'),
-(36, 'purchase-order', 'TEST001', 'test001', 'test aja gan.\r\nThankyou.\r\nGBU', 0, 0, 1, 0, '2014-11-28 17:20:14', 1, '2014-11-28 17:20:14', 1, 36, 'en-36');
+(36, 'purchase-order', 'TEST001', 'test001', 'test aja gan.\r\nThankyou.\r\nGBU', 0, 0, 1, 0, '2014-11-28 17:20:14', 1, '2014-11-28 17:20:14', 1, 36, 'en-36'),
+(39, 'purchase-order', 'PUR141204001', 'pur141204001', 'First Purchase Test !!\r\nthanks\r\noke\r\nGBU', 0, 0, 1, 5, '2014-12-04 10:01:11', 1, '2014-12-04 10:01:12', 1, 39, 'en-39'),
+(40, 'purchase-detail', 'mesin-hardcover-maker', 'mesin-hardcover-maker-3', NULL, 0, 39, 1, 0, '2014-12-04 10:01:11', 1, '2014-12-04 10:01:11', 1, 40, 'en-40'),
+(41, 'hutang', 'HUT141204001', 'hut141204001', 'Beli <strong>Mesin Hardcover Maker</strong> sebanyak 3 unit @Rp 6.000.000,-', 0, 39, 1, 0, '2014-12-04 10:01:11', 1, '2014-12-04 10:01:11', 1, 41, 'en-41'),
+(42, 'purchase-detail', 'bahan-tinta', 'bahan-tinta-1', NULL, 0, 39, 1, 0, '2014-12-04 10:01:11', 1, '2014-12-04 10:01:11', 1, 42, 'en-42'),
+(43, 'hutang', 'HUT141204002', 'hut141204002', 'Beli <strong>Bahan Tinta</strong> sebanyak 7 Galon @Rp 345.000,-', 0, 39, 1, 0, '2014-12-04 10:01:12', 1, '2014-12-04 10:01:12', 1, 43, 'en-43'),
+(44, 'hutang', 'HUT141204003', 'hut141204003', 'Pembayaran PUR141204001 telah lunas.', 0, 39, 1, 0, '2014-12-04 10:01:12', 1, '2014-12-04 10:01:12', 1, 44, 'en-44'),
+(45, 'pages', 'Database Sequence', 'database-sequence', '#MASTER\r\nCUSTOMER\r\nSUPPLIER\r\nEKSPEDISI\r\nGUDANG\r\nJENIS BARANG\r\nBARANG DAGANG\r\n#PEMBELIAN\r\nPURCHASE ORDER\r\nBARANG MASUK\r\nHUTANG\r\n#PENJUALAN\r\nSALES ORDER\r\nSURAT JALAN\r\nRESI\r\nPIUTANG\r\n#RETUR\r\nRETUR BELI\r\nRETUR JUAL', 0, 0, 1, 0, '2014-12-05 17:12:50', 1, '2014-12-05 17:12:50', 1, 45, 'en-45');
 
 -- --------------------------------------------------------
 
@@ -122,7 +129,7 @@ CREATE TABLE IF NOT EXISTS `cms_entry_metas` (
   `key` varchar(500) NOT NULL,
   `value` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=98 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=121 ;
 
 --
 -- Dumping data for table `cms_entry_metas`
@@ -197,7 +204,30 @@ INSERT INTO `cms_entry_metas` (`id`, `entry_id`, `key`, `value`) VALUES
 (84, 36, 'form-status_bayar', 'Tunggak'),
 (85, 36, 'form-status_kirim', 'Diproses'),
 (86, 36, 'form-nama_pegawai', 'Bejo'),
-(87, 36, 'form-total_harga', '150000');
+(87, 36, 'form-total_harga', '150000'),
+(98, 39, 'form-tanggal', '12/04/2014'),
+(99, 39, 'form-supplier', 'he-xin-min'),
+(100, 39, 'form-status_bayar', 'Lunas'),
+(101, 39, 'form-status_kirim', 'Diproses'),
+(102, 39, 'form-nama_pegawai', 'admin zpanel'),
+(103, 39, 'count-purchase-detail', '2'),
+(104, 40, 'form-jumlah', '3'),
+(105, 40, 'form-harga', '6000000'),
+(106, 40, 'form-terkirim', '0'),
+(107, 40, 'form-retur', '0'),
+(108, 39, 'count-hutang', '3'),
+(109, 41, 'form-tanggal', '12/04/2014'),
+(110, 41, 'form-mutasi_kredit', '18000000'),
+(111, 42, 'form-jumlah', '7'),
+(112, 42, 'form-harga', '345000'),
+(113, 42, 'form-terkirim', '0'),
+(114, 42, 'form-retur', '0'),
+(115, 43, 'form-tanggal', '12/04/2014'),
+(116, 43, 'form-mutasi_kredit', '2415000'),
+(117, 44, 'form-tanggal', '12/04/2014'),
+(118, 44, 'form-mutasi_debet', '20415000'),
+(119, 39, 'form-balance', '0'),
+(120, 39, 'form-total_harga', '20415000');
 
 -- --------------------------------------------------------
 
