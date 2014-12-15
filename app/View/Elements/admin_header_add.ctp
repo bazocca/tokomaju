@@ -2,7 +2,15 @@
 	if(is_array($data)) extract($data , EXTR_SKIP);
 	if(!empty($myType))
 	{
-		$this->Html->addCrumb($myType['Type']['name'], '/admin/entries/'.$myType['Type']['slug']);
+		// custom case !!
+        if($myChildType['Type']['slug'] == 'barang-masuk' || $myChildType['Type']['slug'] == 'hutang')
+        {
+            $this->Html->addCrumb($myChildType['Type']['name'], '/admin/entries/'.$myType['Type']['slug'].'?action='.$myChildType['Type']['slug']);
+        }
+        else // general case !!
+        {
+            $this->Html->addCrumb($myType['Type']['name'], '/admin/entries/'.$myType['Type']['slug']);
+        }
 	}
 	else
 	{

@@ -833,7 +833,7 @@ class Entry extends AppModel {
 		foreach ($data['barang']['id'] as $key => $value)
 		{
 			$detailbarang = $this->meta_details($value , "product-detail");
-			unset($input);
+			$input = array();
 			$input['Entry']['title'] = $detailbarang['Entry']['title'];
 			$input['Entry']['entry_type'] = "sale-detail";
 			$input['Entry']['slug'] = "sal-".strtolower($detailbarang['Entry']['title']);
@@ -844,7 +844,7 @@ class Entry extends AppModel {
 			$this->save($input);
 			
 			$input['EntryMeta']['entry_id'] = $this->id;
-			$input['EntryMeta']['key'] = "form-quantity";
+			$input['EntryMeta']['key'] = "form-jumlah";
 			$input['EntryMeta']['value'] = $data['barang']['jumlah'][$key];
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
@@ -859,7 +859,7 @@ class Entry extends AppModel {
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
 			
-			$input['EntryMeta']['key'] = "form-delivered_goods";
+			$input['EntryMeta']['key'] = "form-terkirim";
 			$input['EntryMeta']['value'] = 0;
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
@@ -878,7 +878,7 @@ class Entry extends AppModel {
 			// ------------------------------------------------------------------------------------- //
 			// AUTO ADD FOR piutang !!
 			// ------------------------------------------------------------------------------------- //
-			unset($input);			
+			$input = array();			
 			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("piutang", $frontTitle);
 			$input['Entry']['description'] = "Jual ".$detailbarang['Entry']['title']." (".$detailbarang['Entry']['title'].") sebanyak ".$data['barang']['jumlah'][$key]." ".$detailbarang['EntryMeta']['satuan']." @Rp.".str_replace(',', '.', toMoney( $data['barang']['harga'][$key] , true , true) ).",-".(empty($data['barang']['discount'][$key])?"":" dengan total diskon Rp.".str_replace(',', '.', toMoney( $data['barang']['discount'][$key] , true , true) ).",-");
 			$input['Entry']['entry_type'] = "piutang";
@@ -902,7 +902,7 @@ class Entry extends AppModel {
 		}
 		// UPDATE BALANCE !!
 		$balance = $grandtotal - $down_payment;
-		unset($input);
+		$input = array();
 		$input['Entry']['entry_type'] = "piutang";
 		$input['Entry']['created_by'] = $myCreator['id'];
 		$input['Entry']['modified_by'] = $myCreator['id'];
@@ -927,7 +927,7 @@ class Entry extends AppModel {
 			$this->EntryMeta->save($input);
 		}		
 		// cek status pembayaran apakah sudah langsung lunas ato belum :D
-		if($nota['EntryMeta']['payment_status'] == "Complete")
+		if($nota['EntryMeta']['status_bayar'] == "Complete")
 		{			
 			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("piutang", $frontTitle);
 			$input['Entry']['description'] = "Pembayaran telah lunas.";
@@ -969,7 +969,7 @@ class Entry extends AppModel {
 			$this->EntryMeta->save($input);
 		}
 		
-		unset($input);
+		$input = array();
 		$input['EntryMeta']['entry_id'] = $nota['Entry']['id'];
 		$input['EntryMeta']['key'] = "form-balance";
 		$input['EntryMeta']['value'] = $balance;
@@ -1159,7 +1159,7 @@ class Entry extends AppModel {
 		// execute the goods !!
 		foreach ($data['barang']['id-barang'] as $key => $value) 
 		{
-			unset($input);
+			$input = array();
 			$input['Entry']['title'] = $value;
 			$input['Entry']['description'] = $data['barang']['keterangan'][$key];
 			$input['Entry']['entry_type'] = "barang-surat-jalan";
@@ -1177,7 +1177,7 @@ class Entry extends AppModel {
 			
 			$sjDetailsId = $this->id;
 			$input['EntryMeta']['entry_id'] = $sjDetailsId;
-			$input['EntryMeta']['key'] = "form-quantity";
+			$input['EntryMeta']['key'] = "form-jumlah";
 			$input['EntryMeta']['value'] = $data['barang']['jumlah'][$key];
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
@@ -1210,7 +1210,7 @@ class Entry extends AppModel {
 			
 			// --------------------------------------------------------------------------------------- //
 			// 				PINDAH KELUAR !!!!
-			unset($input);
+			$input = array();
 			$input['Entry']['title'] = strtolower($data['Entry']['id-customer']).'_'.strtolower($value);
 			$input['Entry']['description'] = "Pengiriman Surat Jalan ".$data['Entry'][0]['value'];
 			$input['Entry']['main_image'] = $data['barang']['jumlah'][$key];
@@ -1243,7 +1243,7 @@ class Entry extends AppModel {
 				$delivered = $this->EntryMeta->find("first", array(
 					"conditions" => array(
 						"EntryMeta.entry_id" => $updateSalDetails['Entry']['id'],
-						"EntryMeta.key" => "form-delivered_goods"
+						"EntryMeta.key" => "form-terkirim"
 					)
 				));				
 				$this->EntryMeta->id = $delivered['EntryMeta']['id'];
@@ -1270,7 +1270,7 @@ class Entry extends AppModel {
 				// -------------------------------------------------------------- >>
 				// ADD RETUR ENTRIES !!
 				// -------------------------------------------------------------- >>
-				unset($input);
+				$input = array();
 				$input['Entry']['title'] = $value;
 				$input['Entry']['description'] = $data['Entry'][1]['value'];
 				$input['Entry']['entry_type'] = "retur-beli";
@@ -1287,7 +1287,7 @@ class Entry extends AppModel {
 				$this->save($input);
 				
 				$input['EntryMeta']['entry_id'] = $this->id;
-				$input['EntryMeta']['key'] = "form-quantity";
+				$input['EntryMeta']['key'] = "form-jumlah";
 				$input['EntryMeta']['value'] = $data['barang']['jumlah'][$key];
 				$this->EntryMeta->create();
 				$this->EntryMeta->save($input);
@@ -1328,7 +1328,7 @@ class Entry extends AppModel {
 			$frontTitle = "HUT".substr($explodeDate[2], strlen($explodeDate[2])-2).$explodeDate[0].$explodeDate[1];
 			foreach ($rekeningKoran['barang'] as $key => $value) 
 			{
-				unset($input);
+				$input = array();
 				$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("hutang" , $frontTitle);
 				$detailbarang = $this->meta_details($value , "product-detail");
 				$input['Entry']['description'] = "Retur ".$detailbarang['Entry']['title']." (".$detailbarang['Entry']['title'].") sebanyak ".$rekeningKoran['jumlah'][$key]." ".$detailbarang['EntryMeta']['satuan']." @Rp.".str_replace(',', '.', toMoney( $detailbarang['EntryMeta']['buy_price'] , true , true) ).",-";
@@ -1381,7 +1381,7 @@ class Entry extends AppModel {
 					$payment = $this->EntryMeta->find('first' , array(
 						"conditions" => array(
 							"EntryMeta.entry_id" => $nota['Entry']['id'],
-							"EntryMeta.key" => "form-payment_status"
+							"EntryMeta.key" => "form-status_bayar"
 						)
 					));
 					$this->EntryMeta->id = $payment['EntryMeta']['id'];
@@ -1403,7 +1403,7 @@ class Entry extends AppModel {
 			foreach ($myList as $key => $value) 
 			{
 				$salDetails = $this->meta_details($value['Entry']['slug'] , "sale-detail" , $nota['Entry']['id']);
-				if($salDetails['EntryMeta']['delivered_goods'] < $salDetails['EntryMeta']['quantity'])
+				if($salDetails['EntryMeta']['terkirim'] < $salDetails['EntryMeta']['jumlah'])
 				{
 					$fullDelivered = 0;
 					break;
@@ -1414,7 +1414,7 @@ class Entry extends AppModel {
 				$updateDeliveryStatus = $this->EntryMeta->find("first", array(
 					"conditions" => array(
 						"EntryMeta.entry_id" => $nota['Entry']['id'],
-						"EntryMeta.key" => "form-delivery_status"
+						"EntryMeta.key" => "form-status_kirim"
 					)
 				));
 				$this->EntryMeta->id = $updateDeliveryStatus['EntryMeta']['id'];
@@ -1426,21 +1426,21 @@ class Entry extends AppModel {
 	public function addReturJual($data = array() , $myEntry = array())
 	{
 		$myCreator = $this->getCurrentUser();
-		if(empty($data['Entry']['id-gudang']))
+		if(empty($data['EntryMeta']['gudang']))
 		{
 			return false;
 		}
-		if(empty($data['Entry']['tanggal']))
+		if(empty($data['EntryMeta']['tanggal']))
 		{
 			$nowDate = getdate();
 			$year = $nowDate['year'];
 			$month = $nowDate['mon'];
 			$day = $nowDate['mday'];
-			$data['Entry']['tanggal'] = $month."/".$day."/".$year;
+			$data['EntryMeta']['tanggal'] = $month."/".$day."/".$year;
 		}
-		$explodeDate = explode("/", $data['Entry']['tanggal']);
+		$explodeDate = explode("/", $data['EntryMeta']['tanggal']);
 		$saleHeader = $this->meta_details($myEntry['Entry']['slug'],"sale");
-		$gudangku = $this->meta_details($data['Entry']['id-gudang'] , "gudang");
+		$gudangku = $this->meta_details($data['EntryMeta']['gudang'] , "gudang");
 		
 		$rekeningKoran = array();
 		$rekeningKoran['barang'] = array();
@@ -1453,7 +1453,7 @@ class Entry extends AppModel {
 			{
 				continue;
 			}
-			unset($input);
+			$input = array();
 			$input['Entry']['title'] = strtoupper($key);
 			$input['Entry']['description'] = $value['keterangan'];
 			$input['Entry']['entry_type'] = "retur-jual";
@@ -1471,18 +1471,18 @@ class Entry extends AppModel {
 			
 			$barangMasukBaruId = $this->id;
 			$input['EntryMeta']['entry_id'] = $barangMasukBaruId;
-			$input['EntryMeta']['key'] = "form-quantity";
+			$input['EntryMeta']['key'] = "form-jumlah";
 			$input['EntryMeta']['value'] = $value['jumlah'];
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
 			
 			$input['EntryMeta']['key'] = "form-tanggal";
-			$input['EntryMeta']['value'] = $data['Entry']['tanggal'];
+			$input['EntryMeta']['value'] = $data['EntryMeta']['tanggal'];
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
 			
 			$input['EntryMeta']['key'] = "id-gudang";
-			$input['EntryMeta']['value'] = $data['Entry']['id-gudang'];
+			$input['EntryMeta']['value'] = $data['EntryMeta']['gudang'];
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
 			
@@ -1509,7 +1509,7 @@ class Entry extends AppModel {
 			
 			if(empty($cari_barang)) // BUAT BARU !!
 			{
-				unset($input);
+				$input = array();
 				$input['Entry']['title'] = strtoupper($key);
 				$input['Entry']['description'] = "Retur dari customer.";
 				$input['Entry']['entry_type'] = "barang-gudang";
@@ -1564,7 +1564,7 @@ class Entry extends AppModel {
 			}
 			// --------------------------------------------------------------------------------------- //
 			// 				PINDAH MASUK !!!!
-			unset($input);
+			$input = array();
 			$input['Entry']['title'] = strtolower($saleHeader['EntryMeta']['id-customer']).'_'.$key;
 			$input['Entry']['description'] = "Retur nota ".$myEntry['Entry']['title'];
 			$input['Entry']['main_image'] = $value['jumlah'];
@@ -1606,7 +1606,7 @@ class Entry extends AppModel {
 			$frontTitle = "PIU".substr($explodeDate[2], strlen($explodeDate[2])-2).$explodeDate[0].$explodeDate[1];
 			foreach ($rekeningKoran['barang'] as $key => $value) 
 			{
-				unset($input);				
+				$input = array();				
 				$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("piutang", $frontTitle);
 				$detailbarang = $this->meta_details($value , "product-detail");
 				$input['Entry']['description'] = "Retur ".$detailbarang['Entry']['title']." (".$detailbarang['Entry']['title'].") sebanyak ".$rekeningKoran['jumlah'][$key]." ".$detailbarang['EntryMeta']['satuan']." @Rp.".str_replace(',', '.', toMoney( $rekeningKoran['harga'][$key] , true , true) ).",-";
@@ -1620,7 +1620,7 @@ class Entry extends AppModel {
 				
 				$input['EntryMeta']['entry_id'] = $this->id;
 				$input['EntryMeta']['key'] = "form-tanggal";
-				$input['EntryMeta']['value'] = $data['Entry']['tanggal'];
+				$input['EntryMeta']['value'] = $data['EntryMeta']['tanggal'];
 				$this->EntryMeta->create();
 				$this->EntryMeta->save($input);
 				
@@ -1670,7 +1670,7 @@ class Entry extends AppModel {
 					$payment = $this->EntryMeta->find('first' , array(
 						"conditions" => array(
 							"EntryMeta.entry_id" => $myEntry['Entry']['id'],
-							"EntryMeta.key" => "form-payment_status"
+							"EntryMeta.key" => "form-status_bayar"
 						)
 					));
 					$this->EntryMeta->id = $payment['EntryMeta']['id'];
@@ -1684,21 +1684,10 @@ class Entry extends AppModel {
 	public function addBarangMasuk($data = array() , $myEntry = array())
 	{	
 		$myCreator = $this->getCurrentUser();
-		if(empty($data['Entry']['id-gudang']))
-		{
-			return false;
-		}
-		if(empty($data['Entry']['tanggal']))
-		{
-			$nowDate = getdate();
-			$year = $nowDate['year'];
-			$month = $nowDate['mon'];
-			$day = $nowDate['mday'];
-			$data['Entry']['tanggal'] = $month."/".$day."/".$year;
-		}
-		$explodeDate = explode("/", $data['Entry']['tanggal']);
-		$purHeader = $this->meta_details($myEntry['Entry']['slug'],"purchase");
-		$gudangku = $this->meta_details($data['Entry']['id-gudang'] , "gudang");
+        $data = breakEntryMetas($data);
+		$explodeDate = explode("/", $data['EntryMeta']['tanggal']);
+		$purHeader = $this->meta_details($myEntry['Entry']['slug'],"purchase-order");
+		$gudangku = $this->meta_details($data['EntryMeta']['gudang'] , "gudang");
 		
 		foreach ($data['barang'] as $key => $value) 
 		{
@@ -1706,36 +1695,30 @@ class Entry extends AppModel {
 			{
 				continue;
 			}
-			unset($input);
-			$input['Entry']['title'] = strtoupper($key);
+			$input = array();
+            $input['Entry']['entry_type'] = "barang-masuk";
+			$input['Entry']['title'] = $key;
+            $input['Entry']['slug'] = get_slug($input['Entry']['title']);
 			$input['Entry']['description'] = $value['keterangan'];
-			$input['Entry']['entry_type'] = "barang-masuk";
-			$temp = $this->find('count' , array(
-				'conditions' => array(
-					'Entry.entry_type' => $input['Entry']['entry_type']
-				)
-			));
-			$input['Entry']['slug'] = $input['Entry']['entry_type'].'-'.($temp+1);
-			$input['Entry']['created_by'] = $myCreator['id'];
-			$input['Entry']['modified_by'] = $myCreator['id'];			
+			$input['Entry']['created_by'] = $input['Entry']['modified_by'] = $myCreator['id'];
 			$input['Entry']['parent_id'] = $myEntry['Entry']['id'];
 			$this->create();
 			$this->save($input);
 			
 			$barangMasukBaruId = $this->id;
 			$input['EntryMeta']['entry_id'] = $barangMasukBaruId;
-			$input['EntryMeta']['key'] = "form-quantity";
+			$input['EntryMeta']['key'] = "form-jumlah_datang";
 			$input['EntryMeta']['value'] = $value['jumlah'];
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
 			
 			$input['EntryMeta']['key'] = "form-tanggal";
-			$input['EntryMeta']['value'] = $data['Entry']['tanggal'];
+			$input['EntryMeta']['value'] = $data['EntryMeta']['tanggal'];
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
 			
-			$input['EntryMeta']['key'] = "id-gudang";
-			$input['EntryMeta']['value'] = $data['Entry']['id-gudang'];
+			$input['EntryMeta']['key'] = "form-gudang";
+			$input['EntryMeta']['value'] = $data['EntryMeta']['gudang'];
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
 			
@@ -1744,14 +1727,14 @@ class Entry extends AppModel {
 			$updatePurDetails = $this->find('first' , array(
 				"conditions" => array(
 					"Entry.parent_id" => $myEntry['Entry']['id'],
-					"Entry.slug" => "pur-".$key,
+					"Entry.title" => $key,
 					"Entry.entry_type" => "purchase-detail"
 				)
 			)); 
 			$delivered = $this->EntryMeta->find("first", array(
 				"conditions" => array(
 					"EntryMeta.entry_id" => $updatePurDetails['Entry']['id'],
-					"EntryMeta.key" => "form-delivered_goods"
+					"EntryMeta.key" => "form-terkirim"
 				)
 			));
 			$terkirim = $delivered['EntryMeta']['value'] + $value['jumlah'];
@@ -1762,7 +1745,7 @@ class Entry extends AppModel {
 			$pesanan = $this->EntryMeta->find("first", array(
 				"conditions" => array(
 					"EntryMeta.entry_id" => $updatePurDetails['Entry']['id'],
-					"EntryMeta.key" => "form-quantity"
+					"EntryMeta.key" => "form-jumlah"
 				)
 			));
 			$input['EntryMeta']['entry_id'] = $barangMasukBaruId;
@@ -1770,96 +1753,60 @@ class Entry extends AppModel {
 			$input['EntryMeta']['value'] = $pesanan['EntryMeta']['value'] - $terkirim;
 			$this->EntryMeta->create();
 			$this->EntryMeta->save($input);
-			// -------------------------------------------------------------------------------- //
+			
+            // -------------------------------------------------------------------------------- //
 			// UPDATE STOCK GUDANGGGGGG !!!!!!!!!!!!!!!
 			// -------------------------------------------------------------------------------- //
 			$cari_barang = $this->find('first' , array(
 				"conditions" => array(
 					"Entry.parent_id" => $gudangku['Entry']['id'],
-					"Entry.slug" => "gud-".$key,
+					"Entry.title" => $key,
 					"Entry.entry_type" => "barang-gudang" 
 				)
 			));
 			
 			if(empty($cari_barang)) // BUAT BARU !!
 			{
-				unset($input);
-				$input['Entry']['title'] = strtoupper($key);
-				$input['Entry']['description'] = "Masukan dari supplier.";
+				$input = array();
+				$input['Entry']['title'] = $key;
+				$input['Entry']['description'] = "Kiriman dari supplier.";
 				$input['Entry']['entry_type'] = "barang-gudang";
-				$input['Entry']['slug'] = "gud-".$key;
-				$input['Entry']['created_by'] = $myCreator['id'];
-				$input['Entry']['modified_by'] = $myCreator['id'];
+				$input['Entry']['slug'] = get_slug($input['Entry']['title']);
+				$input['Entry']['created_by'] = $input['Entry']['modified_by'] = $myCreator['id'];
 				$input['Entry']['parent_id'] = $gudangku['Entry']['id'];
 				$this->create();
 				$this->save($input);
 				
 				// add jumlah stok
 				$this->data['EntryMeta']['entry_id'] = $this->id;
-				$this->data['EntryMeta']['key'] = 'form-jumlah_stok';
+				$this->data['EntryMeta']['key'] = 'form-stock';
 				$this->data['EntryMeta']['value'] = $value['jumlah'];
 				$this->EntryMeta->create();
 				$this->EntryMeta->save($this->data);
-				
-				// update PARENT COUNT !!
-				$updateCountType = $this->EntryMeta->find('first' , array(
-					'conditions' => array(
-						'EntryMeta.entry_id' => $gudangku['Entry']['id'],
-						'EntryMeta.key' => 'count-'.$input['Entry']['entry_type']
-					)
-				));
-				if(!empty($updateCountType))
-				{
-					$this->EntryMeta->id = $updateCountType['EntryMeta']['id'];
-					$this->EntryMeta->saveField('value' , $updateCountType['EntryMeta']['value']+1);
-				}
-				else
-				{
-					$this->data['EntryMeta']['entry_id'] = $gudangku['Entry']['id'];
-					$this->data['EntryMeta']['key'] = 'count-'.$input['Entry']['entry_type'];
-					$this->data['EntryMeta']['value'] = 1;
-					$this->EntryMeta->create();
-					$this->EntryMeta->save($this->data);
-				}
-				
-				$this->id = $gudangku['Entry']['id'];
-				$this->saveField('count' , $gudangku['Entry']['count'] + 1);
 			}
-			else // UPDATE TAMBAH BARANG !!
+			else // UPDATE TAMBAH STOCK BARANG !!
 			{
-				$cari_stok = $this->EntryMeta->find('first' , array(
-					"conditions" => array(
-						"EntryMeta.entry_id" => $cari_barang['Entry']['id'],
-						"EntryMeta.key" => "form-jumlah_stok"
-					)
-				));
-				$this->EntryMeta->id = $cari_stok['EntryMeta']['id'];
-				$this->EntryMeta->saveField('value' , $cari_stok['EntryMeta']['value'] + $value['jumlah']);
+                $this->EntryMeta->id = $cari_barang['EntryMeta'][0]['id'];
+				$this->EntryMeta->saveField('value' , $cari_barang['EntryMeta'][0]['value'] + $value['jumlah']);
 			}
 			// --------------------------------------------------------------------------------------- //
 			// 				PINDAH MASUK !!!!
-			unset($input);
-			$input['Entry']['title'] = strtolower($purHeader['EntryMeta']['id-supplier']).'_'.$key;
-			$input['Entry']['description'] = "Pembelian nota ".$myEntry['Entry']['title'];
+			$input = array();
+            $input['Entry']['entry_type'] = "pindah-masuk";
+			$input['Entry']['title'] = $purHeader['EntryMeta']['supplier'].'_'.$key;
+            $input['Entry']['slug'] = get_slug($input['Entry']['title']);
+			$input['Entry']['description'] = "Pembelian INVOICE kode ".$myEntry['Entry']['title'];
 			$input['Entry']['main_image'] = $value['jumlah'];
-			$input['Entry']['entry_type'] = "pindah-masuk";
-			$temp = $this->find('count' , array(
-				'conditions' => array(
-					'Entry.entry_type' => $input['Entry']['entry_type']
-				)
-			));
-			$input['Entry']['slug'] = $input['Entry']['entry_type'].'-'.($temp+1);
-			$input['Entry']['created_by'] = $myCreator['id'];
-			$input['Entry']['modified_by'] = $myCreator['id'];
-			$input['Entry']['created'] = $explodeDate[2]."-".$explodeDate[0]."-".$explodeDate[1];
+			$input['Entry']['created_by'] = $input['Entry']['modified_by'] = $myCreator['id'];
+			$input['Entry']['created'] = $input['Entry']['modified'] = $explodeDate[2]."-".$explodeDate[0]."-".$explodeDate[1];            
 			$input['Entry']['parent_id'] = $gudangku['Entry']['id'];
 			$this->create();
 			$this->save($input);
 			// tambah stock di master barang...
-			$this->EntryMeta->add_stock_master_barang($key , $value['jumlah']);
+			$this->EntryMeta->add_stock_master_barang($key , +$value['jumlah']);
 		}
 
-		// untuk tahap terakhir, CHECK apakah pengiriman barangnya sudah lunas semua ato belum !!
+		// untuk tahap terakhir, CHECK apakah pengiriman barangnya sudah selesai semua ato belum !!
 		$myList = $this->find("all" , array(
 			"conditions" => array(
 				"Entry.parent_id" => $myEntry['Entry']['id'],
@@ -1870,7 +1817,7 @@ class Entry extends AppModel {
 		foreach ($myList as $key => $value) 
 		{
 			$purDetails = $this->meta_details($value['Entry']['slug'] , "purchase-detail" , $myEntry['Entry']['id']);
-			if($purDetails['EntryMeta']['delivered_goods'] < $purDetails['EntryMeta']['quantity'])
+			if($purDetails['EntryMeta']['terkirim'] < $purDetails['EntryMeta']['jumlah'])
 			{
 				$fullDelivered = 0;
 				break;
@@ -1881,12 +1828,14 @@ class Entry extends AppModel {
 			$updateDeliveryStatus = $this->EntryMeta->find("first", array(
 				"conditions" => array(
 					"EntryMeta.entry_id" => $myEntry['Entry']['id'],
-					"EntryMeta.key" => "form-delivery_status"
+					"EntryMeta.key" => "form-status_kirim"
 				)
 			));
 			$this->EntryMeta->id = $updateDeliveryStatus['EntryMeta']['id'];
-			$this->EntryMeta->saveField("value" , "Complete");
+			$this->EntryMeta->saveField("value" , "Terkirim");
 		}
-		return true;
+        
+        return $gudangku['Entry']['title'];
+        // END OF FUNCTION !!        
 	}
 }

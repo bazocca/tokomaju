@@ -405,6 +405,42 @@ class EntriesController extends AppController {
 	{
 		throw new NotFoundException('Error 404 - Not Found');
 	}
+    
+    function _initBarangMasukAdd($myType = array() , $myEntry = array() , $myChildTypeSlug = NULL)
+	{
+		if($myType['Type']['slug'] == 'purchase-order' && $myChildTypeSlug == "barang-masuk")
+		{
+			if(empty($this->request->data))
+			{
+				$this->set('pesanan' , $this->_admin_default($myType , 0 , $myEntry , NULL , NULL , "purchase-detail"));
+			}
+			else
+			{
+                $this->Session->setFlash('Pengiriman barang terpilih sukses tiba di gudang '.$this->Entry->addBarangMasuk($this->request->data , $myEntry).'.','success');
+				$this->redirect (array('action' => $myEntry['Entry']['entry_type']."/".$myEntry['Entry']['slug']."?type=barang-masuk"));
+			}
+		}
+		else if($myType['Type']['slug'] == 'sales-order' && $myChildTypeSlug == "retur-jual")
+		{
+			if(empty($this->request->data))
+			{
+				$this->set('pesanan' , $this->_admin_default($myType , 0 , $myEntry , NULL , NULL , "sale-detail"));
+			}
+			else
+			{
+				if($this->Entry->addReturJual($this->request->data , $myEntry))
+				{	
+					$this->Session->setFlash('Input Success.','success');
+					$this->redirect (array('action' => $myEntry['Entry']['entry_type']."/".$myEntry['Entry']['slug']."?type=retur-jual"));
+				}
+				else
+				{
+					$this->Session->setFlash('Invalid input! Please fill the required fields.','failed');
+					$this->redirect (array('action' => $myEntry['Entry']['entry_type']."/".$myEntry['Entry']['slug']."/add?type=retur-jual"));
+				}
+			}
+		}
+	}
 	
 	/**
 	* target route for adding new entry
@@ -446,6 +482,10 @@ class EntriesController extends AppController {
 		}
 		
 		// main add function ...
+        if($myType['Type']['slug'] == 'purchase-order' && $myChildTypeSlug == "barang-masuk" || $myType['Type']['slug'] == 'sales-order' && $myChildTypeSlug == "retur-jual")
+        {				
+            $this->_initBarangMasukAdd($myType , $myEntry , $myChildTypeSlug);
+        }
 		$this->_admin_default_add(($myType['Type']['slug']=='pages'?NULL:$myType) , $myEntry , $myChildTypeSlug);
 		
 		$myTemplate = ($myType['Type']['slug']=='pages'?$myEntry['Entry']['slug']:(empty($myChildTypeSlug)?$myType['Type']['slug']:$myChildTypeSlug)).'_add';
@@ -1365,7 +1405,7 @@ class EntriesController extends AppController {
                 $this->Entry->save($input);
 
                 // tambah total stock di master barang !!
-                $this->EntryMeta->add_stock_master_barang($this->request->data['Entry'][0]['value'] , $this->request->data['EntryMeta'][3]['value']);
+                $this->EntryMeta->add_stock_master_barang($this->request->data['Entry'][0]['value'] , +$this->request->data['EntryMeta'][3]['value']);
             }
             else // EDIT MODE !!
             {
@@ -1385,7 +1425,7 @@ class EntriesController extends AppController {
                     $this->Entry->save($input);
 
                     // tambah total stock di master barang !!
-                    $this->EntryMeta->add_stock_master_barang($this->request->data['Entry'][0]['value'] , $diffstock );
+                    $this->EntryMeta->add_stock_master_barang($this->request->data['Entry'][0]['value'] , +$diffstock );
                 }
                 // KURANGI STOCK !!
                 else if($myEntry['EntryMeta']['stock'] > $this->request->data['EntryMeta'][3]['value'])

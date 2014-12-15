@@ -254,7 +254,7 @@
 		$orderlist .= $value['Entry']['sort_order'].",";
 	?>	
 	<tr class="orderlist" alt="<?php echo $value['Entry']['id']; ?>">
-	    <td><?php echo date_converter($value['Entry']['modified'], $mySetting['date_format'] , $mySetting['time_format']); ?></td>
+	    <td><?php echo date_converter($value['Entry']['modified'], $mySetting['date_format']); ?></td>
 	    <?php
 			$transfer = explode('_', $value['Entry']['title']);
 			$detailBarang = $this->Get->meta_details($transfer[1] , "barang-dagang");
@@ -266,7 +266,9 @@
 		        </a>
 		    </h5>
 		</td>
-		<td><?php echo $value['Entry']['main_image'].' '.$detailBarang['EntryMeta']['satuan']; ?></td>
+		<td>
+		    <h5><?php echo $value['Entry']['main_image'].' '.$detailBarang['EntryMeta']['satuan']; ?></h5>
+		</td>
 		<?php
             $identifier = array();
             $entity = "";

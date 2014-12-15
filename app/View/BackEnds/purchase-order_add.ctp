@@ -316,21 +316,22 @@
 		</div>
 		
 		<div>
-			<table class="list bordered">
+			<table class="list bordered" id="tabel-pesanan-barang">
 				<thead>
                     <tr>
                         <th>JUMLAH</th>
-                        <th>JENIS / NAMA</th>                        
+                        <th>JENIS / NAMA BARANG</th>                        
                         <th>HARGA</th>
                         <th>SUBTOTAL</th>
                         <th><?php echo (empty($myEntry)?'':'TERKIRIM'); ?></th>
-                        <?php echo (empty($myEntry)?"":"<th>RETUR</th>"); ?>
+                        <?php echo (empty($myEntry)?"":"<th class='retur'>RETUR</th>"); ?>
                     </tr>
 				</thead>
 				
 				<tbody id="myInputWrapper">
 				<?php
 					$grandtotal = 0;
+                    $retur_existed = false;
 					foreach ($myEntry['ChildEntry'] as $value)
                     {
                         if($value['Entry']['entry_type'] == 'purchase-detail')
@@ -350,10 +351,37 @@
 					<td class="harga">Rp <?php echo str_replace(',', '.', toMoney($value['EntryMeta']['harga'] , true , true) ); ?>,-</td>
 					<td class="subtotal">Rp <?php echo str_replace(',', '.', toMoney($subtotal , true , true) ); ?>,-</td>
 					<td class="terkirim"><?php echo (empty($value['EntryMeta']['terkirim'])?'-':$value['EntryMeta']['terkirim']); ?></td>
-					<?php echo (empty($myEntry)?"":"<td class='retur'>".(empty($value['EntryMeta']['retur'])?'-':$value['EntryMeta']['retur'])."</td>"); ?>
+					<?php
+                        if(!empty($myEntry))
+                        {
+                            echo "<td class='retur'>";
+                            if(empty($value['EntryMeta']['retur']))
+                            {
+                                echo '-';
+                            }
+                            else
+                            {
+                                echo $value['EntryMeta']['retur'];
+                                $retur_existed = true;
+                            }
+                            echo "</td>";
+                        }
+                    ?>
 				</tr>
                             <?php
                         }
+                    }
+
+                    if(!$retur_existed)
+                    {
+                        ?>
+                    <script type="text/javascript">
+                        $(document).ready(function(){
+                            $('#tabel-pesanan-barang .retur').hide();
+                        });
+                    </script>        
+                    
+                        <?php
                     }
 				?>
 				</tbody>
