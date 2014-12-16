@@ -2,7 +2,7 @@
 	$this->Get->create($data);
 	if(is_array($data)) extract($data , EXTR_SKIP);
 
-    $purHeader = $this->Get->meta_details($myEntry['Entry']['slug'] , "purchase-order");
+    $actionType = $this->Get->getType($this->request->query['action']);
 
     // initialize $extensionPaging for URL Query ...
     $extensionPaging = $this->request->query;
@@ -23,23 +23,6 @@
 
 	if($isAjax == 0)
 	{
-        if($purHeader['EntryMeta']['status_kirim'] == "Terkirim")
-		{
-			?>
-			<script type="text/javascript">
-			    $(document).ready(function(){
-                    $('a.get-started').hide();
-                    
-                    $('div.inner-header > div:first').removeClass('span5').addClass('span7');
-                    $('div.inner-header > div:last').removeClass('span7').addClass('span5');
-                });
-			</script>
-			<div class="alert alert-info full fl">
-				<a class="close" data-dismiss="alert" href="#">&times;</a>
-				Seluruh pengiriman barang sudah selesai.
-			</div>
-			<?php
-		}
 		echo $this->element('admin_header', array('extensionPaging' => $extensionPaging));
 		echo '<div class="inner-content '.(empty($popup)?'':'layout-content-popup').'" id="inner-content">';
 		echo '<div class="autoscroll" id="ajaxed">';
@@ -61,24 +44,27 @@
 ?>
 <script>
 	$(document).ready(function(){
+        $('table#myTableList tbody tr').css('cursor' , 'pointer');
 		<?php if(empty($popup)): ?>
-			$('table#myTableList tr').css('cursor' , 'default');
+            $('table#myTableList tbody tr').click(function(e){
+				window.location = site+"admin/entries/<?php echo $myType['Type']['slug']; ?>/"+$(this).find("input[type=hidden].slug-code").val()+"?type=<?php echo $actionType['Type']['slug']; ?>";
+			});
 			// ---------------------------------------------------------------------- >>>
 			// FOR AJAX REASON !!
 			// ---------------------------------------------------------------------- >>>
-            $("a#<?php echo $myType['Type']['slug']; ?>").removeClass("active");
-            $("a#<?php echo $myChildType['Type']['slug']; ?>").addClass("active");
+            $('div.breadcrumbs p a:last').text('<?php echo $actionType['Type']['name']; ?>');
     
-			$('p#id-title-description').html('Last updated by <a href="#"><?php echo (empty($lastModified['AccountModifiedBy']['username'])?$lastModified['AccountModifiedBy']['email']:$lastModified['AccountModifiedBy']['username']).'</a> at '.date_converter($lastModified['Entry']['modified'], $mySetting['date_format'] , $mySetting['time_format']); ?>');
+            $("a#<?php echo $myType['Type']['slug']; ?>").removeClass("active");
+            $("a#<?php echo $actionType['Type']['slug']; ?>").addClass("active");
+    
+            $('p#module-description').html('<?php echo $actionType['Type']['description']; ?>');
+			$('p#id-title-description').html('<span style="color:red;">Pilih salah satu PO untuk melihat detail berikutnya.</span>');
 			$('p#id-title-description').css('display','<?php echo (empty($totalList)?'none':'block'); ?>');
 			
 			// UPDATE TITLE HEADER !!
-			$('div.title > h2').html('<?php echo strtoupper(empty($myEntry)?$myType['Type']['name']:$myEntry['Entry']['title'].' - '.$myChildType['Type']['name']); ?>');
-			
-		<?php else: ?>
-			$('table#myTableList tbody tr').css('cursor' , 'pointer');
-			$('input[type=checkbox]').css('cursor' , 'default');
-
+			$('div.title > h2').html('<?php echo string_unslug($this->request->query['action']); ?>');
+        
+		<?php else: ?>			
 			$('table#myTableList tbody tr').click(function(e){
 				var targetID = "<?php echo (empty($myEntry)?$myType['Type']['slug']:$myChildType['Type']['slug']); ?>"+($('input#query-stream').length > 0?$('input#query-stream').val():'');
                 if($(this).find("td.form-name").length > 0)
@@ -117,22 +103,18 @@
         // ---------------------------------------------------------------------- >>>
 		// FOR AJAX REASON !!
 		// ---------------------------------------------------------------------- >>>
+        $('div.inner-header > div:first').removeClass('span5').addClass('span7');
+        $('div.inner-header > div:last').removeClass('span7').addClass('span5');
     
 		// UPDATE SEARCH LINK !!
 		$('a.searchMeLink').attr('href',site+'admin/entries/<?php echo $myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']); ?>/index/1<?php echo get_more_extension($extensionPaging); ?>');
 		
-		// UPDATE ADD NEW DATABASE LINK !!
-		$('a.get-started').attr('href',site+'admin/entries/<?php echo $myType['Type']['slug'].'/'.(empty($myEntry)?'':$myEntry['Entry']['slug'].'/').'add'.(!empty($extensionPaging['type'])?'?type='.$extensionPaging['type']:''); ?>');
+		// HIDE ADD NEW DATABASE LINK !!
+		$('a.get-started').hide();
 		
 		// disable language selector ONLY IF one language available !!		
 		var myLangSelector = ($('#colorbox').length > 0 && $('#colorbox').is(':visible')? $('#colorbox').find('div.lang-selector:first') : $('div.lang-selector')  );
 		if(myLangSelector.find('ul.dropdown-menu li').length <= 1)	myLangSelector.hide();
-        
-        // switch column position !!
-        $('table#myTableList thead tr').prepend( $('table#myTableList thead tr th:eq(1)') );        
-        $('table#myTableList tbody tr').each(function(i,el){
-            $(el).prepend( $(el).find('td:eq(1)') );
-        });
 	});
 </script>
 <?php if($totalList <= 0){ ?>
@@ -140,6 +122,7 @@
 		<div class="wrapper-empty-state">
 			<div class="pic"></div>
 			<h2>No Items Found!</h2>
+			<?php echo (!($myType['Type']['slug'] == 'pages' && $user['role_id'] >= 2 || !empty($popup))?$this->Form->Html->link('Get Started',array('action'=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'add','?'=> (!empty($myEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug']?array('type'=>$myChildType['Type']['slug']):'') ),array('class'=>'btn btn-primary')):''); ?>
 		</div>
 	</div>
 <?php }else{ ?>
@@ -177,7 +160,8 @@
 					{
                         $entityTitle = $value['TypeMeta']['key'];
                         $hideKeyQuery = '';
-                        if(!empty($popup) && $this->request->query['key'] == substr($entityTitle, 5))
+                        $shortkey = substr($entityTitle, 5);
+                        if(!empty($popup) && $this->request->query['key'] == $shortkey || $shortkey == 'status_kirim')
                         {
                             $hideKeyQuery = 'hide';
                         }
@@ -186,9 +170,14 @@
 						echo "</th>";
 					}
 				}
-			}
-		?>
-		<th class="keterangan">KETERANGAN</th>
+			}	
+		?>		
+		<th class="hide">
+		    <?php
+                $entityTitle = "status";
+                echo $this->Form->Html->link(string_unslug($entityTitle).($_SESSION['order_by'] == $entityTitle.' asc'?' <span class="sort-symbol">'.$sortASC.'</span>':($_SESSION['order_by'] == $entityTitle.' desc'?' <span class="sort-symbol">'.$sortDESC.'</span>':'')),array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index',$paging,'?'=>$extensionPaging) , array("class"=>"ajax_mypage" , "escape" => false , "title" => "Click to Sort" , "alt"=>$entityTitle.($_SESSION['order_by'] == $entityTitle.' asc'?" desc":" asc") ));
+            ?>
+		</th>		
 	</tr>
 	</thead>
 	
@@ -197,14 +186,20 @@
 		$orderlist = "";
 		foreach ($myList as $value):
 		$orderlist .= $value['Entry']['sort_order'].",";
-        
-        $detailbarang = $this->Get->meta_details($value['Entry']['title'] , "barang-dagang");
-        $value['Entry']['title'] = $detailbarang['Entry']['title'];
 	?>	
 	<tr class="orderlist" alt="<?php echo $value['Entry']['id']; ?>">
 		<td class="main-title">
 			<input class="slug-code" type="hidden" value="<?php echo $value['Entry']['slug']; ?>" />
-			<h5 class="title-code"><?php echo (empty($popup)?$this->Form->Html->link($value['Entry']['title'],array('action'=>$detailbarang['Entry']['entry_type'],'edit',$detailbarang['Entry']['slug'] )  ):$value['Entry']['title']); ?></h5>
+			<h5 class="title-code"><?php echo $value['Entry']['title']; ?></h5>
+			<p>
+				<?php
+					if($descriptionUsed == 1 && !empty($value['Entry']['description']))
+					{
+						$description = strip_tags($value['Entry']['description']);
+						echo (strlen($description) > 30? substr($description,0,30)."..." : $description);
+					}
+				?>
+			</p>
 		</td>
 		<?php
 			// check for simple or complex table view !!
@@ -217,7 +212,7 @@
 						$shortkey = substr($value10['TypeMeta']['key'], 5);
                         $displayValue = $value['EntryMeta'][$shortkey];
                         $hideKeyQuery = '';
-                        if(!empty($popup) && $this->request->query['key'] == $shortkey)
+                        if(!empty($popup) && $this->request->query['key'] == $shortkey || $shortkey == 'status_kirim')
                         {
                             $hideKeyQuery = 'hide';
                         }
@@ -225,9 +220,14 @@
                         echo "<td class='".$value10['TypeMeta']['key']." ".$hideKeyQuery."'>";
                         if(empty($displayValue))
                         {
-                        	if($shortkey == 'sisa')
+                        	if($value10['TypeMeta']['input_type'] == 'gallery' && !empty($value['EntryMeta']['count-'.$value10['TypeMeta']['key']]))
                         	{
-                        		echo "<span class='label label-success'>HABIS</span>";
+                        		$queryURL = array('anchor' => $shortkey );
+                        		if( !empty($myEntry) && $myType['Type']['slug']!=$myChildType['Type']['slug'] )
+                        		{
+                        			$queryURL['type'] = $myChildType['Type']['slug'];
+                        		}
+                        		echo '<span class="badge badge-info">'.$value['EntryMeta']['count-'.$value10['TypeMeta']['key']].' <i class="icon-picture icon-white"></i>'.'</span>';
                         	}
                         	else
                         	{
@@ -247,7 +247,7 @@
 								{
 									$emptybrowse = 1;
 									$outputResult = (empty($mydetails['EntryMeta']['name'])?$mydetails['Entry']['title']:$mydetails['EntryMeta']['name']);
-									echo '<p>'.(empty($popup)?$this->Form->Html->link($outputResult,array('controller'=>'entries','action'=>$mydetails['Entry']['entry_type'],'edit',$mydetails['Entry']['slug']),array('target'=>'_blank')):$outputResult).'</p>';
+									echo '<p>'.$outputResult.'</p>';
 								}
 							}
 							
@@ -266,7 +266,7 @@
 							else
 							{
 								$outputResult = (empty($entrydetail['EntryMeta']['name'])?$entrydetail['Entry']['title']:$entrydetail['EntryMeta']['name']);
-								echo '<h5>'.(empty($popup)?$this->Form->Html->link($outputResult,array("controller"=>"entries","action"=>$entrydetail['Entry']['entry_type']."/edit/".$entrydetail['Entry']['slug']),array('target'=>'_blank')):$outputResult).'</h5>';
+								echo '<h5>'.$outputResult.'</h5>';
                                 
                                 echo '<p>';
                                 // Try to use Primary EntryMeta first !!
@@ -284,26 +284,22 @@
                         }
                         else
                         {
-                            $outputConverter = $this->Get->outputConverter($value10['TypeMeta']['input_type'] , $displayValue , $myImageTypeList , $shortkey);
-                            
-                            if($shortkey == 'jumlah_datang' || $shortkey == 'sisa')
-                            {
-                                echo '<h5>'.$outputConverter.' '.$detailbarang['EntryMeta']['satuan'].'</h5>';
-                            }
-                            else
-                            {
-                                echo $outputConverter;
-                            }                            
+                            echo $this->Get->outputConverter($value10['TypeMeta']['input_type'] , $displayValue , $myImageTypeList , $shortkey);
                         }
                         echo "</td>";
 					}
 				}
-			}
+			}	
 		?>
-		<td>
-		    <?php
-                echo (empty($value['Entry']['description'])?'-':nl2br($value['Entry']['description']));
-            ?>
+		<td class="hide" style='min-width: 0px;' <?php echo (empty($popup)?'':'class="offbutt"'); ?>>
+			<span class="label <?php echo $value['Entry']['status']==0?'label-important':'label-success'; ?>">
+				<?php
+					if($value['Entry']['status'] == 0)
+						echo "Draft";
+					else
+						echo "Published";
+				?>
+			</span>
 		</td>
 	</tr>
 	

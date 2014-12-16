@@ -73,7 +73,7 @@
             // header string !!
             if($shortkey == "harga" || $shortkey == "harga_beli" || $shortkey == "harga_jual" || $shortkey == "total_harga" || $shortkey == "mutasi_debet" || $shortkey == "mutasi_kredit")
 			{
-				echo 'Rp ';
+				echo 'Rp.';
 			}
 
             if($view_mode)

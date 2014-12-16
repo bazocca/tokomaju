@@ -255,7 +255,9 @@
 			<h5 style="margin: 0;" class="title-code"><?php echo (empty($popup)?$this->Form->Html->link($barangdagang['Entry']['title'],array('action'=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'edit',$value['Entry']['slug'] ,'?'=> (!empty($myEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug']?array('type'=>$myChildType['Type']['slug']):'')   )  ):$barangdagang['Entry']['title']); ?></h5>
 		</td>
 		<td><?php echo $jenisbarang['Entry']['title']; ?></td>		
-		<td><?php echo $value['EntryMeta']['stock'].' '.$barangdagang['EntryMeta']['satuan']; ?></td>
+		<td>
+		    <h5><?php echo $value['EntryMeta']['stock'].' '.$barangdagang['EntryMeta']['satuan']; ?></h5>
+		</td>
 		<td><?php echo (empty($value['Entry']['description'])?'-':str_replace(chr(10) , '<br/>' , $value['Entry']['description'])); ?></td>
 		<td><?php echo date_converter($value['Entry']['modified'], $mySetting['date_format'] , $mySetting['time_format']); ?></td>
 		<?php

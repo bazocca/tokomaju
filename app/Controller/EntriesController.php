@@ -314,7 +314,7 @@ class EntriesController extends AppController {
 					$_SESSION['order_by'] = $this->request->data['order_by'];
 					break;
 			}
-		}		
+		}
 		// END OF DEFINE THE ORDER...
 		
 		if($this->request->params['type'] == 'pages')
@@ -378,6 +378,18 @@ class EntriesController extends AppController {
 		}
 
 		// this general action is one for all...
+        if($myChildTypeSlug == 'barang-masuk')
+        {
+            if(empty($this->request->data['order_by']))
+            {
+                $_SESSION['order_by'] = 'form-tanggal asc';
+            }
+        }        
+		else if($myChildTypeSlug=="hutang" || $myChildTypeSlug=="piutang")
+		{
+			$this->request->params['page'] = 0; // must be one full page !!            
+            $_SESSION['order_by'] = 'form-tanggal asc';
+		}
 		$this->_admin_default($myType , $this->request->params['page'] , $myEntry , $this->request->query['key'] , $this->request->query['value'] , $myChildTypeSlug , $this->request->data['search_by'] , $this->request->query['popup'] , strtolower($this->request->query['lang']));
 		$myTypeSlug = (empty($myChildTypeSlug)?$myType['Type']['slug']:$myChildTypeSlug);
 		
@@ -900,7 +912,7 @@ class EntriesController extends AppController {
 		// ========================================= >>
 		// EXECUTE MAIN QUERY !!
 		// ========================================= >>
-		$options['order'] = array('Entry.'.(isset($innerFieldMeta)||empty($_SESSION['order_by'])||empty($this->request->params['admin'])?'sort_order DESC':$_SESSION['order_by']));
+		$options['order'] = array('Entry.'.(isset($innerFieldMeta)||empty($_SESSION['order_by'])||empty($this->request->params['admin'])?'sort_order ASC':$_SESSION['order_by']));
         
         // untuk filter tanggal (misalnya di history barang masuk dan keluar di module pindah gudang)
 		if(!empty($this->request->data['date_by']))
@@ -989,7 +1001,7 @@ class EntriesController extends AppController {
 		$data['myImageTypeList'] = $this->EntryMeta->embedded_img_meta('type');
 		
 		// IS ALLOWING ORDER CHANGE OR NOT ??
-		$data['isOrderChange'] = (empty($_SESSION['order_by']) || substr($_SESSION['order_by'], 0 , 10) == 'sort_order'?1:0);
+		$data['isOrderChange'] = 0;
 		
 		// --------------------------------------------- LANGUAGE OPTION LINK ------------------------------------------ //
 		if(!empty($myEntry))

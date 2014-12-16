@@ -1049,7 +1049,7 @@ class Entry extends AppModel {
 			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("hutang", $frontTitle);
             $input['Entry']['slug'] = get_slug($input['Entry']['title']);
             
-			$input['Entry']['description'] = "Beli <strong>".$detailbarang['Entry']['title']."</strong> sebanyak ".$data['barang']['jumlah'][$key]." ".$detailbarang['EntryMeta']['satuan']." @Rp ".str_replace(',', '.', toMoney( $data['barang']['harga'][$key] , true , true) ).",-";			
+			$input['Entry']['description'] = "Beli <strong>".$detailbarang['Entry']['title']."</strong> sebanyak ".$data['barang']['jumlah'][$key]." ".$detailbarang['EntryMeta']['satuan']." @Rp.".str_replace(',', '.', toMoney( $data['barang']['harga'][$key] , true , true) ).",-";			
 			
 			$input['Entry']['created_by'] = $input['Entry']['modified_by'] = $myCreator['id'];
 			$input['Entry']['parent_id'] = $data['Entry']['id'];

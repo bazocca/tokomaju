@@ -64,8 +64,8 @@
                     var content = '<tr>';
                     content += '<td class="jumlah"><h5>'+jumlah+' '+$('span.stock-satuan').text()+'</h5></td>';
                     content += '<td class="nama">'+$("input#jenis-barang").val()+' / '+$('input#barang-dagang').val()+'</td>';                    
-                    content += '<td class="harga">Rp '+number_format (harga, 0, ',', '.')+',-</td>';
-                    content += '<td class="subtotal">Rp '+number_format (subtotal, 0, ',', '.')+',-<input type="hidden" value="'+subtotal+'"></td>';
+                    content += '<td class="harga">Rp.'+number_format (harga, 0, ',', '.')+',-</td>';
+                    content += '<td class="subtotal">Rp.'+number_format (subtotal, 0, ',', '.')+',-<input type="hidden" value="'+subtotal+'"></td>';
                     content += '<td class="action">';
                     content += '<a href="javascript:void(0)" class="btn btn-danger del-barang" style="display: inline;"><i class="icon-trash icon-white"></i></a>';
                     content += '<input type="hidden" name="data[barang][id][]" value="'+id+'"/>';
@@ -82,7 +82,7 @@
                         var grandtotal = parseInt($("#grandtotal > input[type=hidden]").val());
                         grandtotal += subtotal;                        
                         $("#grandtotal > input[type=hidden]").val(grandtotal);                        
-                        $("#grandtotal > strong").html('Rp '+number_format(grandtotal, 0, ',', '.')+',-');
+                        $("#grandtotal > strong").html('Rp.'+number_format(grandtotal, 0, ',', '.')+',-');
                     });
                 });
 
@@ -92,7 +92,7 @@
                         var minus = parseInt($(this).find('td.subtotal input[type=hidden]').val());
                         grandtotal -= minus;
                         $("#grandtotal > input[type=hidden]").val(grandtotal);                        
-                        $("#grandtotal > strong").html('Rp '+number_format(grandtotal, 0, ',', '.')+',-');
+                        $("#grandtotal > strong").html('Rp.'+number_format(grandtotal, 0, ',', '.')+',-');
                         $(this).detach();
                         
                         // re-enable browse supplier !!
@@ -348,8 +348,8 @@
 					<td class="nama">
 					    <?php echo $jenisbarang['Entry']['title']." / ".$detailbarang['Entry']['title']; ?>
 					</td>					
-					<td class="harga">Rp <?php echo str_replace(',', '.', toMoney($value['EntryMeta']['harga'] , true , true) ); ?>,-</td>
-					<td class="subtotal">Rp <?php echo str_replace(',', '.', toMoney($subtotal , true , true) ); ?>,-</td>
+					<td class="harga">Rp.<?php echo str_replace(',', '.', toMoney($value['EntryMeta']['harga'] , true , true) ); ?>,-</td>
+					<td class="subtotal">Rp.<?php echo str_replace(',', '.', toMoney($subtotal , true , true) ); ?>,-</td>
 					<td class="terkirim"><?php echo (empty($value['EntryMeta']['terkirim'])?'-':$value['EntryMeta']['terkirim']); ?></td>
 					<?php
                         if(!empty($myEntry))
@@ -393,7 +393,7 @@
 			<label class="control-label">Total Harga</label>
 			<div class="controls">
 				<div class="view-mode" id="grandtotal">
-				    <strong>Rp <?php echo str_replace(',', '.', toMoney($grandtotal , true , true) ); ?>,-</strong>
+				    <strong>Rp.<?php echo str_replace(',', '.', toMoney($grandtotal , true , true) ); ?>,-</strong>
                     <input type="hidden" value="<?php echo $grandtotal; ?>">
 				</div>
 			</div>

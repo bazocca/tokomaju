@@ -431,7 +431,7 @@
 			}	
 		?>
 		<td>
-			<?php echo (empty($value['EntryMeta']['harga_jual'])||empty($value['EntryMeta']['harga_beli'])?'-':'Rp '.str_replace(',', '.', toMoney( $value['EntryMeta']['harga_jual'] - $value['EntryMeta']['harga_beli'] , true , true) ).',-'); ?>
+			<?php echo (empty($value['EntryMeta']['harga_jual'])||empty($value['EntryMeta']['harga_beli'])?'-':'Rp.'.str_replace(',', '.', toMoney( $value['EntryMeta']['harga_jual'] - $value['EntryMeta']['harga_beli'] , true , true) ).',-'); ?>
 			<input type="hidden" value="<?php echo (empty($value['EntryMeta']['harga_jual'])||empty($value['EntryMeta']['harga_beli'])?'0':$value['EntryMeta']['harga_jual'] - $value['EntryMeta']['harga_beli']); ?>">
 		</td>
 		<td><?php echo date_converter($value['Entry']['modified'], $mySetting['date_format'] , $mySetting['time_format']); ?></td>

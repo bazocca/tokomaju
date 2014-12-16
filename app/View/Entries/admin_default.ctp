@@ -438,7 +438,7 @@
 					else
 					{
 						$confirm = 'Are you sure to set '.strtoupper($value['Entry']['title']).' as draft ?';
-						echo '<a class="hide" href="javascript:void(0)" onclick="show_confirm(\''.$confirm.'\',\''.$targetURL.'\')" class="btn btn-warning"><i class="icon-ban-circle icon-white"></i></a>';
+						echo '<a class="hide btn btn-warning" href="javascript:void(0)" onclick="show_confirm(\''.$confirm.'\',\''.$targetURL.'\')"><i class="icon-ban-circle icon-white"></i></a>';
 					}
 				}
 				if(!($myType['Type']['slug'] == 'pages' && $user['role_id'] >= 2))

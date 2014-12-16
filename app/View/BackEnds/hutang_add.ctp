@@ -1,12 +1,21 @@
 <?php
+    // CUMAN BISA ADD, TIDAK BISA EDIT OR DELETE !!!!
 	$this->Get->create($data);
 	if(is_array($data)) extract($data , EXTR_SKIP);
+
+    $balance = $this->Get->meta_details($myParentEntry['Entry']['slug'] , "purchase-order");
+
 	if($isAjax == 0)
 	{
 		echo $this->element('admin_header_add');
 		?>
 		<script>
 			$(document).ready(function(){
+                $('div.title > h2').html('FORM TRANSAKSI <?php echo $myParentEntry['Entry']['title']; ?>');
+                
+                $("a#<?php echo $myType['Type']['slug']; ?>").removeClass("active");
+                $("a#<?php echo $myChildType['Type']['slug']; ?>").addClass("active");
+                
 				// disable language selector ONLY IF one language available !!
 				if($('div.lang-selector ul.dropdown-menu li').length <= 1)
 				{
@@ -41,6 +50,17 @@
 ?>
 	<fieldset>
 		<script>
+            $.fn.update_balance = function(){
+				var mutasi_debet = parseInt($.trim($('input.mutasi_debet').val()).length>0?$('input.mutasi_debet').val():0);
+				var mutasi_kredit = parseInt($.trim($('input.mutasi_kredit').val()).length>0?$('input.mutasi_kredit').val():0);
+				var balance = parseInt($('input[type=hidden]#neutral_balance').val());
+                
+                var new_balance = balance - mutasi_debet + mutasi_kredit;
+                
+				$('#display_balance').html('Rp.'+number_format(new_balance, 0, ',', '.')+',-');
+				$('input[type=hidden]#pass_balance').val(new_balance);
+			}
+            
 			$(document).ready(function(){
 				if($('p#id-title-description').length > 0)
 				{
@@ -63,6 +83,11 @@
 					<?php endif; ?>
 					$(this).closest('form').find('button[type=submit]:first').click();
 				});
+                
+                // BALANCE AUTO UPDATES ...
+                $('input.mutasi_debet , input.mutasi_kredit').change(function(){
+                    $.fn.update_balance();
+                });
 			});
 		</script>
 		<p class="notes important" style="color: red;font-weight: bold;">* Red input MUST NOT be empty.</p>
@@ -80,15 +105,6 @@
 					break;
 				}
 			}
-			
-			$value = array();
-			$value['key'] = 'form-'.Inflector::slug($titlekey);
-			$value['validation'] = 'not_empty';
-			$value['model'] = 'Entry';
-			$value['counter'] = 0;
-			$value['input_type'] = 'text';
-			$value['value'] = (isset($_POST['data'][$value['model']][$value['counter']]['value'])?$_POST['data'][$value['model']][$value['counter']]['value']:$myEntry[$value['model']]['title']);
-			echo $this->element('input_'.$value['input_type'] , $value);
 		?>
 		<!-- BEGIN TO LIST META ATTRIBUTES -->
 		<?php
@@ -129,10 +145,42 @@
 							break;
 					}
 					echo $this->element('input_'.$value['input_type'] , $value);
+                    
+                    // MOVE TITLE FIELD POSITION !!
+                    if($value['key'] == 'form-tanggal')
+                    {
+                        $value = array();
+                        $value['key'] = 'form-'.Inflector::slug($titlekey);
+                        $value['validation'] = 'not_empty';
+                        $value['model'] = 'Entry';
+                        $value['counter'] = 0;
+                        $value['input_type'] = 'text';
+                        $value['p'] = 'Auto generated Code / Apply your own Reference Code';
+                        $value['id'] = 'entry_id';
+                        $value['inputsize'] = 'input-medium';
+                        $value['value'] = (isset($_POST['data'][$value['model']][$value['counter']]['value'])?$_POST['data'][$value['model']][$value['counter']]['value']:$myEntry[$value['model']]['title']);
+                        echo $this->element('input_'.$value['input_type'] , $value);
+                    }
 				}
 			}
 		?>		
 		<!-- END OF META ATTRIBUTES -->
+		<div class="control-group">            
+			<label class="control-label">Balance</label>
+			<div class="controls">
+                <?php
+                    if(empty($balance['EntryMeta']['balance']))
+                    {
+                        $balance['EntryMeta']['balance'] = 0;
+                    }
+                ?>
+			    <div class="view-mode" id="display_balance">
+			        Rp.<?php echo str_replace(',', '.', toMoney( $balance['EntryMeta']['balance']  , true , true) ); ?>,-
+			    </div>
+				<input type="hidden" id="neutral_balance" value="<?php echo $balance['EntryMeta']['balance']; ?>" />
+				<input name="data[ParentEntry][balance]" type="hidden" id="pass_balance" value="<?php echo $balance['EntryMeta']['balance']; ?>" />
+			</div>
+		</div>
 		
 		<?php
 			// Our CKEditor Description Field !!
@@ -158,10 +206,11 @@
 			$value['list'][1]['name'] = 'Draft';
 			$value['value'] = (isset($_POST['data'][$value['model']][$value['counter']]['value'])?$_POST['data'][$value['model']][$value['counter']]['value']:$myEntry[$value['model']]['status']);
 			$value['display'] = (empty($myEntry)?'none':'');
-			echo $this->element('input_'.$value['input_type'] , $value);
+			echo $this->element('input_'.$value['input_type'] , $value);			
 		?>
 		
 		<!-- myTypeSlug is for media upload settings purpose !! -->
+		<input type="hidden" value="<?php echo getFrontCodeId(empty($myChildType)?$myType['Type']['slug']:$myChildType['Type']['slug']); ?>" id="frontId"/>
 		<input type="hidden" value="<?php echo (empty($myChildType)?$myType['Type']['slug']:$myChildType['Type']['slug']); ?>" id="myTypeSlug"/>
 	<!-- SAVE BUTTON -->
 		<div class="control-action">
