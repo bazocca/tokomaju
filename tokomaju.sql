@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 12, 2014 at 05:12 PM
+-- Generation Time: Dec 18, 2014 at 05:21 PM
 -- Server version: 5.1.37
 -- PHP Version: 5.3.0
 
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `cms_accounts` (
 --
 
 INSERT INTO `cms_accounts` (`id`, `user_id`, `role_id`, `username`, `email`, `password`, `last_login`, `created`, `created_by`, `modified`, `modified_by`) VALUES
-(1, 1, 1, 'admin', 'admin@yahoo.com', '169e781bd52860b584879cbe117085da596238f3', '2014-12-08 11:44:37', '2013-01-04 00:00:00', 1, '2014-05-05 15:15:38', 1);
+(1, 1, 1, 'admin', 'admin@yahoo.com', '169e781bd52860b584879cbe117085da596238f3', '2014-12-18 13:44:30', '2013-01-04 00:00:00', 1, '2014-05-05 15:15:38', 1);
 
 -- --------------------------------------------------------
 
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `cms_entries` (
   `lang_code` varchar(10) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=46 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=59 ;
 
 --
 -- Dumping data for table `cms_entries`
@@ -83,7 +83,7 @@ INSERT INTO `cms_entries` (`id`, `entry_type`, `title`, `slug`, `description`, `
 (1, 'customer', 'Andy Basuki', 'andy-basuki', 'just a test', 0, 0, 1, 0, '2014-11-23 10:59:31', 1, '2014-11-23 10:59:32', 1, 1, 'en-1'),
 (2, 'supplier', 'He Xin Min', 'he-xin-min', 'fake supplier', 0, 0, 1, 0, '2014-11-23 11:27:33', 1, '2014-11-23 11:27:33', 1, 2, 'en-2'),
 (3, 'ekspedisi', 'Pak Gunawan Santoso', 'pak-gunawan-santoso', 'Ekspedisi Sby - Kudus OKE', 0, 0, 1, 0, '2014-11-23 14:37:16', 1, '2014-11-23 14:37:16', 1, 3, 'en-3'),
-(4, 'gudang', 'Pengampon', 'pengampon', 'Gudang satu-satunya.', 0, 0, 1, 15, '2014-11-25 11:05:06', 1, '2014-11-26 17:36:24', 1, 4, 'en-4'),
+(4, 'gudang', 'Pengampon', 'pengampon', 'Gudang satu-satunya.', 0, 0, 1, 16, '2014-11-25 11:05:06', 1, '2014-12-16 10:55:27', 1, 4, 'en-4'),
 (5, 'jenis-barang', 'Bahan Baku', 'bahan-baku', 'test bahan', 0, 0, 1, 0, '2014-11-25 11:24:04', 1, '2014-11-25 11:24:04', 1, 5, 'en-5'),
 (6, 'jenis-barang', 'Mesin', 'mesin', 'test jenis mesin.\r\nOke.', 0, 0, 1, 0, '2014-11-25 11:24:23', 1, '2014-11-25 11:24:23', 1, 6, 'en-6'),
 (7, 'jenis-barang', 'Sparepart', 'sparepart', 'berbagai barang pendukung', 0, 0, 1, 0, '2014-11-25 11:26:10', 1, '2014-11-25 11:26:10', 1, 7, 'en-7'),
@@ -105,17 +105,28 @@ INSERT INTO `cms_entries` (`id`, `entry_type`, `title`, `slug`, `description`, `
 (28, 'pindah-keluar', 'automatic_bahan-tinta', 'automatic-bahan-tinta-3', 'Dihapus oleh administrator.', 2, 4, 1, 0, '2014-11-26 12:14:14', 1, '2014-11-26 12:14:14', 1, 28, 'en-28'),
 (29, 'pindah-keluar', 'automatic_bahan-tinta', 'automatic-bahan-tinta-4', 'Dihapus oleh administrator.', 1, 4, 1, 0, '2014-11-26 12:14:32', 1, '2014-11-26 12:14:32', 1, 29, 'en-29'),
 (32, 'pindah-masuk', 'automatic_mesin-hardcover-maker', 'automatic-mesin-hardcover-maker-8', 'Penambahan stok barang oleh administrator.', 5, 4, 1, 0, '2014-11-26 17:36:24', 1, '2014-11-26 17:36:24', 1, 32, 'en-32'),
-(33, 'gudang', ' Romokalisari', 'romokalisari', 'Gudang coba coba.\r\ntest oke', 0, 0, 1, 2, '2014-11-27 09:38:12', 1, '2014-11-27 09:38:39', 1, 33, 'en-33'),
+(33, 'gudang', ' Romokalisari', 'romokalisari', 'Gudang coba coba.\r\ntest oke', 0, 0, 1, 6, '2014-11-27 09:38:12', 1, '2014-12-16 11:55:29', 1, 33, 'en-33'),
 (34, 'barang-gudang', 'mesin-hardcover-maker', 'mesin-hardcover-maker-2', '', 0, 33, 1, 0, '2014-11-27 09:38:38', 1, '2014-11-27 09:38:38', 1, 34, 'en-34'),
 (35, 'pindah-masuk', 'automatic_mesin-hardcover-maker', 'automatic-mesin-hardcover-maker-9', 'Penambahan stok barang oleh administrator.', 12, 33, 1, 0, '2014-11-27 09:38:38', 1, '2014-11-27 09:38:39', 1, 35, 'en-35'),
 (36, 'purchase-order', 'TEST001', 'test001', 'test aja gan.\r\nThankyou.\r\nGBU', 0, 0, 1, 0, '2014-11-28 17:20:14', 1, '2014-11-28 17:20:14', 1, 36, 'en-36'),
-(39, 'purchase-order', 'PUR141204001', 'pur141204001', 'First Purchase Test !!\r\nthanks\r\noke\r\nGBU', 0, 0, 1, 5, '2014-12-04 10:01:11', 1, '2014-12-04 10:01:12', 1, 39, 'en-39'),
+(39, 'purchase-order', 'PUR141204001', 'pur141204001', 'First Purchase Test !!\r\nthanks\r\noke\r\nGBU', 0, 0, 1, 11, '2014-12-04 10:01:11', 1, '2014-12-17 11:35:22', 1, 39, 'en-39'),
 (40, 'purchase-detail', 'mesin-hardcover-maker', 'mesin-hardcover-maker-3', NULL, 0, 39, 1, 0, '2014-12-04 10:01:11', 1, '2014-12-04 10:01:11', 1, 40, 'en-40'),
 (41, 'hutang', 'HUT141204001', 'hut141204001', 'Beli <strong>Mesin Hardcover Maker</strong> sebanyak 3 unit @Rp 6.000.000,-', 0, 39, 1, 0, '2014-12-04 10:01:11', 1, '2014-12-04 10:01:11', 1, 41, 'en-41'),
 (42, 'purchase-detail', 'bahan-tinta', 'bahan-tinta-1', NULL, 0, 39, 1, 0, '2014-12-04 10:01:11', 1, '2014-12-04 10:01:11', 1, 42, 'en-42'),
 (43, 'hutang', 'HUT141204002', 'hut141204002', 'Beli <strong>Bahan Tinta</strong> sebanyak 7 Galon @Rp 345.000,-', 0, 39, 1, 0, '2014-12-04 10:01:12', 1, '2014-12-04 10:01:12', 1, 43, 'en-43'),
 (44, 'hutang', 'HUT141204003', 'hut141204003', 'Pembayaran PUR141204001 telah lunas.', 0, 39, 1, 0, '2014-12-04 10:01:12', 1, '2014-12-04 10:01:12', 1, 44, 'en-44'),
-(45, 'pages', 'Database Sequence', 'database-sequence', '#MASTER\r\nCUSTOMER\r\nSUPPLIER\r\nEKSPEDISI\r\nGUDANG\r\nJENIS BARANG\r\nBARANG DAGANG\r\n#PEMBELIAN\r\nPURCHASE ORDER\r\nBARANG MASUK\r\nHUTANG\r\n#PENJUALAN\r\nSALES ORDER\r\nSURAT JALAN\r\nRESI\r\nPIUTANG\r\n#RETUR\r\nRETUR BELI\r\nRETUR JUAL', 0, 0, 1, 0, '2014-12-05 17:12:50', 1, '2014-12-05 17:12:50', 1, 45, 'en-45');
+(45, 'pages', 'Database Sequence', 'database-sequence', '#MASTER\r\nCUSTOMER\r\nSUPPLIER\r\nEKSPEDISI\r\nGUDANG\r\nJENIS BARANG\r\nBARANG DAGANG\r\n#PEMBELIAN\r\nPURCHASE ORDER\r\nBARANG MASUK\r\nHUTANG\r\n#PENJUALAN\r\nSALES ORDER\r\nSURAT JALAN\r\nRESI\r\nPIUTANG\r\n#RETUR\r\nRETUR BELI\r\nRETUR JUAL', 0, 0, 1, 0, '2014-12-05 17:12:50', 1, '2014-12-05 17:12:50', 1, 45, 'en-45'),
+(46, 'barang-masuk', 'bahan-tinta', 'bahan-tinta-2', 'masuk tinta', 0, 39, 1, 0, '2014-12-16 09:48:06', 1, '2014-12-16 09:48:06', 1, 46, 'en-46'),
+(47, 'barang-gudang', 'bahan-tinta', 'bahan-tinta-3', 'Kiriman dari supplier.', 0, 33, 1, 0, '2014-12-16 09:48:06', 1, '2014-12-16 09:48:06', 1, 47, 'en-47'),
+(48, 'pindah-masuk', 'he-xin-min_bahan-tinta', 'he-xin-min-bahan-tinta', 'Pembelian INVOICE kode PUR141204001', 3, 33, 1, 0, '2013-12-25 00:00:00', 1, '2014-12-16 09:48:06', 1, 48, 'en-48'),
+(49, 'barang-masuk', 'mesin-hardcover-maker', 'mesin-hardcover-maker-4', 'masuk mesin', 0, 39, 1, 0, '2014-12-16 09:48:07', 1, '2014-12-16 09:48:07', 1, 49, 'en-49'),
+(50, 'pindah-masuk', 'he-xin-min_mesin-hardcover-maker', 'he-xin-min-mesin-hardcover-maker', 'Pembelian INVOICE kode PUR141204001', 2, 33, 1, 0, '2013-12-25 00:00:00', 1, '2014-12-16 09:48:07', 1, 50, 'en-50'),
+(51, 'barang-masuk', 'mesin-hardcover-maker', 'mesin-hardcover-maker-5', '', 0, 39, 1, 0, '2014-12-16 10:55:27', 1, '2014-12-16 10:55:27', 1, 51, 'en-51'),
+(52, 'pindah-masuk', 'he-xin-min_mesin-hardcover-maker', 'he-xin-min-mesin-hardcover-maker-1', 'Pembelian INVOICE kode PUR141204001', 1, 4, 1, 0, '2014-12-16 00:00:00', 1, '2014-12-16 10:55:27', 1, 52, 'en-52'),
+(53, 'barang-masuk', 'bahan-tinta', 'bahan-tinta-4', '', 0, 39, 1, 0, '2014-12-16 11:55:29', 1, '2014-12-16 11:55:29', 1, 53, 'en-53'),
+(54, 'pindah-masuk', 'he-xin-min_bahan-tinta', 'he-xin-min-bahan-tinta-1', 'Pembelian INVOICE kode PUR141204001', 4, 33, 1, 0, '2014-12-16 00:00:00', 1, '2014-12-16 11:55:29', 1, 54, 'en-54'),
+(57, 'hutang', '1234-5678-9012', '1234-5678-9012', 'kembalikan kelebihan bayar\r\nOKE thankyou :)', 0, 39, 1, 0, '2014-12-17 11:35:22', 1, '2014-12-17 11:35:22', 1, 57, 'en-57'),
+(56, 'hutang', 'HUT141217001', 'hut141217001', 'Lebih bayar OKE', 0, 39, 1, 0, '2014-12-17 11:33:04', 1, '2014-12-17 11:33:04', 1, 56, 'en-56');
 
 -- --------------------------------------------------------
 
@@ -129,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `cms_entry_metas` (
   `key` varchar(500) NOT NULL,
   `value` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=121 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=149 ;
 
 --
 -- Dumping data for table `cms_entry_metas`
@@ -180,9 +191,9 @@ INSERT INTO `cms_entry_metas` (`id`, `entry_id`, `key`, `value`) VALUES
 (43, 9, 'form-rekening_bank', 'BCA - 123 456 7890'),
 (48, 8, 'form-harga_jual', '15000000'),
 (49, 4, 'count-barang-gudang', '1'),
-(72, 16, 'form-stock', '28'),
-(52, 4, 'count-pindah-masuk', '7'),
-(53, 8, 'form-stock', '40'),
+(72, 16, 'form-stock', '29'),
+(52, 4, 'count-pindah-masuk', '8'),
+(53, 8, 'form-stock', '43'),
 (55, 4, 'count-pindah-keluar', '7'),
 (57, 18, 'form-jenis_barang', 'bahan-baku'),
 (58, 18, 'form-satuan', 'Galon'),
@@ -190,15 +201,15 @@ INSERT INTO `cms_entry_metas` (`id`, `entry_id`, `key`, `value`) VALUES
 (60, 18, 'form-harga_beli', '345000'),
 (61, 18, 'form-harga_jual', '600000'),
 (73, 33, 'form-alamat', 'Jl. Romokalisari No 12'),
-(63, 18, 'form-stock', '0'),
+(63, 18, 'form-stock', '7'),
 (74, 33, 'form-kota', 'Raden'),
 (75, 33, 'form-kode_pos', '60969'),
 (76, 33, 'form-telepon', '031 372 9191'),
 (77, 33, 'form-nama_pegawai', 'Pak Sutejo'),
 (78, 33, 'form-handphone', '081 737 1234'),
-(79, 33, 'count-barang-gudang', '1'),
-(80, 34, 'form-stock', '12'),
-(81, 33, 'count-pindah-masuk', '1'),
+(79, 33, 'count-barang-gudang', '2'),
+(80, 34, 'form-stock', '14'),
+(81, 33, 'count-pindah-masuk', '4'),
 (82, 36, 'form-tanggal', '11/28/2014'),
 (83, 36, 'form-supplier', 'he-xin-min'),
 (84, 36, 'form-status_bayar', 'Tunggak'),
@@ -208,26 +219,48 @@ INSERT INTO `cms_entry_metas` (`id`, `entry_id`, `key`, `value`) VALUES
 (98, 39, 'form-tanggal', '12/04/2014'),
 (99, 39, 'form-supplier', 'he-xin-min'),
 (100, 39, 'form-status_bayar', 'Lunas'),
-(101, 39, 'form-status_kirim', 'Diproses'),
+(101, 39, 'form-status_kirim', 'Terkirim'),
 (102, 39, 'form-nama_pegawai', 'admin zpanel'),
 (103, 39, 'count-purchase-detail', '2'),
 (104, 40, 'form-jumlah', '3'),
 (105, 40, 'form-harga', '6000000'),
-(106, 40, 'form-terkirim', '0'),
+(106, 40, 'form-terkirim', '3'),
 (107, 40, 'form-retur', '0'),
-(108, 39, 'count-hutang', '3'),
+(108, 39, 'count-hutang', '5'),
 (109, 41, 'form-tanggal', '12/04/2014'),
 (110, 41, 'form-mutasi_kredit', '18000000'),
 (111, 42, 'form-jumlah', '7'),
 (112, 42, 'form-harga', '345000'),
-(113, 42, 'form-terkirim', '0'),
+(113, 42, 'form-terkirim', '7'),
 (114, 42, 'form-retur', '0'),
 (115, 43, 'form-tanggal', '12/04/2014'),
 (116, 43, 'form-mutasi_kredit', '2415000'),
 (117, 44, 'form-tanggal', '12/04/2014'),
 (118, 44, 'form-mutasi_debet', '20415000'),
 (119, 39, 'form-balance', '0'),
-(120, 39, 'form-total_harga', '20415000');
+(120, 39, 'form-total_harga', '20415000'),
+(121, 39, 'count-barang-masuk', '4'),
+(122, 46, 'form-jumlah_datang', '3'),
+(123, 46, 'form-tanggal', '12/25/2013'),
+(124, 46, 'form-gudang', 'romokalisari'),
+(125, 46, 'form-sisa', '4'),
+(126, 47, 'form-stock', '7'),
+(127, 49, 'form-jumlah_datang', '2'),
+(128, 49, 'form-tanggal', '12/25/2013'),
+(129, 49, 'form-gudang', 'romokalisari'),
+(130, 49, 'form-sisa', '1'),
+(131, 51, 'form-jumlah_datang', '1'),
+(132, 51, 'form-tanggal', '12/16/2014'),
+(133, 51, 'form-gudang', 'pengampon'),
+(134, 51, 'form-sisa', '0'),
+(135, 53, 'form-jumlah_datang', '4'),
+(136, 53, 'form-tanggal', '12/16/2014'),
+(137, 53, 'form-gudang', 'romokalisari'),
+(138, 53, 'form-sisa', '0'),
+(145, 57, 'form-mutasi_kredit', '520000'),
+(144, 57, 'form-tanggal', '12/20/2014'),
+(142, 56, 'form-tanggal', '12/17/2014'),
+(143, 56, 'form-mutasi_debet', '520000');
 
 -- --------------------------------------------------------
 
@@ -404,9 +437,9 @@ INSERT INTO `cms_type_metas` (`id`, `type_id`, `key`, `value`, `input_type`, `va
 (41, 9, 'form-jenis_barang', '', 'browse', 'not_empty|', ''),
 (42, 9, 'form-stock', '', 'text', '', 'Jumlah stock barang berjalan.'),
 (43, 9, 'form-satuan', '', 'text', 'not_empty|', 'Nama satuan barang yang sesuai.<br>Misalnya : unit, kg, liter, sak, dll'),
-(44, 9, 'form-supplier', '', 'multibrowse', '', 'Para Supplier yang menyediakan barang tersebut.'),
-(45, 9, 'form-harga_beli', '', 'text', 'is_numeric|', 'Standard patokan harga beli produk.<br><span style=''color:red''>NB : KETIK nominal harganya saja, tanpa Rp / tanda baca lainnya.</span>'),
-(46, 9, 'form-harga_jual', '', 'text', 'is_numeric|', 'Standard patokan harga jual produk.<br><span style=''color:red''>NB : KETIK nominal harganya saja, tanpa Rp / tanda baca lainnya.</span>'),
+(44, 9, 'form-supplier', '', 'multibrowse', 'not_empty|', 'Para Supplier yang menyediakan barang tersebut.'),
+(45, 9, 'form-harga_beli', '', 'text', 'is_numeric|not_empty|', 'Standard patokan harga beli produk.<br><span style=''color:red''>NB : KETIK nominal harganya saja, tanpa Rp / tanda baca lainnya.</span>'),
+(46, 9, 'form-harga_jual', '', 'text', 'is_numeric|not_empty|', 'Standard patokan harga jual produk.<br><span style=''color:red''>NB : KETIK nominal harganya saja, tanpa Rp / tanda baca lainnya.</span>'),
 (47, 10, 'title_key', 'Barang Dagang', NULL, NULL, NULL),
 (48, 10, 'form-stock', '', 'text', 'not_empty|is_numeric|', 'Banyaknya barang yg tersimpan.'),
 (49, 13, 'title_key', 'Kode Invoice', NULL, NULL, NULL),
@@ -428,8 +461,8 @@ INSERT INTO `cms_type_metas` (`id`, `type_id`, `key`, `value`, `input_type`, `va
 (65, 15, 'form-gudang', '', 'browse', 'not_empty|', 'Gudang tempat pengiriman.'),
 (66, 16, 'title_key', 'Kode Referensi', NULL, NULL, NULL),
 (67, 16, 'form-tanggal', '', 'datepicker', 'not_empty|', ''),
-(68, 16, 'form-mutasi_debet', '', 'text', 'is_numeric|', ''),
-(69, 16, 'form-mutasi_kredit', '', 'text', 'is_numeric|', ''),
+(68, 16, 'form-mutasi_debet', '', 'text', 'is_numeric|', 'Masukan nominal untuk <strong>pembayaran</strong> hutang.'),
+(69, 16, 'form-mutasi_kredit', '', 'text', 'is_numeric|', 'Masukan nominal untuk <strong>menambah beban</strong> hutang.'),
 (71, 17, 'title_key', 'Surat Jalan', NULL, NULL, NULL),
 (72, 18, 'title_key', 'Kode Invoice', NULL, NULL, NULL),
 (73, 18, 'form-tanggal', '', 'datepicker', 'not_empty|', ''),
@@ -438,7 +471,7 @@ INSERT INTO `cms_type_metas` (`id`, `type_id`, `key`, `value`, `input_type`, `va
 (76, 18, 'form-status_kirim', 'Diproses\r\nTerkirim', 'radio', 'not_empty|', 'Status pengiriman barang selesai atau belum.'),
 (77, 18, 'form-nama_pegawai', '', 'text', '', 'Pegawai toko yang mengeluarkan invoice.'),
 (78, 18, 'form-diskon_nota', '', 'text', 'is_numeric|', 'Diskon langsung dlm satuan rupiah.'),
-(79, 18, 'form-total_harga', '', 'text', 'not_empty|is_numeric|', 'Harga total penjualan barang.'),
+(79, 18, 'form-total_harga', '', 'text', 'is_numeric|', 'Harga total penjualan barang.'),
 (80, 18, 'form-uang_muka', '', 'text', 'is_numeric|', 'Uang Muka yg dibayarkan.'),
 (81, 18, 'form-ongkos_tambahan', '', 'text', 'is_numeric|', 'Ongkos Lain-lain (biaya bensin, jasa supir, portal, dll)'),
 (82, 18, 'form-laba_bersih', '', 'text', 'is_numeric|', 'Keuntungan bersih yang didapat.'),
@@ -451,8 +484,8 @@ INSERT INTO `cms_type_metas` (`id`, `type_id`, `key`, `value`, `input_type`, `va
 (89, 19, 'form-retur', '', 'text', 'is_numeric|', 'Jumlah barang yg diretur.'),
 (90, 20, 'title_key', 'Kode Referensi', NULL, NULL, NULL),
 (91, 20, 'form-tanggal', '', 'datepicker', 'not_empty|', ''),
-(92, 20, 'form-mutasi_debet', '', 'text', 'is_numeric|', ''),
-(93, 20, 'form-mutasi_kredit', '', 'text', 'is_numeric|', ''),
+(92, 20, 'form-mutasi_debet', '', 'text', 'is_numeric|', 'Masukan nominal untuk <strong>menambah beban</strong> piutang.'),
+(93, 20, 'form-mutasi_kredit', '', 'text', 'is_numeric|', 'Masukan nominal untuk <strong>pembayaran</strong> piutang.'),
 (95, 21, 'title_key', 'Barang Dagang', NULL, NULL, NULL),
 (96, 21, 'form-tanggal', '', 'datepicker', 'not_empty|', 'Tanggal pengiriman barang.'),
 (97, 21, 'form-jumlah', '', 'text', 'not_empty|is_numeric|', 'jumlah barang yg diretur.'),

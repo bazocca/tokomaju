@@ -18,7 +18,12 @@
             
             $('div.<?php echo $browse_slug; ?>-group').append(content);
             <?php echo $var_stream; ?>++;
-            $('.get-from-table').colorbox({reposition: false});
+            $(".get-from-table").colorbox({ // REFRESH - POPUP ADMIN_DEFAULT.CTP
+                reposition: false,
+                onLoad: function() {
+                    $('#cboxClose').show();
+                }
+            });
         });
         
 		($('#colorbox').length>0&&$('#colorbox').is(':visible')?$('#colorbox').children().last().children():$(document)).on("click",'div.<?php echo $browse_slug; ?>-group a.del-raw',function(e){

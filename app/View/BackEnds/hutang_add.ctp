@@ -37,7 +37,12 @@
 		<script>
 			$(document).ready(function(){
 				$('#cmsAlert').css('display' , 'none');
-				$('.get-from-table').colorbox({reposition: false});
+				$(".get-from-table").colorbox({ // REFRESH - POPUP ADMIN_DEFAULT.CTP
+					reposition: false,
+					onLoad: function() {
+						$('#cboxClose').show();
+					}
+				});
 			});
 		</script>
 		<?php
@@ -179,6 +184,9 @@
 			    </div>
 				<input type="hidden" id="neutral_balance" value="<?php echo $balance['EntryMeta']['balance']; ?>" />
 				<input name="data[ParentEntry][balance]" type="hidden" id="pass_balance" value="<?php echo $balance['EntryMeta']['balance']; ?>" />
+				<p class="help-block">
+				    Status transaksi akan menjadi <span class="label label-success">LUNAS</span> <strong>APABILA</strong> balance mencapai nilai Rp.0,-
+				</p>
 			</div>
 		</div>
 		
@@ -190,6 +198,7 @@
 			$value['model'] = 'Entry';
 			$value['counter'] = 1;
 			$value['input_type'] = 'textarea';
+            $value['p'] = 'Keterangan pembayaran (misal, berita yg ditulis sewaktu pembayaran lewat klikBCA, dicatat di kolom ini)';
 			$value['value'] = (isset($_POST['data'][$value['model']][$value['counter']]['value'])?$_POST['data'][$value['model']][$value['counter']]['value']:$myEntry[$value['model']]['description']);
 			echo $this->element('input_'.$value['input_type'] , $value);
 
@@ -205,7 +214,7 @@
 			$value['list'][1]['id'] = '0';
 			$value['list'][1]['name'] = 'Draft';
 			$value['value'] = (isset($_POST['data'][$value['model']][$value['counter']]['value'])?$_POST['data'][$value['model']][$value['counter']]['value']:$myEntry[$value['model']]['status']);
-			$value['display'] = (empty($myEntry)?'none':'');
+			$value['display'] = 'none';
 			echo $this->element('input_'.$value['input_type'] , $value);			
 		?>
 		

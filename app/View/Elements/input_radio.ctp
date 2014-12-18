@@ -16,7 +16,7 @@
 		<?php
             if($view_mode)
             {
-                echo '<div class="view-mode">';
+                echo '<div class="view-mode '.$shortkey.'">';
                 if($shortkey == 'status_bayar')
                 {
                     echo '<span class="label '.($value=='Lunas'?'label-success':'label-important').'">';

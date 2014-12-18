@@ -160,21 +160,41 @@
                     // update satuan in stock field ...
                     if($('span.stock-satuan').length > 0)
                     {
-                        $('span.stock-satuan').html($(this).find('td.form-satuan').html());
+                        $('span.stock-satuan').html($(this).find('td.form-satuan').text());
                     }
                     
                     // update jenis barang ...
                     if($('input#jenis-barang').length > 0)
                     {
-                        $('input#jenis-barang').val($(this).find('td.form-jenis_barang h5').html());
+                        $('input#jenis-barang').val($(this).find('td.form-jenis_barang h5').text());
                     }
                     
                     // ADD DEFAULT PRICE !!
-                    if($('input[type=hidden]#myTypeSlug').val() == 'purchase-order')
-                    {					
-                        $("input[type=text].price").val( $(this).find("td.form-harga_beli input[type=hidden]").val() );
-                    }
+                    switch($('input[type=hidden]#myTypeSlug').val())
+                    {
+                        case 'purchase-order':
+                            $("input.price").val( $(this).find("td.form-harga_beli input[type=hidden]").val() );
+                            break;
+                        case 'sales-order':
+                            $("input.price").val( $(this).find("td.form-harga_jual input[type=hidden]").val() );
+                            $("input[type=hidden]#buy-price").val( $(this).find("td.form-harga_beli input[type=hidden]").val() );
 
+                            var stock = parseInt($(this).find("td.form-stock").text());
+                            if(stock > 0)
+                            {
+                                $("p#stock-left").html("Jumlah barang yang tersedia : "+stock+" "+$(this).find("td.form-satuan").text());
+                            }
+                            else
+                            {
+                                $("p#stock-left").html("Persediaan barang sedang habis.");
+                            }	
+                            break;
+                        case 'surat-jalan':
+                            $("input[type=hidden]#namabarang").val($(this).find("td.name-code").html());
+                            $("input[type=hidden]#satuan").val($(this).find("td.satuan").html());
+                            break;                            
+                    }
+                    
 					$.colorbox.close();
 				}
 				else

@@ -34,7 +34,7 @@
 		<?php
             if($view_mode)
             {
-                echo '<div class="view-mode">';
+                echo '<div class="view-mode '.$shortkey.'">';
                 echo (empty($value)?'-':str_replace(chr(10) , '<br/>' , $value));
                 echo '</div>';
             }

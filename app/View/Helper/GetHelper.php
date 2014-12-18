@@ -688,6 +688,11 @@ class GetHelper extends AppHelper
             case 'total_harga':
             case 'mutasi_debet':
             case 'mutasi_kredit':
+            // sales order ...
+            case 'ongkos_tambahan':
+            case 'diskon_nota':
+            case 'laba_bersih':
+            case 'uang_muka':
                 $echothis = 'Rp.'.str_replace(',', '.', toMoney($result  , true , true) ).',-';
                 $echothis .= '<input type="hidden" value="'.$result.'">';
                 break;

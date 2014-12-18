@@ -28,7 +28,12 @@
 		<script>
 			$(document).ready(function(){
 				$('#cmsAlert').css('display' , 'none');
-				$('.get-from-table').colorbox({reposition: false});
+				$(".get-from-table").colorbox({ // REFRESH - POPUP ADMIN_DEFAULT.CTP
+					reposition: false,
+					onLoad: function() {
+						$('#cboxClose').show();
+					}
+				});
 			});
 		</script>
 		<?php
@@ -157,11 +162,12 @@
 			$value['list'][1]['id'] = '0';
 			$value['list'][1]['name'] = 'Draft';
 			$value['value'] = (isset($_POST['data'][$value['model']][$value['counter']]['value'])?$_POST['data'][$value['model']][$value['counter']]['value']:$myEntry[$value['model']]['status']);
-			$value['display'] = (empty($myEntry)?'none':'');
+			$value['display'] = 'none';
 			echo $this->element('input_'.$value['input_type'] , $value);
 		?>
 		
 		<!-- myTypeSlug is for media upload settings purpose !! -->
+		<input type="hidden" value="<?php echo getFrontCodeId(empty($myChildType)?$myType['Type']['slug']:$myChildType['Type']['slug']); ?>" id="frontId"/>
 		<input type="hidden" value="<?php echo (empty($myChildType)?$myType['Type']['slug']:$myChildType['Type']['slug']); ?>" id="myTypeSlug"/>
 	<!-- SAVE BUTTON -->
 		<div class="control-action">

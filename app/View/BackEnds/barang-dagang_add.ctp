@@ -28,7 +28,12 @@
 		<script>
 			$(document).ready(function(){
 				$('#cmsAlert').css('display' , 'none');
-				$('.get-from-table').colorbox({reposition: false});
+				$(".get-from-table").colorbox({ // REFRESH - POPUP ADMIN_DEFAULT.CTP
+					reposition: false,
+					onLoad: function() {
+						$('#cboxClose').show();
+					}
+				});
 			});
 		</script>
 		<?php
@@ -195,61 +200,8 @@
 			$value['list'][1]['id'] = '0';
 			$value['list'][1]['name'] = 'Draft';
 			$value['value'] = (isset($_POST['data'][$value['model']][$value['counter']]['value'])?$_POST['data'][$value['model']][$value['counter']]['value']:$myEntry[$value['model']]['status']);
-			$value['display'] = (empty($myEntry)?'none':'');
+			$value['display'] = 'none';
 			echo $this->element('input_'.$value['input_type'] , $value);
-			
-			// is used gallery function ...
-            if($gallery)
-            {
-                echo '<strong class="galleryCount">Gallery Pictures (<span></span>)</strong>';
-
-                $nowTypeSlug = (empty($myChildType)?$myType['Type']['slug']:$myChildType['Type']['slug']);                
-                echo $this->Form->Html->link('Add Picture',array('action'=>'media_popup_single',1,'myPictureWrapper',$nowTypeSlug,'admin'=>false),array('class'=>'btn btn-inverse fr get-from-library'));
-                
-                echo '<div class="inner-content pictures" id="myPictureWrapper">';
-                if(!empty($this->request->data['Entry']['image']) && is_array($this->request->data['Entry']['image']) )
-                {
-                	foreach ($this->request->data['Entry']['image'] as $key => $value) 
-                	{
-                		$myImage = $this->Get->meta_details(NULL , 'media' , NULL , $value);
-                		?>
-                			<div class="photo">
-                                <div class="image">
-                                    <?php echo $this->Html->image('upload/thumb/'.$myImage['Entry']['id'].'.'.$myImageTypeList[$myImage['Entry']['id']], array('width'=>150,'alt'=>$myImage['Entry']['title'],'title'=>$myImage['Entry']['title'])); ?>
-                                </div>
-                                <div class="description">
-                                    <p><?php echo $myImage['Entry']['title']; ?></p>
-                                    <a href="javascript:void(0)" onclick="javascript:deleteChildPic(this);" class="icon-remove icon-white"></a>
-                                </div>
-                                <input type="hidden" value="<?php echo $myImage['Entry']['id']; ?>" name="data[Entry][image][]" />
-                            </div>
-                		<?php
-                	}
-                }
-                else if(!empty($myEntry))
-                {
-                    foreach ($myEntry['ChildEntry'] as $index => $findDetail)
-                    {
-                        $findDetail = $findDetail['Entry']; // SPECIAL CASE, COZ IT'S BEEN MODIFIED IN CONTROLLER !!
-                        if($findDetail['entry_type'] == $nowTypeSlug)
-                        {
-                            ?>
-                                <div class="photo">
-                                    <div class="image">
-                                        <?php echo $this->Html->image('upload/thumb/'.$findDetail['main_image'].'.'.$myImageTypeList[$findDetail['main_image']], array('width'=>150,'alt'=>$findDetail['title'],'title'=>$findDetail['title'])); ?>
-                                    </div>
-                                    <div class="description">
-                                        <p><?php echo $findDetail['title']; ?></p>
-                                        <a href="javascript:void(0)" onclick="javascript:deleteChildPic(this);" class="icon-remove icon-white"></a>
-                                    </div>
-                                    <input type="hidden" value="<?php echo $findDetail['main_image']; ?>" name="data[Entry][image][]" />
-                                </div>                          
-                            <?php                            
-                        }
-                    }
-                }
-                echo '</div>';
-            }			
 		?>
 		
 		<!-- myTypeSlug is for media upload settings purpose !! -->

@@ -77,7 +77,7 @@ form .alert-info{ border:none; border-bottom: 1px solid lightGrey; color: #46464
 
 /*Layout*/
 html{ min-height: 100%; }
-a{ text-decoration: none !important; }
+a , a:hover , a:link, a:visited{ text-decoration: none; }
 h2{ font-size: 24px; line-height: normal !important; }
 h3{ font-size: 18px; }
 h4{ font-size: 14px; }
@@ -288,7 +288,7 @@ background: white !important; padding: 20px 40px 0px 20px; width:800px;}
 form{ width: 100%; }
 form .container-box{ border: 1px solid lightGrey; margin-bottom: 18px;margin-left: 150px;}
 
-.form-horizontal .help-block{ margin-top: 2px !important; color: black; font-size: 11px; }
+.form-horizontal .help-block{ margin-top: 2px !important; color: black; font-size: 12px; }
 .form-horizontal .control-label{ width: 135px; font-size: 13px; }
 .form-horizontal .controls{ margin-left: 150px; }
 .form-horizontal .controls .view-mode { font-weight: bold; padding-top: 5px; }

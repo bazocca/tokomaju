@@ -23,7 +23,7 @@
         <?php
             if($view_mode)
             {
-                echo '<div class="view-mode">';
+                echo '<div class="view-mode '.$shortkey.'">';
                 if($metaDetails['Entry']['entry_type'] == 'supplier')
                 {
                     echo $metaDetails['Entry']['title'].' / '.$metaDetails['EntryMeta']['perusahaan'].(!empty($metaDetails['EntryMeta']['alamat'])?' / '.$metaDetails['EntryMeta']['alamat']:'').(!empty($metaDetails['EntryMeta']['kota'])?' / '.$metaDetails['EntryMeta']['kota']:'').' / '.$metaDetails['EntryMeta']['handphone'];

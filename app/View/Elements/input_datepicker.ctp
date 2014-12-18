@@ -37,7 +37,7 @@
         <?php
             if($view_mode)
             {
-                echo '<div class="view-mode">';
+                echo '<div class="view-mode '.$shortkey.'">';
                 echo (empty($value)?'-':date_converter($value , $mySetting['date_format']));
                 echo '</div>';
             }

@@ -53,13 +53,15 @@
 		$inputsize = 'input-xlarge';
 	}
 	
+    $rupiah = false;
 	if($shortkey == 'diskon' || $shortkey == 'berat' || $shortkey == 'jumlah' || $shortkey == 'stock')
 	{
 		$inputsize = 'input-mini';
 	}
-	else if($shortkey == "harga" || $shortkey == "harga_beli" || $shortkey == "harga_jual" || $shortkey == "total_harga" || $shortkey == "mutasi_debet" || $shortkey == "mutasi_kredit")
+	else if($shortkey == "harga" || $shortkey == "harga_beli" || $shortkey == "harga_jual" || $shortkey == "total_harga" || $shortkey == "mutasi_debet" || $shortkey == "mutasi_kredit" || $shortkey == "ongkos_tambahan" || $shortkey == "diskon_nota" || $shortkey == "uang_muka")
 	{
 		$inputsize = 'input-small';
+        $rupiah = true;
 	}
 ?>
 <div class="control-group" <?php echo (empty($display)?'':'style="display:none"'); ?>>            
@@ -68,13 +70,10 @@
     </label>
 	<div class="controls">
 		<?php
-            if($view_mode)  echo '<div class="view-mode">';
+            if($view_mode)  echo '<div class="view-mode '.$shortkey.'">';
 
             // header string !!
-            if($shortkey == "harga" || $shortkey == "harga_beli" || $shortkey == "harga_jual" || $shortkey == "total_harga" || $shortkey == "mutasi_debet" || $shortkey == "mutasi_kredit")
-			{
-				echo 'Rp.';
-			}
+            if($rupiah)     echo 'Rp.';
 
             if($view_mode)
             {
@@ -92,7 +91,7 @@
 			{
 				echo '% OFF';
 			}
-			else if($shortkey == "harga" || $shortkey == "harga_beli" || $shortkey == "harga_jual" || $shortkey == "total_harga" || $shortkey == "mutasi_debet" || $shortkey == "mutasi_kredit")
+			else if($rupiah)
 			{
 				echo ',-';
 			}

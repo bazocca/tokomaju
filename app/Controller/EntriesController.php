@@ -1103,8 +1103,8 @@ class EntriesController extends AppController {
 		// if form submit is taken...
 		if (!empty($this->request->data)) 
 		{
-//            dpr($this->request->data);
-//            exit;
+            dpr($this->request->data);
+            exit;
             
 			if(empty($lang_code) && !empty($myEntry) && substr($myEntry['Entry']['lang_code'], 0,2) != $this->request->data['language'])
 			{
@@ -1225,15 +1225,7 @@ class EntriesController extends AppController {
 						$this->Session->setFlash('Ditemukan adanya kelebihan pengiriman barang. Silahkan ulangi.','failed');
 						return;
 					}
-				}
-				else if($myType['Type']['slug'] == "resi")
-				{
-					if(empty($this->request->data['Entry']['id-surat-jalan']))
-					{
-						$this->Session->setFlash('Silahkan pilih Surat Jalan terlebih dahulu.','failed');
-						return;
-					}
-				}
+				}				
 				// ------------------------------------- end of entry details...
 				$this->Entry->create();
 				$this->Entry->save($this->request->data);
@@ -1359,25 +1351,18 @@ class EntriesController extends AppController {
         {
             $this->Entry->addPurchaseDetails($this->request->data);
         }
-        else if($myTypeSlug == "sales-order" && empty($myChildTypeSlug) && empty($myEntry)) // ADD ONLY!!
+        else if( $myTypeSlug == "sales-order" && empty($myChildTypeSlug) )
         {
-            $this->Entry->addSaleDetails($this->request->data);
+            if(empty($myEntry))
+            {
+                $this->Entry->addSaleDetails($this->request->data);
+            }
+            else
+            {
+                // updates minor fields ...
+            }            
         }
-		else if($myChildTypeSlug == "product-detail" && !empty($this->request->data['Entry']['id-supplier']))
-		{	
-			$this->request->data['EntryMeta']['key'] = "id-supplier";
-			$this->request->data['EntryMeta']['value'] = $this->request->data['Entry']['id-supplier'];
-			$this->EntryMeta->create();
-			$this->EntryMeta->save($this->request->data);
-		}
-		else if(($myChildTypeSlug == "history" || $myChildTypeSlug == "purchase-detail" || $myChildTypeSlug == "sale-detail") && !empty($this->request->data['Entry']['id-product-detail']))
-		{	
-			$this->request->data['EntryMeta']['key'] = "id-product-detail";
-			$this->request->data['EntryMeta']['value'] = $this->request->data['Entry']['id-product-detail'];
-			$this->EntryMeta->create();
-			$this->EntryMeta->save($this->request->data);
-		}
-		else if($myChildTypeSlug == "credits" || $myChildTypeSlug == "debts")
+		else if( empty($myEntry) && ($myChildTypeSlug == "hutang" || $myChildTypeSlug == "piutang") ) // ADD ONLY!!
 		{	
 			// UPDATE BALANCE !!
 			$balance = $this->EntryMeta->find('first',array(
@@ -1388,18 +1373,16 @@ class EntriesController extends AppController {
 			));
 			$this->EntryMeta->id = $balance['EntryMeta']['id'];
 			$this->EntryMeta->saveField('value' , $this->request->data['ParentEntry']['balance']);
-			// IF BALANCE IS ZERO, AND THEN PAYMENT STATUS IS COMPLETE !!
-			if($this->request->data['ParentEntry']['balance'] == 0)
-			{
-				$payment = $this->EntryMeta->find('first' , array(
-					"conditions" => array(
-						"EntryMeta.entry_id" => $myParentEntry['Entry']['id'],
-						"EntryMeta.key" => "form-payment_status"
-					)
-				));
-				$this->EntryMeta->id = $payment['EntryMeta']['id'];
-				$this->EntryMeta->saveField('value' , "Complete");
-			}
+            
+            // IF BALANCE IS ZERO, AND THEN PAYMENT STATUS IS COMPLETE !!
+            $payment = $this->EntryMeta->find('first' , array(
+                "conditions" => array(
+                    "EntryMeta.entry_id" => $myParentEntry['Entry']['id'],
+                    "EntryMeta.key" => "form-status_bayar"
+                )
+            ));
+            $this->EntryMeta->id = $payment['EntryMeta']['id'];
+            $this->EntryMeta->saveField('value' , ($this->request->data['ParentEntry']['balance'] == 0?'Lunas':'Tunggak') );
 		}
 		else if($myChildTypeSlug == "barang-gudang")
 		{
@@ -1458,17 +1441,6 @@ class EntriesController extends AppController {
                     $this->EntryMeta->add_stock_master_barang($this->request->data['Entry'][0]['value'] , -$diffstock);
                 }
             }            
-		}
-		else if($myChildTypeSlug == "pengeluaran")
-		{	
-			$query = $this->EntryMeta->find("first" , array(
-				"conditions" => array(
-					"EntryMeta.entry_id" => $myParentEntry['Entry']['id'],
-					"EntryMeta.key" => "form-pengeluaran"
-				)
-			));
-			$this->EntryMeta->id = $query["EntryMeta"]["id"];
-			$this->EntryMeta->saveField("value" , $query['EntryMeta']['value'] + $this->request->data['EntryMeta'][4]['value'] - (empty($myEntry)?0:$myEntry['EntryMeta']['biaya']));
 		}
 		else if($myTypeSlug == "surat-jalan" && empty($myEntry))
 		{

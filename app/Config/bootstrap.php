@@ -681,7 +681,7 @@ function getFrontCodeId($myTypeSlug)
             $result = "SRJ";		break;
         case 'purchase-order':
             $result = "PUR";		break;
-        case 'sale-order':
+        case 'sales-order':
             $result = "SAL";		break;
         case 'hutang':
             $result = "HUT";		break;
