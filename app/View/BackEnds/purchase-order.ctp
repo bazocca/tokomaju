@@ -285,7 +285,7 @@
 					if($descriptionUsed == 1 && !empty($value['Entry']['description']))
 					{
 						$description = strip_tags($value['Entry']['description']);
-						echo (strlen($description) > 30? substr($description,0,30)."..." : $description);
+						echo nl2br($description);
 					}
 				?>
 			</p>
@@ -375,11 +375,11 @@
                         {
                             if($shortkey == 'status_bayar')
                             {
-                                echo '<a href="'.$imagePath.'admin/entries/'.$value['Entry']['entry_type'].'/'.$value['Entry']['slug'].'?type=hutang'.'">';
+                                echo '<a title="klik untuk lihat detail pembayaran." href="'.$imagePath.'admin/entries/'.$value['Entry']['entry_type'].'/'.$value['Entry']['slug'].'?type=hutang'.'">';
                             }
                             else if($shortkey == 'status_kirim')
                             {
-                                echo '<a href="'.$imagePath.'admin/entries/'.$value['Entry']['entry_type'].'/'.$value['Entry']['slug'].'?type=barang-masuk'.'">';
+                                echo '<a title="klik untuk lihat detail pengiriman." href="'.$imagePath.'admin/entries/'.$value['Entry']['entry_type'].'/'.$value['Entry']['slug'].'?type=barang-masuk'.'">';
                             }
                             
                         	echo $this->Get->outputConverter($value10['TypeMeta']['input_type'] , $displayValue , $myImageTypeList , $shortkey);

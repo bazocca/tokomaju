@@ -196,7 +196,7 @@
 					if($descriptionUsed == 1 && !empty($value['Entry']['description']))
 					{
 						$description = strip_tags($value['Entry']['description']);
-						echo (strlen($description) > 30? substr($description,0,30)."..." : $description);
+						echo nl2br($description);
 					}
 				?>
 			</p>

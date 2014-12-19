@@ -69,6 +69,20 @@
                 $('<?php echo ($view_mode?'div':'input'); ?>.uang_muka').closest('div.control-group').appendTo('div.portal-uang_muka');
                 $('<?php echo ($view_mode?'div':'input'); ?>.ongkos_tambahan').closest('div.control-group').appendTo('div.portal-ongkos_tambahan');
                 
+                // disable uang_muka jika pembayaran langsung lunas !!
+                $('input[type=radio].status_bayar').change(function(){
+                    if($(this).val() == 'Lunas')
+                    {
+                        $('input.uang_muka').val('0');
+                        $("input.uang_muka").change();
+                        $('input.uang_muka').attr('readonly' , 'readonly');
+                    }
+                    else
+                    {
+                        $('input.uang_muka').removeAttr('readonly');
+                    }
+                });
+                
                 // Tabel Pesanan Barang !!
                 $("input#barang-dagang").change(function(){
                     if($(this).val() == "")
@@ -202,24 +216,34 @@
 					$('p#id-title-description').css('display','<?php echo (!empty($lang)?'none':'block'); ?>');
 				}
 				
-				// save as draft button !!
-				$('button#save-as-draft').click(function(){
-					// set last status button as draft !!
-					$('select.status:last').val('0');
-					$(this).closest('form').find('button[type=submit]:first').click();
-				});
-				
 				// save as published button !!
 				$('button#save-button').click(function(){
-					<?php if(empty($myEntry)): ?>
-					// set last status button as published !!
-					$('select.status:last').val('1');
-					<?php endif; ?>
-					$(this).closest('form').find('button[type=submit]:first').click();
+					// cek barang ada atau tidak ...
+                    if($("#grandtotal > input[type=hidden]").val() > 0)
+                    {
+                        <?php if(empty($myEntry)): ?>
+                        // set last status button as published !!
+                        $('select.status:last').val('1');
+                        <?php endif; ?>
+                        $(this).closest('form').find('button[type=submit]:first').click();
+                    }
+                    else
+                    {
+                        alert('Pesanan barang masih kosong!\nSilahkan pesan barang terlebih dahulu.');
+                    }
 				});
+                
+                // prevent from form submit !!!
+                $('#optgoods input').keypress(function(e){
+                    if(e.keyCode == 13)
+                    {
+                        e.preventDefault();                    
+                        $("button[type=button]#addToCart").click();
+                    }
+                });
 			});
 		</script>
-		<p class="notes important" style="color: red;font-weight: bold;">* Red input MUST NOT be empty.</p>
+		<p class="notes important <?php echo ($view_mode?'hide':''); ?>" style="color: red;font-weight: bold;">* Red input MUST NOT be empty.</p>
 		<input type="hidden" value="<?php echo (isset($_POST['data']['language'])?$_POST['data']['language']:(empty($lang)?substr($myEntry['Entry']['lang_code'], 0,2):$lang)); ?>" name="data[language]" id="myLanguage"/>
 		<input type="hidden" value="<?php echo (isset($_POST['data']['Entry'][2]['value'])?$_POST['data']['Entry'][2]['value']:(empty($myEntry)?'0':$myEntry['Entry']['main_image'])); ?>" name="data[Entry][2][value]" id="mySelectCoverId"/>
 		<input type='hidden' id="entry_image_type" value="<?php echo $myImageTypeList[isset($_POST['data']['Entry'][2]['value'])?$_POST['data']['Entry'][2]['value']:(empty($myEntry)?'0':$myEntry['Entry']['main_image'])]; ?>" />
@@ -321,7 +345,7 @@
 		</div>
 		
 		<div id="optgoods" style="display:none">
-			<div class="control-group">
+		    <div class="control-group">
 				<label class="control-label">Harga Jual</label>
 				<div class="controls">
 					Rp. <input id="harga" class="input-small price" type="number"> ,-
@@ -467,12 +491,9 @@
 		
 		<div class="control-group">
 			<label class="control-label">Sisa Pembayaran</label>
-			<?php
-                $sisabayar = (empty($myEntry['EntryMeta']['balance'])?'0':$myEntry['EntryMeta']['balance']);
-            ?>
 			<div class="controls inline">
 				<div class="view-mode" id="sisabayar">
-				    <strong>Rp.<?php echo str_replace(',', '.', toMoney($sisabayar , true , true) ); ?>,-</strong>
+				    <strong>Rp.<?php echo str_replace(',', '.', toMoney($myEntry['EntryMeta']['balance'] , true , true) ); ?>,-</strong>
 				</div>
 			</div>
 			<div class="controls inline <?php echo (empty($myEntry)?'hide':''); ?>">
@@ -527,14 +548,14 @@
 			<!-- always use submit button to submit form -->
 			<button class="hide" type="submit"></button>
 
-			<button id="save-button" type="button" class="btn btn-primary"><?php echo $saveButton; ?></button>
+			<button id="save-button" type="button" class="btn btn-primary <?php echo ($view_mode?'hide':''); ?>"><?php echo $saveButton; ?></button>
 			<?php
 				if(empty($myEntry))
 				{
 					echo '<button id="save-as-draft" type="button" class="btn btn-inverse hide">Save as Draft</button>';
 				}
 			?>
-        	<button type="button" class="btn" onclick="javascript: window.location=site+'admin/entries/<?php echo (empty($myType)?'pages':$myType['Type']['slug']).(empty($myChildType)?'':'/'.$myParentEntry['Entry']['slug']).$myChildTypeLink.(empty($myEntry)?'':(empty($myChildTypeLink)?'?':'&').'lang='.(empty($lang)?substr($myEntry['Entry']['lang_code'], 0,2):$lang)); ?>'">Cancel</button>
+        	<button type="button" class="btn" onclick="javascript: window.location=site+'admin/entries/<?php echo (empty($myType)?'pages':$myType['Type']['slug']).(empty($myChildType)?'':'/'.$myParentEntry['Entry']['slug']).$myChildTypeLink.(empty($myEntry)?'':(empty($myChildTypeLink)?'?':'&').'lang='.(empty($lang)?substr($myEntry['Entry']['lang_code'], 0,2):$lang)); ?>'"><?php echo ($view_mode?'&laquo; Back':'Cancel'); ?></button>
 		</div>
 	</fieldset>
 <?php echo $this->Form->end(); ?>

@@ -77,7 +77,21 @@
 
             if($view_mode)
             {
-                echo (empty($value)?'-':$value);
+                if(empty($value))
+                {
+                    echo '-';
+                }
+                else
+                {
+                    if($rupiah)
+                    {
+                        echo str_replace(',', '.', toMoney($value , true , true) );
+                    }
+                    else
+                    {
+                        echo $value;
+                    }
+                }
             }
             else
             {
@@ -111,7 +125,7 @@
             if($view_mode)  echo '</div>';
 		?>
 		<p class="help-block">
-            <?php echo ($view_mode?'':$p); ?>
+            <?php echo $p; ?>
         </p>
 	</div>
 	<input type="hidden" value="<?php echo $key; ?>" name="data[<?php echo $model; ?>][<?php echo $counter; ?>][key]"/>

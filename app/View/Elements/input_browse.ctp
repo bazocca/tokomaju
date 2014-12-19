@@ -24,9 +24,9 @@
             if($view_mode)
             {
                 echo '<div class="view-mode '.$shortkey.'">';
-                if($metaDetails['Entry']['entry_type'] == 'supplier')
+                if($metaDetails['Entry']['entry_type'] == 'supplier' || $metaDetails['Entry']['entry_type'] == 'customer')
                 {
-                    echo $metaDetails['Entry']['title'].' / '.$metaDetails['EntryMeta']['perusahaan'].(!empty($metaDetails['EntryMeta']['alamat'])?' / '.$metaDetails['EntryMeta']['alamat']:'').(!empty($metaDetails['EntryMeta']['kota'])?' / '.$metaDetails['EntryMeta']['kota']:'').' / '.$metaDetails['EntryMeta']['handphone'];
+                    echo $metaDetails['Entry']['title'].' / '.$metaDetails['EntryMeta']['perusahaan'].(!empty($metaDetails['EntryMeta']['alamat'])?' / '.nl2br($metaDetails['EntryMeta']['alamat']):'').(!empty($metaDetails['EntryMeta']['kota'])?' / '.$metaDetails['EntryMeta']['kota']:'').' / '.$metaDetails['EntryMeta']['handphone'];
                 }
                 else
                 {

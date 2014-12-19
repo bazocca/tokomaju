@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 18, 2014 at 05:21 PM
+-- Generation Time: Dec 19, 2014 at 04:23 PM
 -- Server version: 5.1.37
 -- PHP Version: 5.3.0
 
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `cms_accounts` (
 --
 
 INSERT INTO `cms_accounts` (`id`, `user_id`, `role_id`, `username`, `email`, `password`, `last_login`, `created`, `created_by`, `modified`, `modified_by`) VALUES
-(1, 1, 1, 'admin', 'admin@yahoo.com', '169e781bd52860b584879cbe117085da596238f3', '2014-12-18 13:44:30', '2013-01-04 00:00:00', 1, '2014-05-05 15:15:38', 1);
+(1, 1, 1, 'admin', 'admin@yahoo.com', '169e781bd52860b584879cbe117085da596238f3', '2014-12-19 10:12:25', '2013-01-04 00:00:00', 1, '2014-05-05 15:15:38', 1);
 
 -- --------------------------------------------------------
 
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `cms_entries` (
   `lang_code` varchar(10) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=59 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=71 ;
 
 --
 -- Dumping data for table `cms_entries`
@@ -126,7 +126,18 @@ INSERT INTO `cms_entries` (`id`, `entry_type`, `title`, `slug`, `description`, `
 (53, 'barang-masuk', 'bahan-tinta', 'bahan-tinta-4', '', 0, 39, 1, 0, '2014-12-16 11:55:29', 1, '2014-12-16 11:55:29', 1, 53, 'en-53'),
 (54, 'pindah-masuk', 'he-xin-min_bahan-tinta', 'he-xin-min-bahan-tinta-1', 'Pembelian INVOICE kode PUR141204001', 4, 33, 1, 0, '2014-12-16 00:00:00', 1, '2014-12-16 11:55:29', 1, 54, 'en-54'),
 (57, 'hutang', '1234-5678-9012', '1234-5678-9012', 'kembalikan kelebihan bayar\r\nOKE thankyou :)', 0, 39, 1, 0, '2014-12-17 11:35:22', 1, '2014-12-17 11:35:22', 1, 57, 'en-57'),
-(56, 'hutang', 'HUT141217001', 'hut141217001', 'Lebih bayar OKE', 0, 39, 1, 0, '2014-12-17 11:33:04', 1, '2014-12-17 11:33:04', 1, 56, 'en-56');
+(56, 'hutang', 'HUT141217001', 'hut141217001', 'Lebih bayar OKE', 0, 39, 1, 0, '2014-12-17 11:33:04', 1, '2014-12-17 11:33:04', 1, 56, 'en-56'),
+(60, 'purchase-order', 'PUR141219002', 'pur141219002', '', 0, 0, 1, 2, '2014-12-19 10:27:53', 1, '2014-12-19 10:27:54', 1, 60, 'en-60'),
+(59, 'purchase-order', 'PUR141219001', 'pur141219001', '', 0, 0, 1, 0, '2014-12-19 10:22:23', 1, '2014-12-19 10:22:23', 1, 59, 'en-59'),
+(61, 'purchase-detail', 'mesin-hardcover-maker', 'mesin-hardcover-maker-6', NULL, 0, 60, 1, 0, '2014-12-19 10:27:53', 1, '2014-12-19 10:27:53', 1, 61, 'en-61'),
+(62, 'hutang', 'HUT141219001', 'hut141219001', 'Beli <strong>Mesin Hardcover Maker</strong> sebanyak 3 unit @Rp.6.000.000,-', 0, 60, 1, 0, '2014-12-19 10:27:53', 1, '2014-12-19 10:27:53', 1, 62, 'en-62'),
+(64, 'sales-order', 'SAL301205001', 'sal301205001', 'sales order pertamaku gan.\r\nhaha thx', 0, 0, 1, 6, '2014-12-19 14:59:17', 1, '2014-12-19 14:59:18', 1, 64, 'en-64'),
+(65, 'sales-detail', 'mesin-hardcover-maker', 'mesin-hardcover-maker-7', NULL, 0, 64, 1, 0, '2014-12-19 14:59:17', 1, '2014-12-19 14:59:17', 1, 65, 'en-65'),
+(66, 'piutang', 'PIU141219001', 'piu141219001', 'Jual <strong>Mesin Hardcover Maker</strong> sebanyak 5 unit @Rp.15.000.000,- dengan total diskon Rp.250.000,-', 0, 64, 1, 0, '2014-12-19 14:59:17', 1, '2014-12-19 14:59:17', 1, 66, 'en-66'),
+(67, 'sales-detail', 'bahan-tinta', 'bahan-tinta-5', NULL, 0, 64, 1, 0, '2014-12-19 14:59:18', 1, '2014-12-19 14:59:18', 1, 67, 'en-67'),
+(68, 'piutang', 'PIU141219002', 'piu141219002', 'Jual <strong>Bahan Tinta</strong> sebanyak 7 Galon @Rp.600.000,-', 0, 64, 1, 0, '2014-12-19 14:59:18', 1, '2014-12-19 14:59:18', 1, 68, 'en-68'),
+(69, 'piutang', 'PIU141219003', 'piu141219003', 'Mendapat potongan diskon nota secara keseluruhan.', 0, 64, 1, 0, '2014-12-19 14:59:18', 1, '2014-12-19 14:59:18', 1, 69, 'en-69'),
+(70, 'piutang', 'PIU141219004', 'piu141219004', 'Pembayaran Uang Muka / Uang DP.', 0, 64, 1, 0, '2014-12-19 14:59:18', 1, '2014-12-19 14:59:18', 1, 70, 'en-70');
 
 -- --------------------------------------------------------
 
@@ -140,7 +151,7 @@ CREATE TABLE IF NOT EXISTS `cms_entry_metas` (
   `key` varchar(500) NOT NULL,
   `value` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=149 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=206 ;
 
 --
 -- Dumping data for table `cms_entry_metas`
@@ -257,10 +268,65 @@ INSERT INTO `cms_entry_metas` (`id`, `entry_id`, `key`, `value`) VALUES
 (136, 53, 'form-tanggal', '12/16/2014'),
 (137, 53, 'form-gudang', 'romokalisari'),
 (138, 53, 'form-sisa', '0'),
+(150, 59, 'form-supplier', 'he-xin-min'),
 (145, 57, 'form-mutasi_kredit', '520000'),
 (144, 57, 'form-tanggal', '12/20/2014'),
 (142, 56, 'form-tanggal', '12/17/2014'),
-(143, 56, 'form-mutasi_debet', '520000');
+(143, 56, 'form-mutasi_debet', '520000'),
+(151, 59, 'form-status_bayar', 'Tunggak'),
+(149, 59, 'form-tanggal', '12/19/2014'),
+(152, 59, 'form-status_kirim', 'Diproses'),
+(153, 59, 'form-nama_pegawai', 'admin zpanel'),
+(154, 59, 'form-balance', '0'),
+(155, 59, 'form-total_harga', '0'),
+(156, 60, 'form-tanggal', '12/19/2014'),
+(157, 60, 'form-supplier', 'he-xin-min'),
+(158, 60, 'form-status_bayar', 'Tunggak'),
+(159, 60, 'form-status_kirim', 'Diproses'),
+(160, 60, 'form-nama_pegawai', 'admin zpanel'),
+(161, 60, 'count-purchase-detail', '1'),
+(162, 61, 'form-jumlah', '3'),
+(163, 61, 'form-harga', '6000000'),
+(164, 61, 'form-terkirim', '0'),
+(165, 61, 'form-retur', '0'),
+(166, 60, 'count-hutang', '1'),
+(167, 62, 'form-tanggal', '12/19/2014'),
+(168, 62, 'form-mutasi_kredit', '18000000'),
+(169, 60, 'form-balance', '18000000'),
+(170, 60, 'form-total_harga', '18000000'),
+(173, 64, 'form-tanggal', '12/05/2030'),
+(174, 64, 'form-customer', 'andy-basuki'),
+(175, 64, 'form-status_bayar', 'Tunggak'),
+(176, 64, 'form-status_kirim', 'Diproses'),
+(177, 64, 'form-nama_pegawai', 'Bejo Sugiantoro'),
+(178, 64, 'form-diskon_nota', '350000'),
+(179, 64, 'form-uang_muka', '25000000'),
+(180, 64, 'form-ongkos_tambahan', '300000'),
+(181, 64, 'count-sales-detail', '2'),
+(182, 65, 'form-jumlah', '5'),
+(183, 65, 'form-harga', '15000000'),
+(184, 65, 'form-diskon', '250000'),
+(185, 65, 'form-profit', '44750000'),
+(186, 65, 'form-terkirim', '0'),
+(187, 65, 'form-retur', '0'),
+(188, 64, 'count-piutang', '4'),
+(189, 66, 'form-tanggal', '12/19/2014'),
+(190, 66, 'form-mutasi_debet', '74750000'),
+(191, 67, 'form-jumlah', '7'),
+(192, 67, 'form-harga', '600000'),
+(193, 67, 'form-diskon', '0'),
+(194, 67, 'form-profit', '1785000'),
+(195, 67, 'form-terkirim', '0'),
+(196, 67, 'form-retur', '0'),
+(197, 68, 'form-tanggal', '12/19/2014'),
+(198, 68, 'form-mutasi_debet', '4200000'),
+(199, 69, 'form-tanggal', '12/19/2014'),
+(200, 69, 'form-mutasi_kredit', '350000'),
+(201, 70, 'form-tanggal', '12/19/2014'),
+(202, 70, 'form-mutasi_kredit', '25000000'),
+(203, 64, 'form-balance', '53600000'),
+(204, 64, 'form-total_harga', '78600000'),
+(205, 64, 'form-laba_bersih', '45885000');
 
 -- --------------------------------------------------------
 

@@ -156,45 +156,7 @@
 						}
 						
 					}
-                    
-                    // update satuan in stock field ...
-                    if($('span.stock-satuan').length > 0)
-                    {
-                        $('span.stock-satuan').html($(this).find('td.form-satuan').text());
-                    }
-                    
-                    // update jenis barang ...
-                    if($('input#jenis-barang').length > 0)
-                    {
-                        $('input#jenis-barang').val($(this).find('td.form-jenis_barang h5').text());
-                    }
-                    
-                    // ADD DEFAULT PRICE !!
-                    switch($('input[type=hidden]#myTypeSlug').val())
-                    {
-                        case 'purchase-order':
-                            $("input.price").val( $(this).find("td.form-harga_beli input[type=hidden]").val() );
-                            break;
-                        case 'sales-order':
-                            $("input.price").val( $(this).find("td.form-harga_jual input[type=hidden]").val() );
-                            $("input[type=hidden]#buy-price").val( $(this).find("td.form-harga_beli input[type=hidden]").val() );
 
-                            var stock = parseInt($(this).find("td.form-stock").text());
-                            if(stock > 0)
-                            {
-                                $("p#stock-left").html("Jumlah barang yang tersedia : "+stock+" "+$(this).find("td.form-satuan").text());
-                            }
-                            else
-                            {
-                                $("p#stock-left").html("Persediaan barang sedang habis.");
-                            }	
-                            break;
-                        case 'surat-jalan':
-                            $("input[type=hidden]#namabarang").val($(this).find("td.name-code").html());
-                            $("input[type=hidden]#satuan").val($(this).find("td.satuan").html());
-                            break;                            
-                    }
-                    
 					$.colorbox.close();
 				}
 				else
@@ -202,11 +164,11 @@
 					$.fn.updateAttachButton();
 				}
 			});
-		<?php endif; ?>
-		// ---------------------------------------------------------------------- >>>
+		<?php endif; ?>		
+        // ---------------------------------------------------------------------- >>>
 		// FOR AJAX REASON !!
 		// ---------------------------------------------------------------------- >>>
-		
+    
 		// UPDATE SEARCH LINK !!
 		$('a.searchMeLink').attr('href',site+'admin/entries/<?php echo $myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']); ?>/index/1<?php echo get_more_extension($extensionPaging); ?>');
 		
@@ -251,15 +213,6 @@
 		</th>
 		
 		<?php
-			// if this is a parent Entry !!
-			if(empty($myEntry) && empty($popup)) 
-			{
-				foreach ($myType['ChildType'] as $key10 => $value10)
-				{
-					echo '<th>'.$value10['name'].'</th>';
-				}
-			}
-			
 			// check for simple or complex table view !!
 			if($mySetting['table_view'] == "complex")
 			{
@@ -268,7 +221,7 @@
 				{
 					if(substr($value['TypeMeta']['key'], 0,5) == 'form-')
 					{
-						$entityTitle = $value['TypeMeta']['key'];
+                        $entityTitle = $value['TypeMeta']['key'];
                         $hideKeyQuery = '';
                         if(!empty($popup) && $this->request->query['key'] == substr($entityTitle, 5))
                         {
@@ -280,14 +233,7 @@
 					}
 				}
 			}	
-		?>
-		<th>LABA KOTOR</th>
-		<th class="date-field">
-            <?php
-                $entityTitle = "modified";
-                echo $this->Form->Html->link('last '.string_unslug($entityTitle).($_SESSION['order_by'] == $entityTitle.' asc'?' <span class="sort-symbol">'.$sortASC.'</span>':($_SESSION['order_by'] == $entityTitle.' desc'?' <span class="sort-symbol">'.$sortDESC.'</span>':'')),array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index',$paging,'?'=>$extensionPaging) , array("class"=>"ajax_mypage" , "escape" => false , "title" => "Click to Sort" , "alt"=>$entityTitle.($_SESSION['order_by'] == $entityTitle.' asc'?" desc":" asc") ));
-            ?>
-        </th>
+		?>		
 		<th class="hide">
 		    <?php
                 $entityTitle = "status";
@@ -327,41 +273,23 @@
 			<?php
 				if($imageUsed == 1)
 				{
-					echo '<div class="thumbs">';
+					echo '<div class="thumbs hide">';
 					echo (empty($popup)?$this->Html->link($this->Html->image('upload/thumb/'.$value['Entry']['main_image'].'.'.$myImageTypeList[$value['Entry']['main_image']], array('alt'=>$value['ParentImageEntry']['title'],'title' => $value['ParentImageEntry']['title'])),array('action'=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']).'/edit/'.$value['Entry']['slug'].(!empty($myEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug']?'?type='.$myChildType['Type']['slug']:'')),array("escape"=>false)):$this->Html->image('upload/thumb/'.$value['Entry']['main_image'].'.'.$myImageTypeList[$value['Entry']['main_image']], array('alt'=>$value['ParentImageEntry']['title'],'title' => $value['ParentImageEntry']['title'])));
 					echo '</div>';
 				}
 			?>
 			<input class="slug-code" type="hidden" value="<?php echo $value['Entry']['slug']; ?>" />
-			<h5 style="margin: 0;" class="title-code"><?php echo (empty($popup)?$this->Form->Html->link($value['Entry']['title'],array('action'=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'edit',$value['Entry']['slug'] ,'?'=> (!empty($myEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug']?array('type'=>$myChildType['Type']['slug']):'')   )  ):$value['Entry']['title']); ?></h5>
+			<h5 class="title-code"><?php echo (empty($popup)?$this->Form->Html->link($value['Entry']['title'],array('action'=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'edit',$value['Entry']['slug'] ,'?'=> (!empty($myEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug']?array('type'=>$myChildType['Type']['slug']):'')   )  ):$value['Entry']['title']); ?></h5>
 			<p>
 				<?php
 					if($descriptionUsed == 1 && !empty($value['Entry']['description']))
 					{
-						$description = strip_tags($value['Entry']['description']);
-						echo nl2br($description);
+                        echo nl2br($value['Entry']['description']);
 					}
 				?>
 			</p>
 		</td>
 		<?php
-			if(empty($myEntry) && empty($popup)) // if this is a parent Entry !!
-			{
-				foreach ($myType['ChildType'] as $key10 => $value10)
-				{
-					$childCount = 0;
-					foreach ($value['EntryMeta'] as $key20 => $value20) 
-					{
-						if($value20['key'] == 'count-'.$value10['slug'])
-						{
-							$childCount = $value20['value'];
-							break;
-						}
-					}
-					echo '<td><span class="badge badge-info">'.$this->Form->Html->link($childCount,array('action'=>$myType['Type']['slug'],$value['Entry']['slug'],'?'=>array('type'=>$value10['slug'], 'lang'=>$_SESSION['lang']))).'</span></td>';
-				}
-			}
-
 			// check for simple or complex table view !!
 			if($mySetting['table_view'] == "complex")
 			{				 
@@ -426,8 +354,9 @@
 							else
 							{
 								$outputResult = (empty($entrydetail['EntryMeta']['name'])?$entrydetail['Entry']['title']:$entrydetail['EntryMeta']['name']);
-								echo '<h5 style="margin: 0;">'.(empty($popup)?$this->Form->Html->link($outputResult,array("controller"=>"entries","action"=>$entrydetail['Entry']['entry_type']."/edit/".$entrydetail['Entry']['slug']),array('target'=>'_blank')):$outputResult).'</h5>';							
-                            	echo '<p>';
+								echo '<h5>'.(empty($popup)?$this->Form->Html->link($outputResult,array("controller"=>"entries","action"=>$entrydetail['Entry']['entry_type']."/edit/".$entrydetail['Entry']['slug']),array('target'=>'_blank')):$outputResult).'</h5>';
+                                
+                                echo '<p>';
                                 // Try to use Primary EntryMeta first !!
                                 if(!empty($entrydetail['EntryMeta'][0]['value']))
                                 {
@@ -443,18 +372,27 @@
                         }
                         else
                         {
+                            if($shortkey == 'status_bayar')
+                            {
+                                echo '<a title="klik untuk lihat detail pembayaran." href="'.$imagePath.'admin/entries/'.$value['Entry']['entry_type'].'/'.$value['Entry']['slug'].'?type=piutang'.'">';
+                            }
+                            else if($shortkey == 'status_kirim')
+                            {
+                                echo '<a title="klik untuk lihat detail pengiriman." href="'.$imagePath.'admin/entries/surat-jalan?key='.str_replace('-','_',$value['Entry']['entry_type']).'&value='.$value['Entry']['slug'].'">';
+                            }
+                            
                         	echo $this->Get->outputConverter($value10['TypeMeta']['input_type'] , $displayValue , $myImageTypeList , $shortkey);
+                            
+                            if($shortkey == 'status_bayar' || $shortkey == 'status_kirim')
+                            {
+                                echo '</a>';
+                            }
                         }
                         echo "</td>";
 					}
 				}
 			}	
 		?>
-		<td>
-			<?php echo (empty($value['EntryMeta']['harga_jual'])||empty($value['EntryMeta']['harga_beli'])?'-':'Rp.'.str_replace(',', '.', toMoney( $value['EntryMeta']['harga_jual'] - $value['EntryMeta']['harga_beli'] , true , true) ).',-'); ?>
-			<input type="hidden" value="<?php echo (empty($value['EntryMeta']['harga_jual'])||empty($value['EntryMeta']['harga_beli'])?'0':$value['EntryMeta']['harga_jual'] - $value['EntryMeta']['harga_beli']); ?>">
-		</td>
-		<td><?php echo date_converter($value['Entry']['modified'], $mySetting['date_format'] , $mySetting['time_format']); ?></td>
 		<td class="hide" style='min-width: 0px;' <?php echo (empty($popup)?'':'class="offbutt"'); ?>>
 			<span class="label <?php echo $value['Entry']['status']==0?'label-important':'label-success'; ?>">
 				<?php
@@ -469,9 +407,20 @@
 			if(empty($popup))
 			{
 				echo "<td>";
-                ?>
-                <a class="btn btn-info" title="Lihat Penempatan Gudang!" href="<?php echo $imagePath.'admin/entries/'.$myType['Type']['slug'].'/view/'.$value['Entry']['slug']; ?>"><i class="icon-search icon-white"></i></a>&nbsp;
-                <?php
+				if($myType['Type']['slug'] != 'pages')
+				{
+					$confirm = null;
+					$targetURL = 'entries/change_status/'.$value['Entry']['id'];
+					if($value['Entry']['status'] == 0)
+					{
+						echo '<a href="javascript:void(0)" onclick="changeLocation(\''.$targetURL.'\')" class="btn btn-info"><i class="icon-ok icon-white"></i></a>';					
+					}
+					else
+					{
+						$confirm = 'Are you sure to set '.strtoupper($value['Entry']['title']).' as draft ?';
+						echo '<a class="hide btn btn-warning" href="javascript:void(0)" onclick="show_confirm(\''.$confirm.'\',\''.$targetURL.'\')"><i class="icon-ban-circle icon-white"></i></a>';
+					}
+				}
 				if(!($myType['Type']['slug'] == 'pages' && $user['role_id'] >= 2))
 				{
 					?>
@@ -497,7 +446,7 @@
 	if($isAjax == 0 || $isAjax == 1 && $search == "yes")
 	{
 		echo '</div>';
-		echo $this->element('admin_footer', array('extensionPaging' => $extensionPaging));
+        echo $this->element('admin_footer', array('extensionPaging' => $extensionPaging));
 		echo '<div class="clear"></div>';
 		echo ($isAjax==0?"</div>":"");
 	}

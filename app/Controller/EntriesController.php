@@ -44,6 +44,18 @@ class EntriesController extends AppController {
 			}
 		}
 	}
+    
+    function _deleteBarangGudang($goods = array())
+	{
+		$listBarang = $this->Entry->findAllByEntryType("barang-gudang");
+		foreach ($listBarang as $key => $value) 
+		{
+			if($value['Entry']['title'] == $goods['Entry']['slug'])
+			{
+				$this->delete($value['Entry']['id']);
+			}
+		}
+	}
 	
 	/**
 	 * delete entry
@@ -68,22 +80,38 @@ class EntriesController extends AppController {
 			}
 		}
 		
-		$title = $this->meta_details(NULL , NULL , NULL , $id);
+		$title = $this->meta_details(NULL , NULL , NULL , $id);        
+        $statushapus = true;
+        
+        // Parent Type !!
 		if($title['Entry']['parent_id'] > 0)
 		{
-			// adjust the balance in Debts / Credits Module ...
-			if($title['Entry']['entry_type'] == 'debts' || $title['Entry']['entry_type'] == 'credits')
+			if($title['Entry']['entry_type'] == 'hutang' || $title['Entry']['entry_type'] == 'piutang')
 			{
-				$state = ($title['Entry']['entry_type']=='debts'?1:-1);
-				$balance = $this->meta_details($title['Entry']['slug']);
+                // adjust the balance in hutang / piutang Module ...
+				$state = ($title['Entry']['entry_type']=='hutang'?1:-1);
+				$balance = $title;
 				$query = $this->EntryMeta->find('first',array(
 					"conditions" => array(
-						"EntryMeta.entry_id" => $myParent['Entry']['id'],
+						"EntryMeta.entry_id" => $title['Entry']['parent_id'],
 						"EntryMeta.key" => "form-balance"
 					)
 				));
+                
+                $balance_result = $query['EntryMeta']['value'] + $state * (empty($balance['EntryMeta']['mutasi_debet'])?0:$balance['EntryMeta']['mutasi_debet']) - $state * (empty($balance['EntryMeta']['mutasi_kredit'])?0:$balance['EntryMeta']['mutasi_kredit']);
+                
 				$this->EntryMeta->id = $query['EntryMeta']['id'];
-				$this->EntryMeta->saveField('value' , $query['EntryMeta']['value'] + $state * (empty($balance['EntryMeta']['debit'])?0:$balance['EntryMeta']['debit']) - $state * (empty($balance['EntryMeta']['credit'])?0:$balance['EntryMeta']['credit']));
+				$this->EntryMeta->saveField('value' , $balance_result );
+                
+                // IF BALANCE IS ZERO, AND THEN PAYMENT STATUS IS COMPLETE !!
+                $payment = $this->EntryMeta->find('first' , array(
+                    "conditions" => array(
+                        "EntryMeta.entry_id" => $title['Entry']['parent_id'],
+                        "EntryMeta.key" => "form-status_bayar"
+                    )
+                ));
+                $this->EntryMeta->id = $payment['EntryMeta']['id'];
+                $this->EntryMeta->saveField('value' , ($balance_result == 0?'Lunas':'Tunggak') );
 			}
 			// add history of pindah-keluar dalam gudang tersebut !!
 			else if($title['Entry']['entry_type'] == "barang-gudang")
@@ -102,83 +130,63 @@ class EntriesController extends AppController {
 				// kurangi stock di master barang...
 				$this->EntryMeta->add_stock_master_barang($title['Entry']['title'] , -$title['EntryMeta']['stock']);
 			}
-			// MINUS TOTAL PENGELUARAN DI PARENT SALE !!
-			else if($title['Entry']['entry_type'] == "pengeluaran")
-			{
-				$expdetails = $this->meta_details($title['Entry']['slug']);
-				$query = $this->EntryMeta->find("first" , array(
-					"conditions" => array(
-						"EntryMeta.entry_id" => $expdetails['Entry']['parent_id'],
-						"EntryMeta.key" => "form-pengeluaran"
-					)
-				));
-				$this->EntryMeta->id = $query["EntryMeta"]["id"];
-				$this->EntryMeta->saveField("value" , $query['EntryMeta']['value'] - $expdetails['EntryMeta']['biaya']);
-			}
-			else if($title['Entry']['entry_type'] == "product-detail")
-			{
-				$this->_deleteBarangGudang($title);
-			}	
 		}
 		else // if this is a single / parent entry ...
 		{
 			if($title['Entry']['entry_type'] == "gudang")
 			{
-				$myChildren = $this->_admin_default($this->Type->findBySlug($title['Entry']['entry_type']) , 0 , $title , NULL , NULL , "barang-gudang");
-				foreach ($myChildren['myList'] as $key => $value) 
-				{
-					if($value['EntryMeta']['jumlah_stok'] > 0)
-					{
-						$barangku = $this->Entry->findBySlug($value['Entry']['title']);
-						$cari_stok = $this->EntryMeta->find('first' , array(
-							"conditions" => array(
-								"EntryMeta.entry_id" => $barangku['Entry']['id'],
-								"EntryMeta.key" => "form-stock_quantity"
-							)
-						));
-						$this->EntryMeta->id = $cari_stok['EntryMeta']['id'];
-						$this->EntryMeta->saveField("value" , $cari_stok['EntryMeta']['value'] - $value['EntryMeta']['jumlah_stok']);
-					}
-				}
+				if(!empty($title['EntryMeta']['count-barang-gudang']))
+                {
+                    $statushapus = false;
+                    $this->Session->setFlash('Hapus gagal! Silahkan kosongkan barang gudang yang bersangkutan terlebih dahulu.','failed');
+                }				
 			}
-			else if($title['Entry']['entry_type'] == "product-type")
+            else if($title['Entry']['entry_type'] == "jenis-barang")
+            {
+                $valid = $this->_admin_default($this->Type->findBySlug('barang-dagang') ,0 , NULL , 'jenis_barang' , $title['Entry']['slug'] , NULL , NULL , NULL , NULL , 'manualset');
+                
+                if($valid['totalList'] > 0)
+                {
+                    $statushapus = false;
+                    $this->Session->setFlash('Hapus gagal! Silahkan hapus barang dagang yang memiliki jenis bersangkutan terlebih dahulu.','failed');
+                }
+            }
+			else if($title['Entry']['entry_type'] == "barang-dagang")
 			{
-				$listProduct = $this->Entry->find("all" , array(
-					"conditions" => array(
-						"Entry.parent_id" => $id ,
-						"Entry.entry_type" => "product-detail"
-					)
-				));
-				foreach ($listProduct as $key => $value) 
-				{
-					$this->_deleteBarangGudang($value);
-				}
+				$this->_deleteBarangGudang($title);
 			}
 			else if($title['Entry']['entry_type'] == "resi")
 			{
-				$suratjalan = $this->Entry->findBySlug($title['EntryMeta']['id-surat-jalan']);
+				$suratjalan = $this->Entry->findBySlug($title['EntryMeta']['surat_jalan'] , 'surat-jalan');
 				$this->Entry->id = $suratjalan['Entry']['id'];
 				$this->Entry->saveField('status', '0');
 			}
 		}
 		
-		// delete all the children !!
-		$children = $this->Entry->findAllByParentId($id);
-		foreach ($children as $key => $value) 
-		{
-			$this->EntryMeta->remove_files( $this->Type->findBySlug($value['Entry']['entry_type']) , $value );
-			$this->EntryMeta->deleteAll(array('EntryMeta.entry_id' => $value['Entry']['id']));
-		}
-		$this->Entry->deleteAll(array('Entry.parent_id' => $id));
-		
-		// delete the entry !!
-		$this->EntryMeta->remove_files( $this->Type->findBySlug($title['Entry']['entry_type']) , $title );
-		$this->EntryMeta->deleteAll(array('EntryMeta.entry_id' => $id));
-		$this->Entry->delete($id);
-		
-		if(empty($localcall))
+		if($statushapus)
         {
-            $this->Session->setFlash($title['Entry']['title'].' has been deleted', 'success');
+            // delete all the children !!
+            $children = $this->Entry->findAllByParentId($id);
+            foreach ($children as $key => $value) 
+            {
+                $this->EntryMeta->remove_files( $this->Type->findBySlug($value['Entry']['entry_type']) , $value );
+                $this->EntryMeta->deleteAll(array('EntryMeta.entry_id' => $value['Entry']['id']));
+            }
+            $this->Entry->deleteAll(array('Entry.parent_id' => $id));
+
+            // delete the entry !!
+            $this->EntryMeta->remove_files( $this->Type->findBySlug($title['Entry']['entry_type']) , $title );
+            $this->EntryMeta->deleteAll(array('EntryMeta.entry_id' => $id));
+            $this->Entry->delete($id);
+
+            if(empty($localcall))
+            {
+                $this->Session->setFlash($title['Entry']['title'].' has been deleted', 'success');
+            }
+        }
+        
+        if(empty($localcall))
+        {
             header("Location: ".$_SESSION['now']);
             exit;
         }
@@ -436,7 +444,7 @@ class EntriesController extends AppController {
 		{
 			if(empty($this->request->data))
 			{
-				$this->set('pesanan' , $this->_admin_default($myType , 0 , $myEntry , NULL , NULL , "sale-detail"));
+				$this->set('pesanan' , $this->_admin_default($myType , 0 , $myEntry , NULL , NULL , "sales-detail"));
 			}
 			else
 			{
@@ -933,13 +941,10 @@ class EntriesController extends AppController {
 			// ----------------------------------------- >>>
             // ADDITIONAL FILTERING METHOD !!
             // ----------------------------------------- >>>
-            if(empty($this->request->params['admin']))
+            if(!empty($myMetaKey) && empty($myMetaValue) && !empty($value['EntryMeta'][$myMetaKey]))
             {
-            	if(false)
-				{
-					unset($mysql[$key]);
-					continue;
-				}
+                unset($mysql[$key]);
+                continue;
             }
 			// ----------------------------------------- >>>
             // END OF ADDITIONAL FILTERING METHOD !!
@@ -1103,8 +1108,8 @@ class EntriesController extends AppController {
 		// if form submit is taken...
 		if (!empty($this->request->data)) 
 		{
-            dpr($this->request->data);
-            exit;
+//            dpr($this->request->data);
+//            exit;
             
 			if(empty($lang_code) && !empty($myEntry) && substr($myEntry['Entry']['lang_code'], 0,2) != $this->request->data['language'])
 			{
@@ -1351,16 +1356,9 @@ class EntriesController extends AppController {
         {
             $this->Entry->addPurchaseDetails($this->request->data);
         }
-        else if( $myTypeSlug == "sales-order" && empty($myChildTypeSlug) )
+        else if( $myTypeSlug == "sales-order" && empty($myChildTypeSlug) && empty($myEntry) ) // ADD ONLY!!
         {
-            if(empty($myEntry))
-            {
-                $this->Entry->addSaleDetails($this->request->data);
-            }
-            else
-            {
-                // updates minor fields ...
-            }            
+            $this->Entry->addSaleDetails($this->request->data);
         }
 		else if( empty($myEntry) && ($myChildTypeSlug == "hutang" || $myChildTypeSlug == "piutang") ) // ADD ONLY!!
 		{	

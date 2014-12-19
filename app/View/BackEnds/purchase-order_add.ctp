@@ -152,29 +152,31 @@
 					$('p#id-title-description').css('display','<?php echo (!empty($lang)?'none':'block'); ?>');
 				}
 				
-				// media sortable
-				if($("div#myPictureWrapper").length > 0)
-				{
-					$("div#myPictureWrapper").sortable({ opacity: 0.6, cursor: 'move'});
-					// print total pictures...
-					$('div#myPictureWrapper').prevAll('.galleryCount:first').find('span').html( $('div#myPictureWrapper').find('div.photo').length );
-				}
-				
-				// save as draft button !!
-				$('button#save-as-draft').click(function(){
-					// set last status button as draft !!
-					$('select.status:last').val('0');
-					$(this).closest('form').find('button[type=submit]:first').click();
-				});
-				
 				// save as published button !!
 				$('button#save-button').click(function(){
-					<?php if(empty($myEntry)): ?>
-					// set last status button as published !!
-					$('select.status:last').val('1');
-					<?php endif; ?>
-					$(this).closest('form').find('button[type=submit]:first').click();
+                    // cek barang ada atau tidak ...
+                    if($("#grandtotal > input[type=hidden]").val() > 0)
+                    {
+                        <?php if(empty($myEntry)): ?>
+                        // set last status button as published !!
+                        $('select.status:last').val('1');
+                        <?php endif; ?>
+                        $(this).closest('form').find('button[type=submit]:first').click();
+                    }
+                    else
+                    {
+                        alert('Pesanan barang masih kosong!\nSilahkan pesan barang terlebih dahulu.');
+                    }
 				});
+                
+                // prevent from form submit !!!
+                $('#optgoods input').keypress(function(e){
+                    if(e.keyCode == 13)
+                    {
+                        e.preventDefault();                    
+                        $("button[type=button]#addToCart").click();
+                    }
+                });
 			});
 		</script>
 		<p class="notes important <?php echo ($view_mode?'hide':''); ?>" style="color: red;font-weight: bold;">* Red input MUST NOT be empty.</p>
