@@ -2,7 +2,7 @@
 	if(is_array($data)) extract($data , EXTR_SKIP);
 	
     // custom case !!
-    if($myChildType['Type']['slug'] == 'barang-masuk' || $myChildType['Type']['slug'] == 'hutang')
+    if($myChildType['Type']['slug'] == 'barang-masuk' || $myChildType['Type']['slug'] == 'hutang' || $myChildType['Type']['slug'] == 'piutang')
     {
         $this->Html->addCrumb($myChildType['Type']['name'], '/admin/entries/'.$myType['Type']['slug'].'?action='.$myChildType['Type']['slug']);
     }
@@ -109,6 +109,14 @@
 					?>
 					<p id="id-title-description" class="title-description">Last updated by <a href="javascript:void(0)"><?php echo (empty($lastModified['AccountModifiedBy']['username'])?$lastModified['AccountModifiedBy']['email']:$lastModified['AccountModifiedBy']['username']).'</a> at '.date_converter($lastModified['Entry']['modified'], $mySetting['date_format'] , $mySetting['time_format']); ?></p>
 					<?php
+                    
+                    // custom case !!
+                    if($myChildType['Type']['slug'] == 'hutang' || $myChildType['Type']['slug'] == 'piutang')
+                    {
+                        ?>
+                    <p class="title-description" style="color:red;">* Balance berwarna merah merupakan sisa pembayaran yang harus segera dilunasi.</p>    
+                        <?php
+                    }
 				}
 			?>
 		</div>

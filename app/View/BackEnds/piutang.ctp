@@ -2,7 +2,7 @@
 	$this->Get->create($data);
 	if(is_array($data)) extract($data , EXTR_SKIP);
 
-    $purHeader = $this->Get->meta_details($myEntry['Entry']['slug'] , "purchase-order");
+    $salHeader = $this->Get->meta_details($myEntry['Entry']['slug'] , "sales-order");
 
     // initialize $extensionPaging for URL Query ...
     $extensionPaging = $this->request->query;
@@ -23,7 +23,7 @@
 
 	if($isAjax == 0)
 	{
-        if($purHeader['EntryMeta']['status_bayar'] == "Lunas")
+        if($salHeader['EntryMeta']['status_bayar'] == "Lunas")
 		{
 			?>
 			<div class="alert alert-info full fl">
@@ -313,7 +313,7 @@
 		?>
 		<td class="walking-balance">
 		    <?php
-				$walking_balance = $walking_balance - (empty($value['EntryMeta']['mutasi_debet'])?0:$value['EntryMeta']['mutasi_debet']) + (empty($value['EntryMeta']['mutasi_kredit'])?0:$value['EntryMeta']['mutasi_kredit']);
+				$walking_balance = $walking_balance + (empty($value['EntryMeta']['mutasi_debet'])?0:$value['EntryMeta']['mutasi_debet']) - (empty($value['EntryMeta']['mutasi_kredit'])?0:$value['EntryMeta']['mutasi_kredit']);
 				echo 'Rp.'.str_replace(',', '.', toMoney( $walking_balance , true , true) ).',-';
 			?>
 		</td>

@@ -884,7 +884,7 @@ class Entry extends AppModel {
 			// --------------------------------------------------------- //
 			$input = array();			
             $input['Entry']['entry_type'] = "piutang";
-			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("piutang", $frontTitle);
+			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter($input['Entry']['entry_type'], $frontTitle);
             $input['Entry']['slug'] = get_slug($input['Entry']['title']);
 			$input['Entry']['description'] = "Jual <strong>".$detailbarang['Entry']['title']."</strong> sebanyak ".$data['barang']['jumlah'][$key]." ".$detailbarang['EntryMeta']['satuan']." @Rp.".str_replace(',', '.', toMoney( $data['barang']['harga'][$key] , true , true) ).",-".(empty($data['barang']['diskon'][$key])?"":" dengan total diskon Rp.".str_replace(',', '.', toMoney( $data['barang']['diskon'][$key] , true , true) ).",-");			
 			$input['Entry']['created_by'] = $input['Entry']['modified_by'] = $myCreator['id'];
@@ -912,7 +912,7 @@ class Entry extends AppModel {
 		$input['Entry']['parent_id'] = $data['Entry']['id'];
 		if(!empty($diskon_nota))
 		{			
-			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("piutang" , $frontTitle);
+			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter($input['Entry']['entry_type'] , $frontTitle);
 			$input['Entry']['description'] = "Mendapat potongan diskon nota secara keseluruhan.";
 			$input['Entry']['slug'] = get_slug($input['Entry']['title']);
 			$this->create();
@@ -932,7 +932,7 @@ class Entry extends AppModel {
 		// cek status pembayaran apakah sudah langsung lunas ato belum :D
 		if($data['EntryMeta']['status_bayar'] == "Lunas")
 		{			
-			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("piutang", $frontTitle);
+			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter($input['Entry']['entry_type'], $frontTitle);
 			$input['Entry']['description'] = "Pembayaran sudah lunas.";
 			$input['Entry']['slug'] = get_slug($input['Entry']['title']);
 			$this->create();
@@ -954,7 +954,7 @@ class Entry extends AppModel {
 		}
 		else if(!empty($uang_muka)) // jika bayar msh tunggak, maka uang muka dapat diperhitungkan!
 		{
-			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("piutang" , $frontTitle);
+			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter($input['Entry']['entry_type'] , $frontTitle);
 			$input['Entry']['description'] = "Pembayaran Uang Muka / Uang DP.";
 			$input['Entry']['slug'] = get_slug($input['Entry']['title']);
 			$this->create();
@@ -1044,7 +1044,7 @@ class Entry extends AppModel {
             $input['Entry']['entry_type'] = "hutang";
             
 			$frontTitle = getFrontCodeId($input['Entry']['entry_type']).substr($year, 2).$month.$day;
-			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("hutang", $frontTitle);
+			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter($input['Entry']['entry_type'], $frontTitle);
             $input['Entry']['slug'] = get_slug($input['Entry']['title']);
             
 			$input['Entry']['description'] = "Beli <strong>".$detailbarang['Entry']['title']."</strong> sebanyak ".$data['barang']['jumlah'][$key]." ".$detailbarang['EntryMeta']['satuan']." @Rp.".str_replace(',', '.', toMoney( $data['barang']['harga'][$key] , true , true) ).",-";			
@@ -1074,7 +1074,7 @@ class Entry extends AppModel {
             $input['Entry']['entry_type'] = "hutang";
             
 			$frontTitle = getFrontCodeId($input['Entry']['entry_type']).substr($year, 2).$month.$day;
-			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("hutang" , $frontTitle);
+			$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter($input['Entry']['entry_type'] , $frontTitle);
             $input['Entry']['slug'] = get_slug($input['Entry']['title']);            
 			$input['Entry']['description'] = "Pembayaran ".$data['Entry']['title']." telah lunas.";
 			$input['Entry']['created_by'] = $input['Entry']['modified_by'] = $myCreator['id'];
@@ -1327,10 +1327,10 @@ class Entry extends AppModel {
 			foreach ($rekeningKoran['barang'] as $key => $value) 
 			{
 				$input = array();
-				$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("hutang" , $frontTitle);
+                $input['Entry']['entry_type'] = "hutang";
+				$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter($input['Entry']['entry_type'] , $frontTitle);
 				$detailbarang = $this->meta_details($value , "product-detail");
-				$input['Entry']['description'] = "Retur ".$detailbarang['Entry']['title']." (".$detailbarang['Entry']['title'].") sebanyak ".$rekeningKoran['jumlah'][$key]." ".$detailbarang['EntryMeta']['satuan']." @Rp.".str_replace(',', '.', toMoney( $detailbarang['EntryMeta']['buy_price'] , true , true) ).",-";
-				$input['Entry']['entry_type'] = "hutang";
+				$input['Entry']['description'] = "Retur ".$detailbarang['Entry']['title']." (".$detailbarang['Entry']['title'].") sebanyak ".$rekeningKoran['jumlah'][$key]." ".$detailbarang['EntryMeta']['satuan']." @Rp.".str_replace(',', '.', toMoney( $detailbarang['EntryMeta']['buy_price'] , true , true) ).",-";				
 				$input['Entry']['slug'] = get_slug($input['Entry']['title']);
 				$input['Entry']['created_by'] = $myCreator['id'];
 				$input['Entry']['modified_by'] = $myCreator['id'];
@@ -1604,11 +1604,11 @@ class Entry extends AppModel {
 			$frontTitle = "PIU".substr($explodeDate[2], strlen($explodeDate[2])-2).$explodeDate[0].$explodeDate[1];
 			foreach ($rekeningKoran['barang'] as $key => $value) 
 			{
-				$input = array();				
-				$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter("piutang", $frontTitle);
+				$input = array();
+                $input['Entry']['entry_type'] = "piutang";
+				$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter($input['Entry']['entry_type'], $frontTitle);
 				$detailbarang = $this->meta_details($value , "product-detail");
-				$input['Entry']['description'] = "Retur ".$detailbarang['Entry']['title']." (".$detailbarang['Entry']['title'].") sebanyak ".$rekeningKoran['jumlah'][$key]." ".$detailbarang['EntryMeta']['satuan']." @Rp.".str_replace(',', '.', toMoney( $rekeningKoran['harga'][$key] , true , true) ).",-";
-				$input['Entry']['entry_type'] = "piutang";
+				$input['Entry']['description'] = "Retur ".$detailbarang['Entry']['title']." (".$detailbarang['Entry']['title'].") sebanyak ".$rekeningKoran['jumlah'][$key]." ".$detailbarang['EntryMeta']['satuan']." @Rp.".str_replace(',', '.', toMoney( $rekeningKoran['harga'][$key] , true , true) ).",-";				
 				$input['Entry']['slug'] = get_slug($input['Entry']['title']);
 				$input['Entry']['created_by'] = $myCreator['id'];
 				$input['Entry']['modified_by'] = $myCreator['id'];

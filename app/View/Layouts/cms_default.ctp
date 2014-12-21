@@ -153,6 +153,9 @@
                                         case 'hutang':
                                             $urlaction = 'purchase-order?action='.$dbslug;
                                             break;
+                                        case 'piutang':
+                                            $urlaction = 'sales-order?action='.$dbslug;
+                                            break;
                                         default:
                                             $urlaction = $dbslug;
                                     }

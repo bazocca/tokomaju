@@ -4,7 +4,6 @@ class EntriesController extends AppController {
     public $components = array('RequestHandler','Session','Validation','Auth');
 	public $helpers = array('Form', 'Html', 'Js', 'Time', 'Get','Paypal','Text','Rss');
 	
-	private $frontEndFolder = '/FrontEnds/';
 	private $backEndFolder = '/BackEnds/';
 	private $onlyActiveEntries = FALSE; // if it's in admin panel, show active/disabled, and if it's on the front, show only active pages !!
 	
@@ -52,7 +51,7 @@ class EntriesController extends AppController {
 		{
 			if($value['Entry']['title'] == $goods['Entry']['slug'])
 			{
-				$this->delete($value['Entry']['id']);
+				$this->delete($value['Entry']['id'] , 'localcall');
 			}
 		}
 	}
@@ -138,7 +137,7 @@ class EntriesController extends AppController {
 				if(!empty($title['EntryMeta']['count-barang-gudang']))
                 {
                     $statushapus = false;
-                    $this->Session->setFlash('Hapus gagal! Silahkan kosongkan barang gudang yang bersangkutan terlebih dahulu.','failed');
+                    if(empty($localcall))   $this->Session->setFlash('Hapus gagal! Silahkan kosongkan barang gudang yang bersangkutan terlebih dahulu.','failed');
                 }				
 			}
             else if($title['Entry']['entry_type'] == "jenis-barang")
@@ -148,7 +147,7 @@ class EntriesController extends AppController {
                 if($valid['totalList'] > 0)
                 {
                     $statushapus = false;
-                    $this->Session->setFlash('Hapus gagal! Silahkan hapus barang dagang yang memiliki jenis bersangkutan terlebih dahulu.','failed');
+                    if(empty($localcall))   $this->Session->setFlash('Hapus gagal! Silahkan hapus barang dagang yang memiliki jenis bersangkutan terlebih dahulu.','failed');
                 }
             }
 			else if($title['Entry']['entry_type'] == "barang-dagang")
@@ -189,6 +188,10 @@ class EntriesController extends AppController {
         {
             header("Location: ".$_SESSION['now']);
             exit;
+        }
+        else
+        {
+            return $statushapus;
         }
 	}
 
@@ -373,11 +376,23 @@ class EntriesController extends AppController {
 			}
 			else if($this->request->data['action'] == 'delete')
 			{
+                $perfectdel = 1;
 				foreach ($pecah as $key => $value) 
 				{
-					$this->delete($value , 'localcall');
+					if(!$this->delete($value , 'localcall'))
+                    {
+                        $perfectdel = 0;
+                    }
 				}
-				$this->Session->setFlash('Your selection data has been <strong>deleted</strong> successfully.','success');
+				
+                if($perfectdel)
+                {
+                    $this->Session->setFlash('Your selection data has been <strong>deleted</strong> successfully.','success');
+                }
+                else
+                {
+                    $this->Session->setFlash('Some of your selection data <strong>failed</strong> to be deleted.<br>Please delete them individually!','failed');
+                }
 			}
 			else
 			{
@@ -2011,38 +2026,12 @@ class EntriesController extends AppController {
     
     function ajax_title_counter($localCall = NULL)
 	{
-		$this->autoRender = FALSE;
-		$options['conditions']['Entry.entry_type'] = $this->request->data['myTypeSlug'];
-		$options['conditions']['Entry.title LIKE'] = $this->request->data['frontTitle'].'%';
-		
-		$options['order'] = 'Entry.id DESC';
-		
-		$temp = $this->Entry->find('first',$options);
-		if(empty($temp))
+        $result = $this->Entry->ajax_title_counter($this->request->data['myTypeSlug'] , $this->request->data['frontTitle']);
+        
+		if(empty($localCall)) // is ajax
 		{
-			if(empty($localCall))
-			{
-				echo '001';
-				return;
-			}
-			else
-			{
-				return '001';
-			}
-		}
-
-		$code = '1'.substr($temp['Entry']['title'], (is_numeric(substr($temp['Entry']['title'], 3))?9:6));
-		$code++;
-		
-		$temp2 = substr($code, 0,1);
-		$temp2--;
-		
-		$result = ($temp2 == 0?substr($code, 1): '1'.substr($code, 1) );
-		
-		if(empty($localCall))
-		{
+            $this->autoRender = FALSE;
 			echo $result;
-			return;
 		}
 		else
 		{
@@ -2138,5 +2127,62 @@ class EntriesController extends AppController {
 		{
 			$this->render($this->backEndFolder."backup-restore");
 		}
+	}
+    
+    function pelunasan_tagihan($invoice) // PELUNASAN INVOICE SECARA LANGSUNG !!
+	{
+		$myParentEntry = $this->meta_details($invoice);		
+		
+        $date = date('m/d/Y');
+		$temp = explode("/", $date);        
+		$myTypeSlug = $this->request->data['myTypeSlug'] = ($myParentEntry['Entry']['entry_type']=="sales-order"?"piutang":"hutang");
+        $frontTitle = $this->request->data['frontTitle'] = getFrontCodeId($myTypeSlug).substr($temp[2], 2).$temp[0].$temp[1];
+        
+        $input = array();
+        $input['Entry']['entry_type'] = $myTypeSlug;
+		$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter('localcall');
+        $input['Entry']['slug'] = $this->get_slug($input['Entry']['title']);        
+		$input['Entry']['description'] = 'Nota lunas (Instant Paid Off)';
+		$input['Entry']['created_by'] = $input['Entry']['modified_by'] = $this->user['id'];
+		$input['Entry']['parent_id'] = $myParentEntry['Entry']['id'];		
+		$this->Entry->create();
+		$this->Entry->save($input);
+		
+		$input['EntryMeta']['entry_id'] = $this->Entry->id;
+		
+        // add tanggal...
+		$input['EntryMeta']['key'] = "form-tanggal";
+		$input['EntryMeta']['value'] = $date;
+		$this->EntryMeta->create();
+		$this->EntryMeta->save($input);
+		
+        // add mutasi...
+		$input['EntryMeta']['key'] = "form-".($myParentEntry['Entry']['entry_type']=="sales-order"? ($myParentEntry['EntryMeta']['balance'] > 0?"mutasi_kredit":"mutasi_debet") : ($myParentEntry['EntryMeta']['balance'] > 0?"mutasi_debet":"mutasi_kredit") );        
+		$input['EntryMeta']['value'] = abs($myParentEntry['EntryMeta']['balance']);
+		$this->EntryMeta->create();
+		$this->EntryMeta->save($input);
+		
+		// SET BALANCE TO ZERO!!
+		$balance = $this->EntryMeta->find('first',array(
+			"conditions" => array(
+				"EntryMeta.entry_id" => $myParentEntry['Entry']['id'],
+				"EntryMeta.key" => "form-balance"
+			)
+		));
+		$this->EntryMeta->id = $balance['EntryMeta']['id'];
+		$this->EntryMeta->saveField('value' , 0);
+		
+		// UPDATE PAYMENT STATUS TO COMPLETE !!
+		$payment = $this->EntryMeta->find('first',array(
+			"conditions" => array(
+				"EntryMeta.entry_id" => $myParentEntry['Entry']['id'],
+				"EntryMeta.key" => "form-status_bayar"
+			)
+		));
+		$this->EntryMeta->id = $payment['EntryMeta']['id'];
+		$this->EntryMeta->saveField('value' , 'Lunas');
+        // END OF PROCESS !!
+        
+		$this->redirect('/admin/entries/'.$myParentEntry['Entry']['entry_type'].'/'.$myParentEntry['Entry']['slug'].'?type='.$myTypeSlug);
 	}
 }
