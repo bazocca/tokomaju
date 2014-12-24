@@ -156,6 +156,30 @@
 						}
 						
 					}
+                    
+                    if($('input[type=hidden]#myTypeSlug').val() == "surat-jalan")
+					{	
+						$("input#customer").val( $(this).find("td.form-customer h5").text() );                        
+                        $("input[type=hidden].customer").val( $(this).find("td.form-customer input[type=hidden]").val() );
+                        
+                        // disable select customer browse button !!
+                        $("input#customer").nextAll('a').addClass('disabled');
+					}
+                    
+                    // update browse id add-invoice-barang...
+                    if($('#add-invoice-barang').length > 0)
+                    {
+                        $('#add-invoice-barang').attr('data-invoice' , $(this).find("input.slug-code").val() );
+                        // refresh barang-dagang !!
+                        $("input[type=text]#barang-dagang").val("");
+                        $("input[type=text]#barang-dagang").change();
+                        
+                        // hapus seluruh isa tabel barang !!
+                        if($("tbody#myInputWrapper tr").length > 0)
+                        {
+                            $("tbody#myInputWrapper tr").detach();
+                        }
+                    }
 
 					$.colorbox.close();
 				}
@@ -355,6 +379,8 @@
 							{
 								$outputResult = (empty($entrydetail['EntryMeta']['name'])?$entrydetail['Entry']['title']:$entrydetail['EntryMeta']['name']);
 								echo '<h5>'.(empty($popup)?$this->Form->Html->link($outputResult,array("controller"=>"entries","action"=>$entrydetail['Entry']['entry_type']."/edit/".$entrydetail['Entry']['slug']),array('target'=>'_blank')):$outputResult).'</h5>';
+                                
+                                echo '<input type="hidden" value="'.$entrydetail['Entry']['slug'].'" >';
                                 
                                 echo '<p>';
                                 // Try to use Primary EntryMeta first !!

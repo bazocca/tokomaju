@@ -189,10 +189,6 @@
                                 $("p#stock-left").html("Persediaan barang sedang habis.");
                             }	
                             break;
-                        case 'surat-jalan':
-                            $("input[type=hidden]#namabarang").val($(this).find("td.name-code").html());
-                            $("input[type=hidden]#satuan").val($(this).find("td.satuan").html());
-                            break;                            
                     }
                     
 					$.colorbox.close();

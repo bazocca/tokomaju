@@ -219,7 +219,7 @@
 				// save as published button !!
 				$('button#save-button').click(function(){
 					// cek barang ada atau tidak ...
-                    if($("#grandtotal > input[type=hidden]").val() > 0)
+                    if( $('#myInputWrapper tr').length > 0 )
                     {
                         <?php if(empty($myEntry)): ?>
                         // set last status button as published !!
@@ -340,8 +340,8 @@
 				<input id="barang-dagang" class="input-large" type="text" value="" readonly="true"/>
 				<?php echo $this->Html->link('Browse',array('controller'=>'entries','action'=>'barang-dagang','admin'=>true, '?'=> array('popup'=>'init')),array('class'=>'btn btn-info get-from-table')); ?>
 				<p class="help-block">Barang yang hendak dipesan oleh Customer terpilih.</p>
-                <input type="hidden" id="jenis-barang">
 			</div>
+			<input type="hidden" id="jenis-barang">
 		</div>
 		
 		<div id="optgoods" style="display:none">

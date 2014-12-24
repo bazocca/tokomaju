@@ -716,6 +716,35 @@ class EntriesController extends AppController {
 		
 		echo json_encode($json);
 	}
+    
+    public function _productExisted()
+	{
+		$subject = (substr($this->request->query['invoice'], 0,3)=="sal"?"sales":"purchase");
+		$metaDetails = $this->_admin_default($this->Type->findBySlug($subject."-order") , 0, $this->meta_details($this->request->query['invoice'] , $subject."-order") , NULL , NULL , $subject."-detail",NULL , NULL , NULL , 'manualset');
+        
+		$pesanan = array();
+		foreach ($metaDetails['myList'] as $key => $value) 
+		{
+			array_push($pesanan , $value['Entry']['title']);
+		}
+		return $pesanan;
+	}
+    
+    public function _bargudExisted()
+    {
+        $metaDetails = $this->_admin_default($this->Type->findBySlug("barang-gudang") , 0, NULL , NULL , NULL , NULL ,NULL , NULL , NULL , 'manualset');
+        
+		$gudstock = array();
+		foreach ($metaDetails['myList'] as $key => $value) 
+		{
+            if($value['Entry']['title'] == $this->request->query['barang-dagang'] && !empty($value['EntryMeta']['stock']) )
+            {
+                // simpan stock barang terpilih berdasarkan gudang !!
+                $gudstock[ $value['ParentEntry']['slug'] ] = $value['EntryMeta']['stock'];
+            }
+		}
+		return $gudstock;
+    }
 	
 	/**
 	* querying to get a bunch of entries based on parameter given (core function)
@@ -848,10 +877,11 @@ class EntriesController extends AppController {
 		$joinEntryMeta = false;
 		if(empty($myEntry))
 		{
-			$options['conditions'] = array(
-				'Entry.entry_type' => $myType['Type']['slug'],
-				'Entry.parent_id' => 0
-			);
+			$options['conditions'] = array('Entry.entry_type' => $myType['Type']['slug']);
+            if($myType['Type']['parent_id'] <= 0)
+			{
+				$options['conditions']['Entry.parent_id'] = 0;
+			}
 		}
 		else
 		{
@@ -948,8 +978,14 @@ class EntriesController extends AppController {
 		}
         
 		$mysql = $this->Entry->find('all' ,$options);
-		
-		// MODIFY OUR ENTRYMETA FIRST !!		
+        
+        // PEMILIHAN BARANG DAGANG DI SURAT JALAN FORM !!
+        $pesanan = ($myType['Type']['slug']=="barang-dagang" && !empty($this->request->query['invoice'])?$this->_productExisted():"");
+        
+        // PEMILIHAN GUDANG YG MASIH MEMPUNYAI STOCK BARANG DAGANG TERTENTU !!
+        $gudstock = ($myType['Type']['slug']=="gudang" && !empty($this->request->query['barang-dagang']) ?$this->_bargudExisted():"");
+        
+        // MODIFY OUR ENTRYMETA FIRST !!		
 		foreach ($mysql as $key => $value) 
 		{
 			$mysql[$key] = $value = breakEntryMetas($value);
@@ -960,6 +996,32 @@ class EntriesController extends AppController {
             {
                 unset($mysql[$key]);
                 continue;
+            }
+            
+            // more validation check !!
+            if($myType['Type']['slug']=="barang-dagang")
+            {
+                // PEMILIHAN BARANG DAGANG DI SURAT JALAN FORM !!
+                if($this->request->query['caller']=="surat-jalan" && empty($value['EntryMeta']['stock']) || !empty($pesanan) && !in_array($value['Entry']['slug'], $pesanan) )
+                {
+                    unset($mysql[$key]);
+                    continue;
+                }
+            }
+            else if($myType['Type']['slug'] == "gudang")
+            {
+                if( !empty($this->request->query['barang-dagang']) )
+                {
+                    if(!empty($gudstock[ $value['Entry']['slug'] ]))
+                    {
+                        $mysql[$key]['EntryMeta']['jumlah-stok'] = $gudstock[$value['Entry']['slug']];
+                    }
+                    else
+                    {
+                        unset($mysql[$key]);
+                        continue;
+                    }
+                }
             }
 			// ----------------------------------------- >>>
             // END OF ADDITIONAL FILTERING METHOD !!
@@ -2142,7 +2204,7 @@ class EntriesController extends AppController {
         $input['Entry']['entry_type'] = $myTypeSlug;
 		$input['Entry']['title'] = $frontTitle.$this->ajax_title_counter('localcall');
         $input['Entry']['slug'] = $this->get_slug($input['Entry']['title']);        
-		$input['Entry']['description'] = 'Nota lunas (Instant Paid Off)';
+		$input['Entry']['description'] = 'Invoice lunas (Instant Paid Off)';
 		$input['Entry']['created_by'] = $input['Entry']['modified_by'] = $this->user['id'];
 		$input['Entry']['parent_id'] = $myParentEntry['Entry']['id'];		
 		$this->Entry->create();

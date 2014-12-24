@@ -42,6 +42,14 @@ var jcrop_api = new Array();
 	    	$(this).parents("div.control-group").find("input.targetID").change();	    	
 	    	// $(this).parents("div.control-group").find("input.targetID").nextAll("p.help-block").html("");	    	
 	    	$(this).parents("div.control-group").find("input[type=hidden]").val("");
+            
+            // release browse button !!
+            if($(this).prevAll('input#sales-order').length > 0 && $("input#customer").length > 0)
+            {
+                $("input#customer").nextAll('a').removeClass('disabled');
+                
+                $('#add-invoice-barang').removeAttr('data-invoice');
+            }
 	    });
 	    
 	    // AJAX IN EDIT FORM (CHANGE LANGUAGE)

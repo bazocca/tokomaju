@@ -18,98 +18,50 @@
 					$('div#form-<?php echo $this->request->query['anchor']; ?>').prevAll('a.get-from-library:first').focus();
 				<?php endif; ?>
                 
-                // Tabel Pesanan Barang !!
+                // EDIT THE TITLE IF RETUR PEMBELIAN !!
+                <?php
+                    if(!empty($this->request->query['purchase_order']))
+                    {
+                        ?>
+                    $("div.title > h2").append(" (RETUR PEMBELIAN)");
+                        <?php
+                    }
+                ?>
+                
+                // Tabel Pengiriman Barang !!
                 $("input#barang-dagang").change(function(){
+                    
                     if($(this).val() == "")
                     {	
-                        $("div#optgoods").slideUp('fast',function(){
-                            $("input#jumlah").val("0");
-                        });
+                        $("div#optgoods").slideUp('fast');
                     }
                     else
                     {				
-                        $("div#optgoods").slideDown('fast');
-                    }
-                });
-
-                $("button[type=button]#addToCart").click(function(){
-                    var id = $("input#barang-dagang").val();
-                    var jumlah = parseInt($("input#jumlah").val());
-                    var harga = parseInt($("input#harga").val());
-                    var subtotal = jumlah * harga;
-                    
-                    // validate input !!
-                    if(isNaN(jumlah) || isNaN(harga) || jumlah <= 0 || harga <= 0)
-                    {
-                        alert("Invalid input. Please try again.");
-                        return;
+                        var myslug = $(this).nextAll("input[type=hidden]").val();
+                        $("div#optgoods").slideDown('fast',function(){
+                            $("a#browse-gudang").attr("data-barang-dagang" , myslug );
+                        });
                     }
                     
-                    // cek barang sudah di list ato tidak...
-                    var check = true;                    
-                    var namabarang = "";
-                    $('tbody#myInputWrapper tr').each(function(i,el){                        
-                        namabarang = $(el).find('td.nama').text().split('/');                        
-                        namabarang = $.trim(namabarang[1]);
-                        if(namabarang == id)
-                        {
-                            check = false;                            
-                            return;
-                        }
-                    });			
-                    if(check == false)
-                    {
-                        alert("Barang sudah terdaftar. Silahkan tambahkan barang yang lainnya.");
-                        return;
-                    }
-                    
-                    // isi tabel ...
-                    var content = '<tr>';
-                    content += '<td class="jumlah"><h5>'+jumlah+' '+$('span.stock-satuan').text()+'</h5></td>';
-                    content += '<td class="nama">'+$("input#jenis-barang").val()+' / '+$('input#barang-dagang').val()+'</td>';                    
-                    content += '<td class="harga">Rp.'+number_format (harga, 0, ',', '.')+',-</td>';
-                    content += '<td class="subtotal">Rp.'+number_format (subtotal, 0, ',', '.')+',-<input type="hidden" value="'+subtotal+'"></td>';
-                    content += '<td class="action">';
-                    content += '<a href="javascript:void(0)" class="btn btn-danger del-barang" style="display: inline;"><i class="icon-trash icon-white"></i></a>';
-                    content += '<input type="hidden" name="data[barang][id][]" value="'+id+'"/>';
-                    content += '<input type="hidden" name="data[barang][jumlah][]" value="'+jumlah+'"/>';
-                    content += '<input type="hidden" name="data[barang][harga][]" value="'+harga+'"/>';
-                    content += '</td>';
-
-                    content += '</tr>';
-                    $('tbody#myInputWrapper').append(content).each(function(){
-                        $("input#barang-dagang").val("");                        
-                        $("input#barang-dagang").change();
-                        $('input#supplier').nextAll('a.cboxElement').addClass('disabled');
-
-                        var grandtotal = parseInt($("#grandtotal > input[type=hidden]").val());
-                        grandtotal += subtotal;                        
-                        $("#grandtotal > input[type=hidden]").val(grandtotal);                        
-                        $("#grandtotal > strong").html('Rp.'+number_format(grandtotal, 0, ',', '.')+',-');
-                    });
-                });
-
-                $(document).on("click","a.del-barang",function(){
-                    $(this).parents('tr').animate({opacity : 0},1000,function(){
-                        var grandtotal = parseInt($("#grandtotal > input[type=hidden]").val());
-                        var minus = parseInt($(this).find('td.subtotal input[type=hidden]').val());
-                        grandtotal -= minus;
-                        $("#grandtotal > input[type=hidden]").val(grandtotal);                        
-                        $("#grandtotal > strong").html('Rp.'+number_format(grandtotal, 0, ',', '.')+',-');
-                        $(this).detach();
-                        
-                        // re-enable browse supplier !!
-                        if($('tbody#myInputWrapper tr').length == 0)
-                        {
-                            $('input#supplier').nextAll('a.cboxElement').removeClass('disabled');
-                        }
-                    });
+                    $("input#gudang").val("");
+                    $("input#jumlah-stok").val("0");
                 });
                 
                 $('a#add-invoice-barang').click(function(e){
                     e.preventDefault();
                     $.colorbox({
-                        href: $(this).attr('href')+"&key=supplier&value="+$(this).attr('data-supplier'),
+                        href: $(this).attr('href')+($(this).is("[data-invoice]")?"&invoice="+$(this).attr('data-invoice'):""),
+                        reposition: false,
+                        onLoad: function() {
+                            $('#cboxClose').show();
+                        }
+                    });
+                });
+                
+                $('a#browse-gudang').click(function(e){
+                    e.preventDefault();
+                    $.colorbox({
+                        href: $(this).attr('href')+"&barang-dagang="+$(this).attr('data-barang-dagang'),
                         reposition: false,
                         onLoad: function() {
                             $('#cboxClose').show();
@@ -152,9 +104,16 @@
 					$('p#id-title-description').css('display','<?php echo (!empty($lang)?'none':'block'); ?>');
 				}
 				
+				// save as draft button !!
+				$('button#save-as-draft').click(function(){
+					// set last status button as draft !!
+					$('select.status:last').val('0');
+					$(this).closest('form').find('button[type=submit]:first').click();
+				});
+				
 				// save as published button !!
 				$('button#save-button').click(function(){
-                    // cek barang ada atau tidak ...
+					// cek barang ada atau tidak ...
                     if( $('#myInputWrapper tr').length > 0 )
                     {
                         <?php if(empty($myEntry)): ?>
@@ -165,25 +124,16 @@
                     }
                     else
                     {
-                        alert('Pesanan barang masih kosong!\nSilahkan pesan barang terlebih dahulu.');
+                        alert('Tabel pengiriman barang masih kosong!\nSilahkan masukan barang yang hendak dikirimkan terlebih dahulu.');
                     }
 				});
-                
-                // prevent from form submit !!!
-                $('#optgoods input').keypress(function(e){
-                    if(e.keyCode == 13)
-                    {
-                        e.preventDefault();                    
-                        $("button[type=button]#addToCart").click();
-                    }
-                });
 			});
 		</script>
-		<p class="notes important <?php echo ($view_mode?'hide':''); ?>" style="color: red;font-weight: bold;">* Red input MUST NOT be empty.</p>
+		<p class="notes important" style="color: red;font-weight: bold;">* Red input MUST NOT be empty.</p>
 		<input type="hidden" value="<?php echo (isset($_POST['data']['language'])?$_POST['data']['language']:(empty($lang)?substr($myEntry['Entry']['lang_code'], 0,2):$lang)); ?>" name="data[language]" id="myLanguage"/>
 		<input type="hidden" value="<?php echo (isset($_POST['data']['Entry'][2]['value'])?$_POST['data']['Entry'][2]['value']:(empty($myEntry)?'0':$myEntry['Entry']['main_image'])); ?>" name="data[Entry][2][value]" id="mySelectCoverId"/>
 		<input type='hidden' id="entry_image_type" value="<?php echo $myImageTypeList[isset($_POST['data']['Entry'][2]['value'])?$_POST['data']['Entry'][2]['value']:(empty($myEntry)?'0':$myEntry['Entry']['main_image'])]; ?>" />
-        <?php
+		<?php
 			$myAutomatic = (empty($myChildType)?$myType['TypeMeta']:$myChildType['TypeMeta']);
 			$titlekey = "title";
 			foreach ($myAutomatic as $key => $value)
@@ -252,53 +202,69 @@
 					}
                     
                     // custom function !!
-                    if($value['key'] == 'form-status_kirim' && empty($myEntry) || $value['key'] == 'form-total_harga')
+                    if(empty($this->request->query['purchase_order']))
                     {
-                        $value['display'] = 'none';
+                        if($value['key']=='form-purchase_order' || $value['key']=='form-supplier')
+                        {
+                            $value['display'] = 'none';
+                        }
+                        else if($value['key'] == 'form-customer') // add validation !!
+                        {
+                            $value['validation'] .= 'not_empty';
+                        }
                     }
-                    else if($value['key'] == 'form-nama_pegawai' && empty($myEntry))
+                    else
                     {
-                        $value['value'] = $user['User']['firstname'].' '.$user['User']['lastname'];
-                    }                    
+                        if($value['key']=='form-sales_order' || $value['key']=='form-customer')
+                        {
+                            $value['display'] = 'none';
+                        }
+                        
+                        else if($value['key'] == 'form-supplier') // add validation !!
+                        {
+                            $value['validation'] .= 'not_empty';
+                        }
+                    }
 					echo $this->element('input_'.$value['input_type'] , $value);
 				}
 			}
 		?>		
 		<!-- END OF META ATTRIBUTES -->
-        
-        <div class="alert alert-info full fl">
-			<strong>TABEL PESANAN BARANG</strong>
-			<p style="color:red;" class="<?php echo (empty($myEntry)?'':'hide'); ?>">Silahkan pilih barang terlebih dahulu, lalu klik "Add to Cart" untuk menambahkan ke tabel pesanan barang.</p>
+		
+		<div class="alert alert-info full fl">
+			<strong>TABEL PENGIRIMAN BARANG</strong>
+			<p style="color:red;" class="<?php echo (empty($myEntry)?'':'hide'); ?>">Silahkan pilih barang terlebih dahulu, lalu pilih asal gudang, dan klik "Add to Cart" untuk menambahkan ke tabel pengiriman barang.</p>
 		</div>
 		<div class="control-group <?php echo (empty($myEntry)?'':'hide'); ?>">
 			<label class="control-label">Barang Dagang</label>
 			<div class="controls">
 				<input id="barang-dagang" class="input-large" type="text" value="" readonly="true"/>
-				<?php echo $this->Html->link('Browse',array('controller'=>'entries','action'=>'barang-dagang','admin'=>true, '?'=> array('popup'=>'init')),array('class'=>'btn btn-info disabled','id'=>'add-invoice-barang')); ?>
-				<p class="help-block">Barang yang hendak dipesan dari Supplier terpilih.</p>
+				<?php echo $this->Html->link('Browse',array('controller'=>'entries','action'=>'barang-dagang','admin'=>true, '?'=> array('popup'=>'init' , 'caller'=>$myType['Type']['slug'])),array('class'=>'btn btn-info','id'=>'add-invoice-barang')); ?>
+				<input type="hidden"/>   <!-- will be filled with slug-code -->
+                <p class="help-block">Barang yang hendak dikirimkan.</p>
 			</div>
-			<input type="hidden" id="jenis-barang">
+			<!-- hidden data -->
+			<input type="hidden" id="jenis-barang">            
+            <span class="stock-satuan hide"></span>
 		</div>
 		
 		<div id="optgoods" style="display:none">
-			<div class="control-group">
-				<label class="control-label">Harga Beli</label>
+		    <div class="control-group">            
+				<label class="control-label">Gudang</label>
 				<div class="controls">
-					Rp. <input id="harga" class="input-small price" type="number"> ,-
+					<input id="gudang" class="input-large" type="text" value="" readonly="true"/>
+					<?php echo $this->Html->link('Browse',array('controller'=>'entries','action'=>'gudang','admin'=>true, '?'=> array('popup'=>'init') ),array('class'=>'btn btn-info','id'=>'browse-gudang','data-barang-dagang'=>'')); ?>
+					<input type="hidden"/>   <!-- will be filled with slug-code -->
+					<p class="help-block">Gudang tempat pengambilan barang.</p>	
 				</div>
-			</div>
-			<div class="control-group">
-				<label class="control-label">Jumlah Pesanan</label>
-				<div class="controls">
-					<input id="jumlah" class="input-small" type="number" value="0">
-                    <span class="stock-satuan"></span>
-				</div>
+				<!-- hidden data -->
+				<input type="hidden" id="jumlah-stok" value="0">
 			</div>
 			<div class="control-group">				
 				<div class="controls">
 					<button id="addToCart" type="button" class="btn btn-primary"><i class="icon-chevron-down icon-white"></i> Add to Cart <i class="icon-chevron-down icon-white"></i></button>
 				</div>
-			</div>			
+			</div>
 		</div>
 		
 		<div>
@@ -375,16 +341,6 @@
 			<div class="clear"></div>
 		</div>
 		
-		<div class="control-group">
-			<label class="control-label">Total Harga</label>
-			<div class="controls">
-				<div class="view-mode" id="grandtotal">
-				    <strong>Rp.<?php echo str_replace(',', '.', toMoney($grandtotal , true , true) ); ?>,-</strong>
-                    <input type="hidden" value="<?php echo $grandtotal; ?>">
-				</div>
-			</div>
-		</div>
-		
 		<?php
 			// Our CKEditor Description Field !!
 			$value = array();
@@ -395,23 +351,39 @@
 			$value['input_type'] = 'textarea';
 			$value['value'] = (isset($_POST['data'][$value['model']][$value['counter']]['value'])?$_POST['data'][$value['model']][$value['counter']]['value']:$myEntry[$value['model']]['description']);
 			echo $this->element('input_'.$value['input_type'] , $value);
+
+			// show status field if update (NEW ZPANEL FEATURE) !!
+			$value = array();
+			$value['counter'] = 3;
+			$value['key'] = 'form-status';
+			$value['validation'] = 'not_empty';
+			$value['model'] = 'Entry';
+			$value['input_type'] = 'dropdown';
+			$value['list'][0]['id'] = '1';
+			$value['list'][0]['name'] = 'Published';
+			$value['list'][1]['id'] = '0';
+			$value['list'][1]['name'] = 'Draft';
+			$value['value'] = (isset($_POST['data'][$value['model']][$value['counter']]['value'])?$_POST['data'][$value['model']][$value['counter']]['value']:$myEntry[$value['model']]['status']);
+			$value['display'] = 'none';
+			echo $this->element('input_'.$value['input_type'] , $value);
 		?>
+		
 		<!-- myTypeSlug is for media upload settings purpose !! -->
-        <input type="hidden" value="<?php echo getFrontCodeId(empty($myChildType)?$myType['Type']['slug']:$myChildType['Type']['slug']); ?>" id="frontId"/>
+		<input type="hidden" value="<?php echo getFrontCodeId(empty($myChildType)?$myType['Type']['slug']:$myChildType['Type']['slug']); ?>" id="frontId"/>
 		<input type="hidden" value="<?php echo (empty($myChildType)?$myType['Type']['slug']:$myChildType['Type']['slug']); ?>" id="myTypeSlug"/>
 	<!-- SAVE BUTTON -->
 		<div class="control-action">
 			<!-- always use submit button to submit form -->
 			<button class="hide" type="submit"></button>
 
-			<button id="save-button" type="button" class="btn btn-primary <?php echo ($view_mode?'hide':''); ?>"><?php echo $saveButton; ?></button>
+			<button id="save-button" type="button" class="btn btn-primary"><?php echo $saveButton; ?></button>
 			<?php
 				if(empty($myEntry))
 				{
 					echo '<button id="save-as-draft" type="button" class="btn btn-inverse hide">Save as Draft</button>';
 				}
 			?>
-        	<button type="button" class="btn" onclick="javascript: window.location=site+'admin/entries/<?php echo (empty($myType)?'pages':$myType['Type']['slug']).(empty($myChildType)?'':'/'.$myParentEntry['Entry']['slug']).$myChildTypeLink.(empty($myEntry)?'':(empty($myChildTypeLink)?'?':'&').'lang='.(empty($lang)?substr($myEntry['Entry']['lang_code'], 0,2):$lang)); ?>'"><?php echo ($view_mode?'&laquo; Back':'Cancel'); ?></button>
+        	<button type="button" class="btn" onclick="javascript: window.location=site+'admin/entries/<?php echo (empty($myType)?'pages':$myType['Type']['slug']).(empty($myChildType)?'':'/'.$myParentEntry['Entry']['slug']).$myChildTypeLink.(empty($myEntry)?'':(empty($myChildTypeLink)?'?':'&').'lang='.(empty($lang)?substr($myEntry['Entry']['lang_code'], 0,2):$lang)); ?>'">Cancel</button>
 		</div>
 	</fieldset>
 <?php echo $this->Form->end(); ?>

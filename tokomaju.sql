@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 19, 2014 at 04:23 PM
+-- Generation Time: Dec 24, 2014 at 04:57 PM
 -- Server version: 5.1.37
 -- PHP Version: 5.3.0
 
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `cms_accounts` (
 --
 
 INSERT INTO `cms_accounts` (`id`, `user_id`, `role_id`, `username`, `email`, `password`, `last_login`, `created`, `created_by`, `modified`, `modified_by`) VALUES
-(1, 1, 1, 'admin', 'admin@yahoo.com', '169e781bd52860b584879cbe117085da596238f3', '2014-12-19 10:12:25', '2013-01-04 00:00:00', 1, '2014-05-05 15:15:38', 1);
+(1, 1, 1, 'admin', 'admin@yahoo.com', '169e781bd52860b584879cbe117085da596238f3', '2014-12-24 16:29:51', '2013-01-04 00:00:00', 1, '2013-01-04 00:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `cms_entries` (
   `lang_code` varchar(10) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=71 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=76 ;
 
 --
 -- Dumping data for table `cms_entries`
@@ -83,7 +83,7 @@ INSERT INTO `cms_entries` (`id`, `entry_type`, `title`, `slug`, `description`, `
 (1, 'customer', 'Andy Basuki', 'andy-basuki', 'just a test', 0, 0, 1, 0, '2014-11-23 10:59:31', 1, '2014-11-23 10:59:32', 1, 1, 'en-1'),
 (2, 'supplier', 'He Xin Min', 'he-xin-min', 'fake supplier', 0, 0, 1, 0, '2014-11-23 11:27:33', 1, '2014-11-23 11:27:33', 1, 2, 'en-2'),
 (3, 'ekspedisi', 'Pak Gunawan Santoso', 'pak-gunawan-santoso', 'Ekspedisi Sby - Kudus OKE', 0, 0, 1, 0, '2014-11-23 14:37:16', 1, '2014-11-23 14:37:16', 1, 3, 'en-3'),
-(4, 'gudang', 'Pengampon', 'pengampon', 'Gudang satu-satunya.', 0, 0, 1, 16, '2014-11-25 11:05:06', 1, '2014-12-16 10:55:27', 1, 4, 'en-4'),
+(4, 'gudang', 'Pengampon', 'pengampon', 'Gudang satu-satunya.', 0, 0, 1, 18, '2014-11-25 11:05:06', 1, '2014-12-23 17:28:17', 1, 4, 'en-4'),
 (5, 'jenis-barang', 'Bahan Baku', 'bahan-baku', 'test bahan', 0, 0, 1, 0, '2014-11-25 11:24:04', 1, '2014-11-25 11:24:04', 1, 5, 'en-5'),
 (6, 'jenis-barang', 'Mesin', 'mesin', 'test jenis mesin.\r\nOke.', 0, 0, 1, 0, '2014-11-25 11:24:23', 1, '2014-11-25 11:24:23', 1, 6, 'en-6'),
 (7, 'jenis-barang', 'Sparepart', 'sparepart', 'berbagai barang pendukung', 0, 0, 1, 0, '2014-11-25 11:26:10', 1, '2014-11-25 11:26:10', 1, 7, 'en-7'),
@@ -137,7 +137,12 @@ INSERT INTO `cms_entries` (`id`, `entry_type`, `title`, `slug`, `description`, `
 (67, 'sales-detail', 'bahan-tinta', 'bahan-tinta-5', NULL, 0, 64, 1, 0, '2014-12-19 14:59:18', 1, '2014-12-19 14:59:18', 1, 67, 'en-67'),
 (68, 'piutang', 'PIU141219002', 'piu141219002', 'Jual <strong>Bahan Tinta</strong> sebanyak 7 Galon @Rp.600.000,-', 0, 64, 1, 0, '2014-12-19 14:59:18', 1, '2014-12-19 14:59:18', 1, 68, 'en-68'),
 (69, 'piutang', 'PIU141219003', 'piu141219003', 'Mendapat potongan diskon nota secara keseluruhan.', 0, 64, 1, 0, '2014-12-19 14:59:18', 1, '2014-12-19 14:59:18', 1, 69, 'en-69'),
-(70, 'piutang', 'PIU141219004', 'piu141219004', 'Pembayaran Uang Muka / Uang DP.', 0, 64, 1, 0, '2014-12-19 14:59:18', 1, '2014-12-19 14:59:18', 1, 70, 'en-70');
+(70, 'piutang', 'PIU141219004', 'piu141219004', 'Pembayaran Uang Muka / Uang DP.', 0, 64, 1, 0, '2014-12-19 14:59:18', 1, '2014-12-19 14:59:18', 1, 70, 'en-70'),
+(71, 'customer', 'Hana Tania', 'hana-tania', '', 0, 0, 1, 0, '2014-12-23 15:33:41', 1, '2014-12-23 15:33:42', 1, 71, 'en-71'),
+(72, 'barang-dagang', 'Mesin VCut', 'mesin-vcut', '', 0, 0, 1, 0, '2014-12-23 17:22:34', 1, '2014-12-23 17:22:34', 1, 72, 'en-72'),
+(73, 'barang-gudang', 'mesin-vcut', 'mesin-vcut-1', 'masuk barang pertama', 0, 4, 1, 0, '2014-12-23 17:28:16', 1, '2014-12-23 17:28:16', 1, 73, 'en-73'),
+(74, 'pindah-masuk', 'automatic_mesin-vcut', 'automatic-mesin-vcut', 'Penambahan stok barang oleh administrator.', 8, 4, 1, 0, '2014-12-23 17:28:16', 1, '2014-12-23 17:28:16', 1, 74, 'en-74'),
+(75, 'barang-dagang', 'Paku Tancep X', 'paku-tancep-x', 'test barang lagi', 0, 0, 1, 0, '2014-12-23 17:40:10', 1, '2014-12-23 17:40:11', 1, 75, 'en-75');
 
 -- --------------------------------------------------------
 
@@ -151,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `cms_entry_metas` (
   `key` varchar(500) NOT NULL,
   `value` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=206 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=223 ;
 
 --
 -- Dumping data for table `cms_entry_metas`
@@ -201,9 +206,9 @@ INSERT INTO `cms_entry_metas` (`id`, `entry_id`, `key`, `value`) VALUES
 (42, 9, 'form-email', 'indahpertiwi@yahoo.com'),
 (43, 9, 'form-rekening_bank', 'BCA - 123 456 7890'),
 (48, 8, 'form-harga_jual', '15000000'),
-(49, 4, 'count-barang-gudang', '1'),
+(49, 4, 'count-barang-gudang', '2'),
 (72, 16, 'form-stock', '29'),
-(52, 4, 'count-pindah-masuk', '8'),
+(52, 4, 'count-pindah-masuk', '9'),
 (53, 8, 'form-stock', '43'),
 (55, 4, 'count-pindah-keluar', '7'),
 (57, 18, 'form-jenis_barang', 'bahan-baku'),
@@ -326,7 +331,24 @@ INSERT INTO `cms_entry_metas` (`id`, `entry_id`, `key`, `value`) VALUES
 (202, 70, 'form-mutasi_kredit', '25000000'),
 (203, 64, 'form-balance', '53600000'),
 (204, 64, 'form-total_harga', '78600000'),
-(205, 64, 'form-laba_bersih', '45885000');
+(205, 64, 'form-laba_bersih', '45885000'),
+(206, 71, 'form-perusahaan', 'PT. Fleur ReadyStock'),
+(207, 71, 'form-alamat', 'Jl. Baruk Utara 7'),
+(208, 71, 'form-kota', 'Surabaya, Indonesia'),
+(209, 71, 'form-kode_pos', '60606'),
+(210, 71, 'form-handphone', '0817375678'),
+(211, 72, 'form-jenis_barang', 'mesin'),
+(212, 72, 'form-satuan', 'unit'),
+(213, 72, 'form-supplier', 'indah-pertiiwi'),
+(214, 72, 'form-harga_beli', '12000000'),
+(215, 72, 'form-harga_jual', '21500000'),
+(216, 73, 'form-stock', '8'),
+(217, 72, 'form-stock', '8'),
+(218, 75, 'form-jenis_barang', 'sparepart'),
+(219, 75, 'form-satuan', 'kg'),
+(220, 75, 'form-supplier', 'he-xin-min'),
+(221, 75, 'form-harga_beli', '3500'),
+(222, 75, 'form-harga_jual', '6000');
 
 -- --------------------------------------------------------
 

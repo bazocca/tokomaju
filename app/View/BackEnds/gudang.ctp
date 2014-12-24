@@ -156,6 +156,11 @@
 						}
 						
 					}
+                    
+                    if($('input[type=hidden]#myTypeSlug').val() == 'surat-jalan')
+                    {
+                        $("input[type=hidden]#jumlah-stok").val($(this).find("input[type=hidden].jumlah-stok").val());
+                    }
 
 					$.colorbox.close();
 				}
@@ -287,12 +292,10 @@
 	<tr class="orderlist" alt="<?php echo $value['Entry']['id']; ?>">
 		<td class="main-title">
 			<?php
-				if($imageUsed == 1)
-				{
-					echo '<div class="thumbs hide">';
-					echo (empty($popup)?$this->Html->link($this->Html->image('upload/thumb/'.$value['Entry']['main_image'].'.'.$myImageTypeList[$value['Entry']['main_image']], array('alt'=>$value['ParentImageEntry']['title'],'title' => $value['ParentImageEntry']['title'])),array('action'=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']).'/edit/'.$value['Entry']['slug'].(!empty($myEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug']?'?type='.$myChildType['Type']['slug']:'')),array("escape"=>false)):$this->Html->image('upload/thumb/'.$value['Entry']['main_image'].'.'.$myImageTypeList[$value['Entry']['main_image']], array('alt'=>$value['ParentImageEntry']['title'],'title' => $value['ParentImageEntry']['title'])));
-					echo '</div>';
-				}
+				if(!empty($value['EntryMeta']['jumlah-stok']))
+                {
+                    echo '<input type="hidden" class="jumlah-stok" value="'.$value['EntryMeta']['jumlah-stok'].'">';
+                }
 			?>
 			<input class="slug-code" type="hidden" value="<?php echo $value['Entry']['slug']; ?>" />
 			<h5 class="title-code"><?php echo (empty($popup)?$this->Form->Html->link($value['Entry']['title'],array('action'=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'edit',$value['Entry']['slug'] ,'?'=> (!empty($myEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug']?array('type'=>$myChildType['Type']['slug']):'')   )  ):$value['Entry']['title']); ?></h5>
