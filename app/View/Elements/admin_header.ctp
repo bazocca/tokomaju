@@ -2,9 +2,13 @@
 	if(is_array($data)) extract($data , EXTR_SKIP);
 	
     // custom case !!
-    if($myChildType['Type']['slug'] == 'barang-masuk' || $myChildType['Type']['slug'] == 'hutang' || $myChildType['Type']['slug'] == 'piutang')
+    if($myChildType['Type']['slug'] == 'barang-masuk' || $myChildType['Type']['slug'] == 'hutang' || $myChildType['Type']['slug'] == 'piutang' || $myChildType['Type']['slug'] == 'retur-jual')
     {
         $this->Html->addCrumb($myChildType['Type']['name'], '/admin/entries/'.$myType['Type']['slug'].'?action='.$myChildType['Type']['slug']);
+    }
+    else if($this->request->params['type'] == 'retur-beli')
+    {
+        $this->Html->addCrumb('Retur Pembelian', '#');
     }
     else // general case !!
     {
@@ -113,9 +117,21 @@
                     // custom case !!
                     if($myChildType['Type']['slug'] == 'hutang' || $myChildType['Type']['slug'] == 'piutang')
                     {
+                        echo '<p class="title-description" style="color:red;">* Balance berwarna merah merupakan sisa pembayaran yang harus segera dilunasi.</p>';
+                    }
+                    else if($myType['Type']['slug'] == 'gudang' && !empty($this->request->query['barang-dagang']))
+                    {
                         ?>
-                    <p class="title-description" style="color:red;">* Balance berwarna merah merupakan sisa pembayaran yang harus segera dilunasi.</p>    
+                <script type="text/javascript">
+                    $(document).ready(function(){
+                        // re-switch span between header element !!
+                        $('div.inner-header.layout-header-popup > div:first').removeClass('span5').addClass('span7');
+                        $('div.inner-header.layout-header-popup > div:last').removeClass('span7').addClass('span5');
+                    });
+                </script>        
                         <?php
+                        $barangdagang = $this->Get->meta_details($this->request->query['barang-dagang'] , 'barang-dagang');
+                        echo '<p class="title-description" style="color:red;">* Jumlah stock <strong>'.$barangdagang['Entry']['title'].'</strong> yang tersedia untuk setiap gudang.</p>';
                     }
 				}
 			?>

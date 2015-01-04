@@ -675,8 +675,6 @@ function getFrontCodeId($myTypeSlug)
     $result = '';
     switch ($myTypeSlug) 
     {
-        case 'resi':
-            $result = "RSI";		break;
         case 'surat-jalan':
             $result = "SRJ";		break;
         case 'purchase-order':

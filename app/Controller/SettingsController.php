@@ -21,7 +21,7 @@ class SettingsController extends AppController {
 	
 	function admin_index() 
 	{
-		$this->setTitle('Setting');
+        $this->setTitle('Setting');
 		// if form submit is taken...
 		if(!empty($this->request->data))
 		{

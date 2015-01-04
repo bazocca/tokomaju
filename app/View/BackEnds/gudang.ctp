@@ -159,7 +159,7 @@
                     
                     if($('input[type=hidden]#myTypeSlug').val() == 'surat-jalan')
                     {
-                        $("input[type=hidden]#jumlah-stok").val($(this).find("input[type=hidden].jumlah-stok").val());
+                        $("span#jumlah-stok").text( $(this).find("input[type=hidden].jumlah-stok").val() );
                     }
 
 					$.colorbox.close();
@@ -218,6 +218,13 @@
 		</th>
 		
 		<?php
+            // PEMILIHAN GUDANG TEMPAT PENGAMBILAN BARANG DAGANG !!
+            if(!empty($this->request->query['barang-dagang']))
+            {
+                $barangdagang = $this->Get->meta_details($this->request->query['barang-dagang'] , 'barang-dagang');
+                echo '<th style="color:red;">Stock Barang</th>';
+            }
+        
 			// if this is a parent Entry !!
 			if(empty($myEntry) && empty($popup)) 
 			{
@@ -291,12 +298,6 @@
 	?>	
 	<tr class="orderlist" alt="<?php echo $value['Entry']['id']; ?>">
 		<td class="main-title">
-			<?php
-				if(!empty($value['EntryMeta']['jumlah-stok']))
-                {
-                    echo '<input type="hidden" class="jumlah-stok" value="'.$value['EntryMeta']['jumlah-stok'].'">';
-                }
-			?>
 			<input class="slug-code" type="hidden" value="<?php echo $value['Entry']['slug']; ?>" />
 			<h5 class="title-code"><?php echo (empty($popup)?$this->Form->Html->link($value['Entry']['title'],array('action'=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'edit',$value['Entry']['slug'] ,'?'=> (!empty($myEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug']?array('type'=>$myChildType['Type']['slug']):'')   )  ):$value['Entry']['title']); ?></h5>
 			<p>
@@ -309,6 +310,17 @@
 			</p>
 		</td>
 		<?php
+            // PEMILIHAN GUDANG TEMPAT PENGAMBILAN BARANG DAGANG !!
+            if(!empty($this->request->query['barang-dagang']))
+            {
+                ?>
+        <td>
+            <h5><?php echo $value['EntryMeta']['jumlah-stok'].' '.$barangdagang['EntryMeta']['satuan']; ?></h5>
+            <input type="hidden" class="jumlah-stok" value="<?php echo $value['EntryMeta']['jumlah-stok']; ?>">
+        </td>        
+                <?php
+            }
+        
 			if(empty($myEntry) && empty($popup)) // if this is a parent Entry !!
 			{
 				foreach ($myType['ChildType'] as $key10 => $value10)
@@ -396,15 +408,33 @@
                                 
                                 echo '<p>';
                                 // Try to use Primary EntryMeta first !!
-                                if(!empty($entrydetail['EntryMeta'][0]['value']))
+                                $targetMetaKey = NULL;
+                                foreach($entrydetail['EntryMeta'] as $metakey => $metavalue)
                                 {
-                                    echo $entrydetail['EntryMeta'][0]['value'];
+                                    if(substr($metavalue['key'] , 0 , 5) == 'form-')
+                                    {
+                                        $targetMetaKey = $metakey;
+                                        break;
+                                    }
+                                }
+                                
+                                if(isset($targetMetaKey))
+                                {
+                                    // test if value is a date value or not !!
+                                    if(strtotime($entrydetail['EntryMeta'][$targetMetaKey]['value']))
+                                    {
+                                        echo date_converter($entrydetail['EntryMeta'][$targetMetaKey]['value'] , $mySetting['date_format']);
+                                    }
+                                    else
+                                    {
+                                        echo $entrydetail['EntryMeta'][$targetMetaKey]['value'];
+                                    }
                                 }
                                 else
                                 {
                                     $description = strip_tags($entrydetail['Entry']['description']);
                             	    echo (strlen($description) > 30 ? substr($description,0,30)."..." : $description);
-                                }                                
+                                } 
                                 echo '</p>';
 							}
                         }

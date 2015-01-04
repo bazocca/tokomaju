@@ -8,7 +8,7 @@
 		?>
 		<script>
 			$(document).ready(function(){
-                $('div.title > h2').html('FORM BARANG MASUK <?php echo $myParentEntry['Entry']['title']; ?>');
+                $('div.title > h2').html('FORM RETUR PENJUALAN <?php echo $myParentEntry['Entry']['title']; ?>');
                 
                 $("a#<?php echo $myType['Type']['slug']; ?>").removeClass("active");
                 $("a#<?php echo $myChildType['Type']['slug']; ?>").addClass("active");
@@ -65,7 +65,7 @@
 				});
                 
                 // Form interaction !!
-                $('#form-barang-masuk tr td input.datang').change(function(){
+                $('#form-retur-jual tr td input.datang').change(function(){
                     var total = parseInt($(this).next("input[type=hidden].total").val());
                     var datang = parseInt($(this).val());
                     $(this).parents("tr").find("td.sisa h5").html(total - datang);
@@ -84,7 +84,7 @@
                     
                     // second check !!
                     var validku = false;
-                    $('#form-barang-masuk tr td input.datang').each(function(){                        
+                    $('#form-retur-jual tr td input.datang').each(function(){                        
                         if( parseInt($(this).val()) > 0)
                         {
                             validku = true;
@@ -96,7 +96,7 @@
                     {
                         message = "Select at least one item to import!";
                         alert(message);                        
-                        $('#form-barang-masuk tr td input.datang:first').focus();                        
+                        $('#form-retur-jual tr td input.datang:first').focus();                        
                         return false;
                     }
                     else
@@ -157,12 +157,12 @@
 			}
 		?>		
 		<!-- END OF META ATTRIBUTES -->
-		<table class="list" id="form-barang-masuk">
+		<table class="list" id="form-retur-jual">
 			<thead>
 			<tr>
-                <th>JUMLAH<br/>ORDER</th>				
+                <th>JUMLAH<br/>TERKIRIM</th>
 				<th>JENIS / NAMA BARANG</th>				
-				<th>JUMLAH<br/>DATANG</th>
+				<th>JUMLAH<br/>RETUR</th>
 				<th>SISA</th>
 				<th>KETERANGAN</th>
 			</tr>
@@ -171,7 +171,7 @@
 			<tbody>
 			<?php
 				foreach ($pesanan['myList'] as $value):
-				$sisa = $value['EntryMeta']['jumlah'] - $value['EntryMeta']['terkirim'];
+				$sisa = $value['EntryMeta']['terkirim'] - $value['EntryMeta']['retur'];
 				if(empty($sisa))
 				{
 					continue;
@@ -181,8 +181,8 @@
                 $jenisbarang = $this->Get->meta_details($detailbarang['EntryMeta']['jenis_barang'] , "jenis-barang");
 			?>	
 			<tr>
-                <td class="jumlah-order">
-                    <h5><?php echo $value['EntryMeta']['jumlah'].' '.$detailbarang['EntryMeta']['satuan']; ?></h5>
+                <td class="jumlah-terkirim">
+                    <h5><?php echo $value['EntryMeta']['terkirim'].' '.$detailbarang['EntryMeta']['satuan']; ?></h5>
                 </td>
                 <td class="nama">
                     <?php echo $jenisbarang['Entry']['title']." / ".$detailbarang['Entry']['title']; ?>

@@ -37,17 +37,21 @@ var jcrop_api = new Array();
 	    	window.onbeforeunload=function(){};
 	    });
 	    
-	    $("a.removeID").click(function(){
-	    	$(this).parents("div.control-group").find("input.targetID").val("");
-	    	$(this).parents("div.control-group").find("input.targetID").change();	    	
-	    	// $(this).parents("div.control-group").find("input.targetID").nextAll("p.help-block").html("");	    	
-	    	$(this).parents("div.control-group").find("input[type=hidden]").val("");
+	    $("a.removeID").click(function(e){
+            e.preventDefault();
+            
+	    	$(this).closest("div.controls").find("input.targetID").val("").change();
+	    	$(this).closest("div.controls").find("input[type=hidden]").val("");
             
             // release browse button !!
             if($(this).prevAll('input#sales-order').length > 0 && $("input#customer").length > 0)
             {
-                $("input#customer").nextAll('a').removeClass('disabled');
-                
+                $("input#customer").nextAll('a').removeClass('disabled');                
+                $('#add-invoice-barang').removeAttr('data-invoice');
+            }
+            else if($(this).prevAll('input#purchase-order').length > 0 && $("input#supplier").length > 0)
+            {
+                $("input#supplier").nextAll('a').removeClass('disabled');                
                 $('#add-invoice-barang').removeAttr('data-invoice');
             }
 	    });

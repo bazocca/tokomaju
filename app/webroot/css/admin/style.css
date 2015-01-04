@@ -34,6 +34,9 @@ a.disabled{
   -webkit-box-shadow: none;
   box-shadow: none;
 }
+textarea{
+  resize: vertical;
+}
 
 /* ABAS CSS */
 .normal-checkbox{float:left; position: relative; top: 10px}

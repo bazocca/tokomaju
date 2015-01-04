@@ -53,13 +53,6 @@
 					$('p#id-title-description').css('display','<?php echo (!empty($lang)?'none':'block'); ?>');
 				}
 				
-				// save as draft button !!
-				$('button#save-as-draft').click(function(){
-					// set last status button as draft !!
-					$('select.status:last').val('0');
-					$(this).closest('form').find('button[type=submit]:first').click();
-				});
-				
 				// save as published button !!
 				$('button#save-button').click(function(){
 					<?php if(empty($myEntry)): ?>
@@ -175,13 +168,7 @@
 			<button class="hide" type="submit"></button>
 
 			<button id="save-button" type="button" class="btn btn-primary"><?php echo $saveButton; ?></button>
-			<?php
-				if(empty($myEntry))
-				{
-					echo '<button id="save-as-draft" type="button" class="btn btn-inverse hide">Save as Draft</button>';
-				}
-			?>
-        	<button type="button" class="btn" onclick="javascript: window.location=site+'admin/entries/<?php echo (empty($myType)?'pages':$myType['Type']['slug']).(empty($myChildType)?'':'/'.$myParentEntry['Entry']['slug']).$myChildTypeLink.(empty($myEntry)?'':(empty($myChildTypeLink)?'?':'&').'lang='.(empty($lang)?substr($myEntry['Entry']['lang_code'], 0,2):$lang)); ?>'">Cancel</button>
+			<button type="button" class="btn" onclick="javascript: window.location=site+'admin/entries/<?php echo (empty($myType)?'pages':$myType['Type']['slug']).(empty($myChildType)?'':'/'.$myParentEntry['Entry']['slug']).$myChildTypeLink.(empty($myEntry)?'':(empty($myChildTypeLink)?'?':'&').'lang='.(empty($lang)?substr($myEntry['Entry']['lang_code'], 0,2):$lang)); ?>'">Cancel</button>
 		</div>
 	</fieldset>
 <?php echo $this->Form->end(); ?>

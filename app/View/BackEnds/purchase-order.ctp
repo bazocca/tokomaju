@@ -156,6 +156,24 @@
 						}
 						
 					}
+                    
+                    if($('input[type=hidden]#myTypeSlug').val() == "surat-jalan")
+					{	
+						$("input#supplier").val( $(this).find("td.form-supplier h5").text() );                        
+                        $("input[type=hidden].supplier").val( $(this).find("td.form-supplier input[type=hidden]").val() );
+                        
+                        // disable select supplier browse button !!
+                        $("input#supplier").nextAll('a').addClass('disabled');
+					}
+                    
+                    // update browse id add-invoice-barang...
+                    if($('#add-invoice-barang').length > 0)
+                    {
+                        $('#add-invoice-barang').attr('data-invoice' , $(this).find("input.slug-code").val() );
+                        // refresh barang-dagang !!
+                        $("input[type=text]#barang-dagang").val("");
+                        $("input[type=text]#barang-dagang").change();
+                    }
 
 					$.colorbox.close();
 				}
@@ -357,17 +375,37 @@
 								$outputResult = (empty($entrydetail['EntryMeta']['name'])?$entrydetail['Entry']['title']:$entrydetail['EntryMeta']['name']);
 								echo '<h5>'.(empty($popup)?$this->Form->Html->link($outputResult,array("controller"=>"entries","action"=>$entrydetail['Entry']['entry_type']."/edit/".$entrydetail['Entry']['slug']),array('target'=>'_blank')):$outputResult).'</h5>';
                                 
+                                echo '<input type="hidden" value="'.$entrydetail['Entry']['slug'].'" >';
+                                
                                 echo '<p>';
                                 // Try to use Primary EntryMeta first !!
-                                if(!empty($entrydetail['EntryMeta'][0]['value']))
+                                $targetMetaKey = NULL;
+                                foreach($entrydetail['EntryMeta'] as $metakey => $metavalue)
                                 {
-                                    echo $entrydetail['EntryMeta'][0]['value'];
+                                    if(substr($metavalue['key'] , 0 , 5) == 'form-')
+                                    {
+                                        $targetMetaKey = $metakey;
+                                        break;
+                                    }
+                                }
+                                
+                                if(isset($targetMetaKey))
+                                {
+                                    // test if value is a date value or not !!
+                                    if(strtotime($entrydetail['EntryMeta'][$targetMetaKey]['value']))
+                                    {
+                                        echo date_converter($entrydetail['EntryMeta'][$targetMetaKey]['value'] , $mySetting['date_format']);
+                                    }
+                                    else
+                                    {
+                                        echo $entrydetail['EntryMeta'][$targetMetaKey]['value'];
+                                    }
                                 }
                                 else
                                 {
                                     $description = strip_tags($entrydetail['Entry']['description']);
                             	    echo (strlen($description) > 30 ? substr($description,0,30)."..." : $description);
-                                }                                
+                                } 
                                 echo '</p>';
 							}
                         }

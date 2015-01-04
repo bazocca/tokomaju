@@ -154,7 +154,11 @@
                                             $urlaction = 'purchase-order?action='.$dbslug;
                                             break;
                                         case 'piutang':
+                                        case 'retur-jual':
                                             $urlaction = 'sales-order?action='.$dbslug;
+                                            break;
+                                        case 'retur-beli':
+                                            $urlaction = 'surat-jalan?key=customer';
                                             break;
                                         default:
                                             $urlaction = $dbslug;

@@ -293,7 +293,7 @@
                 </a>
             </h5>		    
 		</td>
-		<td><?php echo str_replace(chr(10) , '<br/>' , $value['Entry']['description']); ?></td>		
+		<td><?php echo nl2br($value['Entry']['description']); ?></td>		
 		<?php
 			if(empty($popup))
 			{

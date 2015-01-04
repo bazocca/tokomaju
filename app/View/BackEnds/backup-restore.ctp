@@ -78,8 +78,8 @@
 		</div>
 		
 	<?php echo $this->Form->end(); ?>
-	<hr>
-	<div class="control-group">
+<!--	<hr>-->
+	<div class="control-group hide">
 		<div class="controls">
 			<button id="backup-files" title="Backup all your uploaded files" type="button" class="btn btn-info">Backup Uploaded Files</button>
 		</div>

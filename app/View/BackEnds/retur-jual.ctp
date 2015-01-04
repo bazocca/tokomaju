@@ -2,8 +2,6 @@
 	$this->Get->create($data);
 	if(is_array($data)) extract($data , EXTR_SKIP);
 
-    $purHeader = $this->Get->meta_details($myEntry['Entry']['slug'] , "purchase-order");
-
     // initialize $extensionPaging for URL Query ...
     $extensionPaging = $this->request->query;
     unset($extensionPaging['lang']);
@@ -23,24 +21,7 @@
 
 	if($isAjax == 0)
 	{
-        if($purHeader['EntryMeta']['status_kirim'] == "Terkirim")
-		{
-			?>
-			<script type="text/javascript">
-			    $(document).ready(function(){
-                    $('a.get-started').hide();
-                    
-                    $('div.inner-header > div:first').removeClass('span5').addClass('span7');
-                    $('div.inner-header > div:last').removeClass('span7').addClass('span5');
-                });
-			</script>
-			<div class="alert alert-info full fl">
-				<a class="close" data-dismiss="alert" href="#">&times;</a>
-				Seluruh pengiriman barang sudah selesai.
-			</div>
-			<?php
-		}
-		echo $this->element('admin_header', array('extensionPaging' => $extensionPaging));
+        echo $this->element('admin_header', array('extensionPaging' => $extensionPaging));
 		echo '<div class="inner-content '.(empty($popup)?'':'layout-content-popup').'" id="inner-content">';
 		echo '<div class="autoscroll" id="ajaxed">';
 	}
@@ -182,7 +163,7 @@
                             $hideKeyQuery = 'hide';
                         }
                         echo "<th ".($value['TypeMeta']['input_type'] == 'textarea' || $value['TypeMeta']['input_type'] == 'ckeditor'?"style='min-width:200px;'":"")." class='".$hideKeyQuery."'>";
-                        echo $this->Form->Html->link(string_unslug(substr($entityTitle, 5)).($_SESSION['order_by'] == $entityTitle.' asc'?' <span class="sort-symbol">'.$sortASC.'</span>':($_SESSION['order_by'] == $entityTitle.' desc'?' <span class="sort-symbol">'.$sortDESC.'</span>':'')),array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index',$paging,'?'=>$extensionPaging) , array("class"=>"ajax_mypage" , "escape" => false , "title" => "Click to Sort" , "alt"=>$entityTitle.($_SESSION['order_by'] == $entityTitle.' asc'?" desc":" asc") ));
+                        echo $this->Form->Html->link(string_unslug(substr($entityTitle, 5)).($entityTitle=='form-jumlah'?' retur':'').($_SESSION['order_by'] == $entityTitle.' asc'?' <span class="sort-symbol">'.$sortASC.'</span>':($_SESSION['order_by'] == $entityTitle.' desc'?' <span class="sort-symbol">'.$sortDESC.'</span>':'')),array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index',$paging,'?'=>$extensionPaging) , array("class"=>"ajax_mypage" , "escape" => false , "title" => "Click to Sort" , "alt"=>$entityTitle.($_SESSION['order_by'] == $entityTitle.' asc'?" desc":" asc") ));
 						echo "</th>";
 					}
 				}
@@ -225,14 +206,7 @@
                         echo "<td class='".$value10['TypeMeta']['key']." ".$hideKeyQuery."'>";
                         if(empty($displayValue))
                         {
-                        	if($shortkey == 'sisa')
-                        	{
-                        		echo "<span class='label label-success'>HABIS</span>";
-                        	}
-                        	else
-                        	{
-                        		echo '-';	
-                        	}
+                        	echo '-';	
                         }
                         else if($value10['TypeMeta']['input_type'] == 'multibrowse')
 						{
@@ -296,7 +270,7 @@
                                 {
                                     $description = strip_tags($entrydetail['Entry']['description']);
                             	    echo (strlen($description) > 30 ? substr($description,0,30)."..." : $description);
-                                } 
+                                }    
                                 echo '</p>';
 							}
                         }
@@ -304,7 +278,7 @@
                         {
                             $outputConverter = $this->Get->outputConverter($value10['TypeMeta']['input_type'] , $displayValue , $myImageTypeList , $shortkey);
                             
-                            if($shortkey == 'jumlah_datang' || $shortkey == 'sisa')
+                            if($shortkey == 'jumlah')
                             {
                                 echo '<h5>'.$outputConverter.' '.$detailbarang['EntryMeta']['satuan'].'</h5>';
                             }

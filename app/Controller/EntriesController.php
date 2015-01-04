@@ -156,7 +156,7 @@ class EntriesController extends AppController {
 			}
 			else if($title['Entry']['entry_type'] == "resi")
 			{
-				$suratjalan = $this->Entry->findBySlug($title['EntryMeta']['surat_jalan'] , 'surat-jalan');
+				$suratjalan = $this->Entry->findBySlug($title['EntryMeta']['surat_jalan']);
 				$this->Entry->id = $suratjalan['Entry']['id'];
 				$this->Entry->saveField('status', '0');
 			}
@@ -401,7 +401,7 @@ class EntriesController extends AppController {
 		}
 
 		// this general action is one for all...
-        if($myChildTypeSlug == 'barang-masuk')
+        if($myChildTypeSlug == 'barang-masuk' || $myChildTypeSlug == 'retur-jual')
         {
             if(empty($this->request->data['order_by']))
             {
@@ -413,8 +413,20 @@ class EntriesController extends AppController {
 			$this->request->params['page'] = 0; // must be one full page !!            
             $_SESSION['order_by'] = 'form-tanggal asc';
 		}
+        else if($myType['Type']['slug'] == 'surat-jalan')
+        {
+            if(empty($this->request->query['key']) && empty($this->request->query['caller']) )
+            {
+                $this->request->query['key'] = 'supplier';
+            }
+            else if($this->request->query['key'] == 'customer' && empty($this->request->query['value']))
+            {
+                $this->request->params['type'] = 'retur-beli';
+            }
+        }
+        
 		$this->_admin_default($myType , $this->request->params['page'] , $myEntry , $this->request->query['key'] , $this->request->query['value'] , $myChildTypeSlug , $this->request->data['search_by'] , $this->request->query['popup'] , strtolower($this->request->query['lang']));
-		$myTypeSlug = (empty($myChildTypeSlug)?$myType['Type']['slug']:$myChildTypeSlug);
+		$myTypeSlug = (empty($myChildTypeSlug)?$this->request->params['type']:$myChildTypeSlug);
 		
 		// send to each appropriate view
 		$str = substr(WWW_ROOT, 0 , strlen(WWW_ROOT)-1); // buang DS trakhir...
@@ -447,10 +459,11 @@ class EntriesController extends AppController {
 		{
 			if(empty($this->request->data))
 			{
-				$this->set('pesanan' , $this->_admin_default($myType , 0 , $myEntry , NULL , NULL , "purchase-detail"));
+				$this->set('pesanan' , $this->_admin_default($myType , 0 , $myEntry , NULL , NULL , "purchase-detail" , NULL , NULL , NULL , 'manualset'));
 			}
 			else
 			{
+                $this->request->data['imagePath'] = $this->get_linkpath();
                 $this->Session->setFlash('Pengiriman barang terpilih sukses tiba di gudang '.$this->Entry->addBarangMasuk($this->request->data , $myEntry).'.','success');
 				$this->redirect (array('action' => $myEntry['Entry']['entry_type']."/".$myEntry['Entry']['slug']."?type=barang-masuk"));
 			}
@@ -459,20 +472,13 @@ class EntriesController extends AppController {
 		{
 			if(empty($this->request->data))
 			{
-				$this->set('pesanan' , $this->_admin_default($myType , 0 , $myEntry , NULL , NULL , "sales-detail"));
+				$this->set('pesanan' , $this->_admin_default($myType , 0 , $myEntry , NULL , NULL , "sales-detail" , NULL , NULL , NULL , 'manualset'));
 			}
 			else
 			{
-				if($this->Entry->addReturJual($this->request->data , $myEntry))
-				{	
-					$this->Session->setFlash('Input Success.','success');
-					$this->redirect (array('action' => $myEntry['Entry']['entry_type']."/".$myEntry['Entry']['slug']."?type=retur-jual"));
-				}
-				else
-				{
-					$this->Session->setFlash('Invalid input! Please fill the required fields.','failed');
-					$this->redirect (array('action' => $myEntry['Entry']['entry_type']."/".$myEntry['Entry']['slug']."/add?type=retur-jual"));
-				}
+                $this->request->data['imagePath'] = $this->get_linkpath();
+                $this->Session->setFlash('Pengiriman retur barang terpilih sukses tiba di gudang '.$this->Entry->addReturJual($this->request->data , $myEntry).'.','success');
+				$this->redirect (array('action' => $myEntry['Entry']['entry_type']."/".$myEntry['Entry']['slug']."?type=retur-jual"));
 			}
 		}
 	}
@@ -572,6 +578,12 @@ class EntriesController extends AppController {
 		$this->Entry->recursive = 2;
 		$myEntry = $this->meta_details($this->request->params['entry']);
 		$this->Entry->recursive = 1;
+        
+        if(empty($myEntry))
+        {
+            throw new NotFoundException('Error 404 - Not Found');
+            return;
+        }
 		
 		// if this action is going to edit CHILD list...
 		if(!empty($this->request->params['entry_parent']))
@@ -895,6 +907,11 @@ class EntriesController extends AppController {
 		{
 			$options['conditions']['Entry.status'] = 1;
 		}
+        // CUSTOM FILTER QUERY !!
+        if($myType['Type']['slug'] == 'surat-jalan' && $this->request->query['caller'] == 'resi')
+        {
+            $options['conditions']['Entry.status'] = 0;
+        }
 
 		if($myType['Type']['slug'] != 'media')
 		{
@@ -1221,9 +1238,16 @@ class EntriesController extends AppController {
 			}
 			
 			// PREPARE FOR ADDITIONAL LINK OPTIONS !!
-			$myChildTypeLink = (!empty($myEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug']?'?type='.$myChildType['Type']['slug']:'');
-			$myTranslation = (empty($myChildTypeLink)?'?':'&').'lang='.substr($this->request->data['Entry']['lang_code'], 0,2);
-			
+            if($myType['Type']['slug'] == 'surat-jalan' && !empty($this->request->query['retur-beli']))
+            {
+                $myChildTypeLink = '?key=customer';
+            }
+            else
+            {
+                $myChildTypeLink = (!empty($myEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug']?'?type='.$myChildType['Type']['slug']:'');                
+            }            
+            $myTranslation = (empty($myChildTypeLink)?'?':'&').'lang='.substr($this->request->data['Entry']['lang_code'], 0,2);
+            
 			// now for validation !!
 			$this->Entry->set($this->request->data);
 			if($this->Entry->validates())
@@ -1297,14 +1321,9 @@ class EntriesController extends AppController {
 				}
 				else if($myType['Type']['slug'] == "surat-jalan")
 				{
-					if(empty($this->request->data['Entry']['id-customer']) && empty($this->request->data['caller']))
-					{
-						$this->Session->setFlash('Please define who is the customer.','failed');
-						return;
-					}
 					if(!$this->cekSuratJalan())
 					{
-						$this->Session->setFlash('Ditemukan adanya kelebihan pengiriman barang. Silahkan ulangi.','failed');
+						$this->Session->setFlash('Ditemukan adanya kelebihan pengiriman barang berdasarkan invoice terpilih.<br>Silahkan ulangi lagi.','failed');
 						return;
 					}
 				}				
@@ -1428,6 +1447,7 @@ class EntriesController extends AppController {
 		// $this->request->data['EntryMeta']['entry_id'] => not needed to be set, coz it's already set in parent function !!
         $this->request->data = breakEntryMetas($this->request->data);
         $this->request->data['Entry']['id'] = $this->request->data['EntryMeta']['entry_id'];
+        $this->request->data['imagePath'] = $this->get_linkpath();
         
         if($myTypeSlug == "purchase-order" && empty($myChildTypeSlug) && empty($myEntry)) // ADD ONLY!!
         {
@@ -1517,19 +1537,14 @@ class EntriesController extends AppController {
                 }
             }            
 		}
-		else if($myTypeSlug == "surat-jalan" && empty($myEntry))
+		else if($myTypeSlug == "surat-jalan" && empty($myEntry)) // ADD ONLY!!
 		{
 			$this->Entry->addSuratJalan($this->request->data);
 		}
 		else if($myTypeSlug == "resi")
 		{
-			$this->request->data['EntryMeta']['key'] = "id-surat-jalan";
-			$this->request->data['EntryMeta']['value'] = $this->request->data['Entry']['id-surat-jalan'];
-			$this->EntryMeta->create();
-			$this->EntryMeta->save($this->request->data);
-
 			// update resi status di surat jalan tsb...
-			$suratjalan = $this->Entry->findBySlug($this->request->data['Entry']['id-surat-jalan']);
+			$suratjalan = $this->Entry->findBySlug($this->request->data['EntryMeta']['surat_jalan']);
 			$this->Entry->id = $suratjalan['Entry']['id'];
 			$this->Entry->saveField('status', '1');
 		}
@@ -2246,5 +2261,51 @@ class EntriesController extends AppController {
         // END OF PROCESS !!
         
 		$this->redirect('/admin/entries/'.$myParentEntry['Entry']['entry_type'].'/'.$myParentEntry['Entry']['slug'].'?type='.$myTypeSlug);
+	}
+    
+    function cekSuratJalan()
+	{		
+        $this->request->data = breakEntryMetas($this->request->data);
+        
+        if(!empty($this->request->data['EntryMeta']['sales_order']))
+        {
+            $saleDetails = $this->_admin_default($this->Type->findBySlug("sales-order") , 0, $this->Entry->findBySlug($this->request->data['EntryMeta']['sales_order']) , NULL , NULL , "sales-detail", NULL , NULL , NULL , "manualset");
+            
+			foreach ($saleDetails['myList'] as $key => $value) 
+			{
+				$arrayKeys = array_keys($this->request->data['barang']['slug-barang'] , $value['Entry']['title']);
+				$total = 0;
+				$maxLimit = $value['EntryMeta']['jumlah'] - $value['EntryMeta']['terkirim'];
+				foreach ($arrayKeys as $key10 => $value10) 
+				{
+					$total += $this->request->data['barang']['jumlah'][$value10];
+				}
+				if($total > $maxLimit)
+				{
+					return false;
+				}
+			}
+        }
+        // RETUR PEMBELIAN !!
+        else if(!empty($this->request->data['EntryMeta']['purchase_order']))
+        {
+            $purDetails = $this->_admin_default($this->Type->findBySlug("purchase-order") , 0, $this->Entry->findBySlug($this->request->data['EntryMeta']['purchase_order']) , NULL , NULL , "purchase-detail", NULL , NULL , NULL , "manualset");
+			foreach ($purDetails['myList'] as $key => $value) 
+			{
+				$arrayKeys = array_keys($this->request->data['barang']['slug-barang'] , $value['Entry']['title']);
+				$total = 0;
+				$maxLimit = $value['EntryMeta']['terkirim'] - $value['EntryMeta']['retur'];
+				foreach ($arrayKeys as $key10 => $value10) 
+				{
+					$total += $this->request->data['barang']['jumlah'][$value10];
+				}
+				if($total > $maxLimit)
+				{
+					return false;
+				}
+			}
+        }
+        
+		return true;
 	}
 }

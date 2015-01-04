@@ -3,9 +3,13 @@
 	if(!empty($myType))
 	{
 		// custom case !!
-        if($myChildType['Type']['slug'] == 'barang-masuk' || $myChildType['Type']['slug'] == 'hutang')
+        if($myChildType['Type']['slug'] == 'barang-masuk' || $myChildType['Type']['slug'] == 'hutang' || $myChildType['Type']['slug'] == 'retur-jual')
         {
             $this->Html->addCrumb($myChildType['Type']['name'], '/admin/entries/'.$myType['Type']['slug'].'?action='.$myChildType['Type']['slug']);
+        }
+        else if(!empty($this->request->query['retur-beli']))
+        {
+            $this->Html->addCrumb('Retur Pembelian', '/admin/entries/'.$myType['Type']['slug'].'?key=customer');
         }
         else // general case !!
         {

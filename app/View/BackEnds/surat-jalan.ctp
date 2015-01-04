@@ -156,24 +156,6 @@
 						}
 						
 					}
-                    
-                    if($('input[type=hidden]#myTypeSlug').val() == "surat-jalan")
-					{	
-						$("input#customer").val( $(this).find("td.form-customer h5").text() );                        
-                        $("input[type=hidden].customer").val( $(this).find("td.form-customer input[type=hidden]").val() );
-                        
-                        // disable select customer browse button !!
-                        $("input#customer").nextAll('a').addClass('disabled');
-					}
-                    
-                    // update browse id add-invoice-barang...
-                    if($('#add-invoice-barang').length > 0)
-                    {
-                        $('#add-invoice-barang').attr('data-invoice' , $(this).find("input.slug-code").val() );
-                        // refresh barang-dagang !!
-                        $("input[type=text]#barang-dagang").val("");
-                        $("input[type=text]#barang-dagang").change();
-                    }
 
 					$.colorbox.close();
 				}
@@ -196,6 +178,27 @@
 		// disable language selector ONLY IF one language available !!		
 		var myLangSelector = ($('#colorbox').length > 0 && $('#colorbox').is(':visible')? $('#colorbox').find('div.lang-selector:first') : $('div.lang-selector')  );
 		if(myLangSelector.find('ul.dropdown-menu li').length <= 1)	myLangSelector.hide();
+    
+        // merge some field into new field !!
+        if($('td.invoice').length > 0 && $('td.customer-supplier').length > 0)
+        {
+            $('table#myTableList tbody tr').each(function(i,el){
+                
+                var invoice = $(el).find('td.invoice');
+                var cussup = $(el).find('td.customer-supplier');
+                
+                if( $.trim($(el).find('td.form-customer').text()) != '-' )
+                {
+                    invoice.html( $(el).find('td.form-sales_order').html() );                    
+                    cussup.html( $(el).find('td.form-customer').html() );
+                }
+                else
+                {
+                    invoice.html( $(el).find('td.form-purchase_order').html() );                    
+                    cussup.html( $(el).find('td.form-supplier').html() );
+                }
+            });
+        }
 	});
 </script>
 <?php if($totalList <= 0){ ?>
@@ -241,21 +244,54 @@
 					{
                         $entityTitle = $value['TypeMeta']['key'];
                         $hideKeyQuery = '';
-                        if(!empty($popup) && $this->request->query['key'] == substr($entityTitle, 5))
+                        $shortkey = substr($entityTitle, 5);
+                        if(!empty($popup) && $this->request->query['key'] == $shortkey )
                         {
                             $hideKeyQuery = 'hide';
                         }
+                        // custom case !!
+                        else if(empty($this->request->query['key'])) // later, merge them all !!
+                        {
+                            if($shortkey == 'supplier' || $shortkey == 'purchase_order' || $shortkey == 'customer' || $shortkey == 'sales_order')
+                            {
+                                $hideKeyQuery = 'hide';
+                            }
+                        }
+                        else if(empty($this->request->query['value']))
+                        {
+                            if($this->request->query['key'] == 'supplier')
+                            {
+                                if($shortkey == 'supplier' || $shortkey == 'purchase_order')
+                                {
+                                    $hideKeyQuery = 'hide';
+                                }
+                            }
+                            else if($this->request->query['key'] == 'customer')
+                            {
+                                if($shortkey == 'customer' || $shortkey == 'sales_order')
+                                {
+                                    $hideKeyQuery = 'hide';
+                                }
+                            }
+                        }
+                        
                         echo "<th ".($value['TypeMeta']['input_type'] == 'textarea' || $value['TypeMeta']['input_type'] == 'ckeditor'?"style='min-width:200px;'":"")." class='".$hideKeyQuery."'>";
-                        echo $this->Form->Html->link(string_unslug(substr($entityTitle, 5)).($_SESSION['order_by'] == $entityTitle.' asc'?' <span class="sort-symbol">'.$sortASC.'</span>':($_SESSION['order_by'] == $entityTitle.' desc'?' <span class="sort-symbol">'.$sortDESC.'</span>':'')),array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index',$paging,'?'=>$extensionPaging) , array("class"=>"ajax_mypage" , "escape" => false , "title" => "Click to Sort" , "alt"=>$entityTitle.($_SESSION['order_by'] == $entityTitle.' asc'?" desc":" asc") ));
+                        echo $this->Form->Html->link(string_unslug($shortkey).($_SESSION['order_by'] == $entityTitle.' asc'?' <span class="sort-symbol">'.$sortASC.'</span>':($_SESSION['order_by'] == $entityTitle.' desc'?' <span class="sort-symbol">'.$sortDESC.'</span>':'')),array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index',$paging,'?'=>$extensionPaging) , array("class"=>"ajax_mypage" , "escape" => false , "title" => "Click to Sort" , "alt"=>$entityTitle.($_SESSION['order_by'] == $entityTitle.' asc'?" desc":" asc") ));
 						echo "</th>";
 					}
 				}
+                
+                if(empty($this->request->query['key']))
+                {
+                    echo '<th>INVOICE</th>';
+                    echo '<th>CUSTOMER / SUPPLIER</th>';
+                }
 			}	
 		?>		
-		<th class="hide">
+		<th class="<?php echo ($this->request->query['caller']=='resi'?'hide':''); ?>">
 		    <?php
                 $entityTitle = "status";
-                echo $this->Form->Html->link(string_unslug($entityTitle).($_SESSION['order_by'] == $entityTitle.' asc'?' <span class="sort-symbol">'.$sortASC.'</span>':($_SESSION['order_by'] == $entityTitle.' desc'?' <span class="sort-symbol">'.$sortDESC.'</span>':'')),array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index',$paging,'?'=>$extensionPaging) , array("class"=>"ajax_mypage" , "escape" => false , "title" => "Click to Sort" , "alt"=>$entityTitle.($_SESSION['order_by'] == $entityTitle.' asc'?" desc":" asc") ));
+                echo $this->Form->Html->link("RESI STATUS".($_SESSION['order_by'] == $entityTitle.' asc'?' <span class="sort-symbol">'.$sortASC.'</span>':($_SESSION['order_by'] == $entityTitle.' desc'?' <span class="sort-symbol">'.$sortDESC.'</span>':'')),array("action"=>$myType['Type']['slug'].(empty($myEntry)?'':'/'.$myEntry['Entry']['slug']),'index',$paging,'?'=>$extensionPaging) , array("class"=>"ajax_mypage" , "escape" => false , "title" => "Click to Sort" , "alt"=>$entityTitle.($_SESSION['order_by'] == $entityTitle.' asc'?" desc":" asc") ));
             ?>
 		</th>
 		<?php
@@ -321,6 +357,31 @@
                         if(!empty($popup) && $this->request->query['key'] == $shortkey)
                         {
                             $hideKeyQuery = 'hide';
+                        }
+                        // custom case !!
+                        else if(empty($this->request->query['key'])) // later, merge them all !!
+                        {
+                            if($shortkey == 'supplier' || $shortkey == 'purchase_order' || $shortkey == 'customer' || $shortkey == 'sales_order')
+                            {
+                                $hideKeyQuery = 'hide';
+                            }
+                        }
+                        else if(empty($this->request->query['value']))
+                        {
+                            if($this->request->query['key'] == 'supplier')
+                            {
+                                if($shortkey == 'supplier' || $shortkey == 'purchase_order')
+                                {
+                                    $hideKeyQuery = 'hide';
+                                }
+                            }
+                            else if($this->request->query['key'] == 'customer')
+                            {
+                                if($shortkey == 'customer' || $shortkey == 'sales_order')
+                                {
+                                    $hideKeyQuery = 'hide';
+                                }
+                            }
                         }
                         
                         echo "<td class='".$value10['TypeMeta']['key']." ".$hideKeyQuery."'>";
@@ -410,36 +471,34 @@
                         }
                         else
                         {
-                            if($shortkey == 'status_bayar')
-                            {
-                                echo '<a title="klik untuk lihat detail pembayaran." href="'.$imagePath.'admin/entries/'.$value['Entry']['entry_type'].'/'.$value['Entry']['slug'].'?type=piutang'.'">';
-                            }
-                            else if($shortkey == 'status_kirim')
-                            {
-                                echo '<a title="klik untuk lihat detail pengiriman." href="'.$imagePath.'admin/entries/surat-jalan?key='.str_replace('-','_',$value['Entry']['entry_type']).'&value='.$value['Entry']['slug'].'">';
-                            }
-                            
                         	echo $this->Get->outputConverter($value10['TypeMeta']['input_type'] , $displayValue , $myImageTypeList , $shortkey);
-                            
-                            if($shortkey == 'status_bayar' || $shortkey == 'status_kirim')
-                            {
-                                echo '</a>';
-                            }
                         }
                         echo "</td>";
 					}
 				}
+                
+                if(empty($this->request->query['key']))
+                {
+                    echo '<td class="invoice"></td>';
+                    echo '<td class="customer-supplier"></td>';
+                }
 			}	
-		?>
-		<td class="hide" style='min-width: 0px;' <?php echo (empty($popup)?'':'class="offbutt"'); ?>>
+		?>		
+		<td class="<?php echo ($this->request->query['caller']=='resi'?'hide':''); ?>" style='min-width: 0px;' <?php echo (empty($popup)?'':'class="offbutt"'); ?>>
+		    <?php if(empty($popup) && $value['Entry']['status'] == 0 ): ?>
+			<a title="Klik untuk membuat resi." href="<?php echo $imagePath.'admin/entries/resi/add?data-surat-jalan='.$value['Entry']['slug']; ?>">
+			<?php endif; ?>
 			<span class="label <?php echo $value['Entry']['status']==0?'label-important':'label-success'; ?>">
 				<?php
 					if($value['Entry']['status'] == 0)
-						echo "Draft";
+						echo "Pending";
 					else
-						echo "Published";
+						echo "Complete";
 				?>
 			</span>
+			<?php if(empty($popup) && $value['Entry']['status'] == 0 ): ?>
+			</a>
+			<?php endif; ?>
 		</td>
 		<?php
 			if(empty($popup))
@@ -451,7 +510,7 @@
 					$targetURL = 'entries/change_status/'.$value['Entry']['id'];
 					if($value['Entry']['status'] == 0)
 					{
-						echo '<a href="javascript:void(0)" onclick="changeLocation(\''.$targetURL.'\')" class="btn btn-info"><i class="icon-ok icon-white"></i></a>';					
+						echo '<a href="javascript:void(0)" onclick="changeLocation(\''.$targetURL.'\')" class="hide btn btn-info"><i class="icon-ok icon-white"></i></a>';					
 					}
 					else
 					{

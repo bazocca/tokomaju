@@ -1,6 +1,13 @@
 <?php
 	$this->Get->create($data);
 	if(is_array($data)) extract($data , EXTR_SKIP);
+
+    // Custom Check !!
+    if(!empty($myEntry['EntryMeta']['purchase_order']))
+    {
+        $this->request->query['retur-beli'] = 'true';
+    }
+
 	if($isAjax == 0)
 	{
 		echo $this->element('admin_header_add');
@@ -20,10 +27,14 @@
                 
                 // EDIT THE TITLE IF RETUR PEMBELIAN !!
                 <?php
-                    if(!empty($this->request->query['purchase_order']))
+                    if(!empty($this->request->query['retur-beli']))
                     {
                         ?>
                     $("div.title > h2").append(" (RETUR PEMBELIAN)");
+                    
+                    // make retur-beli menu active !!
+                    $("div.sidebar a").removeClass("active");
+                    $("div.sidebar a#retur-beli").addClass("active");
                         <?php
                     }
                 ?>
@@ -44,7 +55,81 @@
                     }
                     
                     $("input#gudang").val("");
-                    $("input#jumlah-stok").val("0");
+                    $("span#jumlah-stok").text("-");
+                });
+                
+                $("button[type=button]#addToCart").click(function(){
+                    var id_barang = $("input#barang-dagang").val();
+                    var slug_barang = $("input#barang-dagang").nextAll("input[type=hidden]").val();
+                    
+                    var id_gudang = $("input#gudang").val();                    
+                    var slug_gudang = $("input#gudang").nextAll("input[type=hidden]").val();
+                    
+                    if(id_barang.length <= 0 || id_gudang.length <= 0)
+                    {
+                        alert("Invalid input. Please try again.");
+                        return;
+                    }
+                    
+                    // cek barang & gudang sudah di list ato tidak...
+                    var check = true;                    
+                    var namabarang = "";
+                    var namagudang = "";
+                    $('tbody#myInputWrapper tr').each(function(i,el){                        
+                        namabarang = $(el).find('td.nama').text().split('/');                        
+                        namabarang = $.trim(namabarang[1]);
+                        
+                        namagudang = $(el).find('td.gudang').text();
+                        
+                        if(namabarang == id_barang && namagudang == id_gudang)
+                        {
+                            check = false;                            
+                            return;
+                        }
+                    });			
+                    if(check == false)
+                    {
+                        alert("Barang dari gudang yang sama sudah terdaftar.\nSilahkan tambahkan barang yang lainnya.");
+                        return;
+                    }
+
+                    // fill content to be appended !!
+                    var satuan = $('span.stock-satuan').text();
+                    var jumlah_stok = parseInt($("span#jumlah-stok").text());
+
+                    var content = '<tr>';                    
+                    content += '<td class="nama">'+$("input#jenis-barang").val()+' / '+id_barang+'</td>';
+                    content += '<td class="jumlah"><input min="1" max="'+jumlah_stok+'" type="number" class="input-mini" name="data[barang][jumlah][]" value="1" /></td>';                    
+                    content += '<td class="satuan">'+satuan+'</td>';
+                    content += '<td class="gudang">'+id_gudang+'</td>';
+                    
+                    content += '<td class="action">';
+                    content += '<a href="javascript:void(0)" class="btn btn-danger del-barang" style="display: inline;"><i class="icon-trash icon-white"></i></a>';
+                    
+                    content += '<input type="hidden" name="data[barang][id-barang][]" value="'+id_barang+'"/>';
+                    content += '<input type="hidden" name="data[barang][slug-barang][]" value="'+slug_barang+'"/>';
+                    content += '<input type="hidden" name="data[barang][id-gudang][]" value="'+id_gudang+'">';
+                    content += '<input type="hidden" name="data[barang][slug-gudang][]" value="'+slug_gudang+'">';
+                    
+                    content += '</td>';
+                    content += '</tr>';			
+
+                    $('tbody#myInputWrapper').append(content).each(function(){
+                        $("input#barang-dagang").val("");				
+                        $("input#barang-dagang").change();
+                        $('input#sales-order , input#purchase-order').nextAll('a.cboxElement').addClass('disabled');
+                    });
+                });
+                
+                $(document).on("click","a.del-barang",function(){
+                    $(this).parents('tr').animate({opacity : 0},1000,function(){                        
+                        $(this).detach();
+                        // re-enable browse supplier !!
+                        if($('tbody#myInputWrapper tr').length == 0)
+                        {
+                            $('input#sales-order , input#purchase-order').nextAll('a.cboxElement').removeClass('disabled');
+                        }
+                    });
                 });
                 
                 $('a#add-invoice-barang').click(function(e){
@@ -88,10 +173,8 @@
 			});
 		</script>
 		<?php
-	}
-	$myChildTypeLink = (!empty($myParentEntry)&&$myType['Type']['slug']!=$myChildType['Type']['slug']?'?type='.$myChildType['Type']['slug']:'');
-	$myTranslation = ( empty($lang)||empty($myEntry) ? '' : (empty($myChildTypeLink)?'?':'&').'lang='.$lang);
-	$targetSubmit = (empty($myType)?'pages':$myType['Type']['slug']).(empty($myChildType)?'':'/'.$myParentEntry['Entry']['slug']).(empty($myEntry)?'/add':'/edit/'.$myEntry['Entry']['slug']).$myChildTypeLink.$myTranslation;
+	}	
+	$targetSubmit = (empty($myType)?'pages':$myType['Type']['slug']).(empty($myChildType)?'':'/'.$myParentEntry['Entry']['slug']).(empty($myEntry)?'/add':'/edit/'.$myEntry['Entry']['slug']).(!empty($this->request->query['retur-beli'])?'?retur-beli=true':'');
 	$saveButton = (empty($myEntry)?'Add New':(empty($lang)?'Save Changes':'Add Translation'));
 	echo $this->Form->create('Entry', array('action'=>$targetSubmit,'type'=>'file','class'=>'notif-change form-horizontal fl','inputDefaults' => array('label' =>false , 'div' => false)));	
 ?>
@@ -129,7 +212,7 @@
 				});
 			});
 		</script>
-		<p class="notes important" style="color: red;font-weight: bold;">* Red input MUST NOT be empty.</p>
+		<p class="notes important <?php echo ($view_mode?'hide':''); ?>" style="color: red;font-weight: bold;">* Red input MUST NOT be empty.</p>
 		<input type="hidden" value="<?php echo (isset($_POST['data']['language'])?$_POST['data']['language']:(empty($lang)?substr($myEntry['Entry']['lang_code'], 0,2):$lang)); ?>" name="data[language]" id="myLanguage"/>
 		<input type="hidden" value="<?php echo (isset($_POST['data']['Entry'][2]['value'])?$_POST['data']['Entry'][2]['value']:(empty($myEntry)?'0':$myEntry['Entry']['main_image'])); ?>" name="data[Entry][2][value]" id="mySelectCoverId"/>
 		<input type='hidden' id="entry_image_type" value="<?php echo $myImageTypeList[isset($_POST['data']['Entry'][2]['value'])?$_POST['data']['Entry'][2]['value']:(empty($myEntry)?'0':$myEntry['Entry']['main_image'])]; ?>" />
@@ -202,7 +285,7 @@
 					}
                     
                     // custom function !!
-                    if(empty($this->request->query['purchase_order']))
+                    if(empty($this->request->query['retur-beli']))
                     {
                         if($value['key']=='form-purchase_order' || $value['key']=='form-supplier')
                         {
@@ -219,8 +302,8 @@
                         {
                             $value['display'] = 'none';
                         }
-                        
-                        else if($value['key'] == 'form-supplier') // add validation !!
+                        // khusus retur beli, PO harus ada !!
+                        else if($value['key'] == 'form-supplier' || $value['key']=='form-purchase_order') // add validation !!
                         {
                             $value['validation'] .= 'not_empty';
                         }
@@ -244,8 +327,7 @@
                 <p class="help-block">Barang yang hendak dikirimkan.</p>
 			</div>
 			<!-- hidden data -->
-			<input type="hidden" id="jenis-barang">            
-            <span class="stock-satuan hide"></span>
+			<input type="hidden" id="jenis-barang">
 		</div>
 		
 		<div id="optgoods" style="display:none">
@@ -256,9 +338,8 @@
 					<?php echo $this->Html->link('Browse',array('controller'=>'entries','action'=>'gudang','admin'=>true, '?'=> array('popup'=>'init') ),array('class'=>'btn btn-info','id'=>'browse-gudang','data-barang-dagang'=>'')); ?>
 					<input type="hidden"/>   <!-- will be filled with slug-code -->
 					<p class="help-block">Gudang tempat pengambilan barang.</p>	
+					<p class="help-block" style="color:red;">Jumlah tersedia : <span id="jumlah-stok">-</span> <span class="stock-satuan"></span></p>
 				</div>
-				<!-- hidden data -->
-				<input type="hidden" id="jumlah-stok" value="0">
 			</div>
 			<div class="control-group">				
 				<div class="controls">
@@ -271,70 +352,72 @@
 			<table class="list bordered" id="tabel-pesanan-barang">
 				<thead>
                     <tr>
-                        <th>JUMLAH</th>
-                        <th>JENIS / NAMA BARANG</th>                        
-                        <th>HARGA</th>
-                        <th>SUBTOTAL</th>
-                        <th><?php echo (empty($myEntry)?'':'TERKIRIM'); ?></th>
-                        <?php echo (empty($myEntry)?"":"<th class='retur'>RETUR</th>"); ?>
+                        <th>JENIS / NAMA BARANG</th>
+                        <th>JUMLAH KIRIM</th>
+                        <th>SATUAN</th>
+                        <th>GUDANG</th>
+                        <?php echo (empty($myEntry)?'<th></th>':''); ?>
                     </tr>
 				</thead>
 				
 				<tbody id="myInputWrapper">
 				<?php
-					$grandtotal = 0;
-                    $retur_existed = false;
-					foreach ($myEntry['ChildEntry'] as $value)
+                    if(!empty($this->request->data))
                     {
-                        if($value['Entry']['entry_type'] == 'purchase-detail')
+                        foreach($this->request->data['barang']['slug-barang'] as $key => $value)
+                        {
+                            $detailbarang = $this->Get->meta_details($value , "barang-dagang");
+                            $jenisbarang = $this->Get->meta_details($detailbarang['EntryMeta']['jenis_barang'] , "jenis-barang");
+                            $detailgudang = $this->Get->meta_details($this->request->data['barang']['slug-gudang'][$key] , "gudang");
+                            ?>
+                <tr>
+				    <td class="nama">
+					    <?php echo $jenisbarang['Entry']['title']." / ".$detailbarang['Entry']['title']; ?>
+					</td>
+					<td class="jumlah">
+                        <input min="1" max="<?php echo $this->request->data['barang']['jumlah'][$key]; ?>" type="number" class="input-mini" name="data[barang][jumlah][]" value="<?php echo $this->request->data['barang']['jumlah'][$key]; ?>" />
+					</td>					
+					<td class="satuan"><?php echo $detailbarang['EntryMeta']['satuan']; ?></td>
+					<td class="gudang"><?php echo $detailgudang['Entry']['title']; ?></td>
+					<td class="action">                       
+                        <a href="javascript:void(0)" class="btn btn-danger del-barang" style="display: inline;"><i class="icon-trash icon-white"></i></a>
+                        <input type="hidden" name="data[barang][id-barang][]" value="<?php echo $this->request->data['barang']['id-barang'][$key]; ?>"/>
+                        <input type="hidden" name="data[barang][slug-barang][]" value="<?php echo $this->request->data['barang']['slug-barang'][$key]; ?>"/>                        
+                        <input type="hidden" name="data[barang][id-gudang][]" value="<?php echo $this->request->data['barang']['id-gudang'][$key]; ?>">                        
+                        <input type="hidden" name="data[barang][slug-gudang][]" value="<?php echo $this->request->data['barang']['slug-gudang'][$key]; ?>">
+					</td>
+				</tr>                            
+                            <?php
+                        }
+                        ?>
+                <script type="text/javascript">
+                    $(document).ready(function(){
+                        $('input#sales-order , input#purchase-order').nextAll('a.cboxElement').addClass('disabled');
+                    });
+                </script>        
+                        <?php
+                    }
+                    else // VIEW MODE !!
+                    {
+                        foreach ($myEntry['ChildEntry'] as $value)
                         {
                             $detailbarang = $this->Get->meta_details($value['Entry']['title'] , "barang-dagang");
                             $jenisbarang = $this->Get->meta_details($detailbarang['EntryMeta']['jenis_barang'] , "jenis-barang");
-                            $subtotal = $value['EntryMeta']['jumlah'] * $value['EntryMeta']['harga'];
-                            $grandtotal += $subtotal;
+                            $detailgudang = $this->Get->meta_details($value['EntryMeta']['gudang'] , "gudang");
                             ?>
-                <tr>					
-					<td class="jumlah">
-					    <h5><?php echo $value['EntryMeta']['jumlah'].' '.$detailbarang['EntryMeta']['satuan']; ?></h5>
-					</td>
-					<td class="nama">
+                <tr>
+				    <td class="nama">
 					    <?php echo $jenisbarang['Entry']['title']." / ".$detailbarang['Entry']['title']; ?>
+					</td>
+					<td class="jumlah">
+					    <h5><?php echo $value['EntryMeta']['jumlah']; ?></h5>
 					</td>					
-					<td class="harga">Rp.<?php echo str_replace(',', '.', toMoney($value['EntryMeta']['harga'] , true , true) ); ?>,-</td>
-					<td class="subtotal">Rp.<?php echo str_replace(',', '.', toMoney($subtotal , true , true) ); ?>,-</td>
-					<td class="terkirim"><?php echo (empty($value['EntryMeta']['terkirim'])?'-':$value['EntryMeta']['terkirim']); ?></td>
-					<?php
-                        if(!empty($myEntry))
-                        {
-                            echo "<td class='retur'>";
-                            if(empty($value['EntryMeta']['retur']))
-                            {
-                                echo '-';
-                            }
-                            else
-                            {
-                                echo $value['EntryMeta']['retur'];
-                                $retur_existed = true;
-                            }
-                            echo "</td>";
-                        }
-                    ?>
-				</tr>
+					<td class="satuan"><?php echo $detailbarang['EntryMeta']['satuan']; ?></td>
+					<td class="gudang"><?php echo $detailgudang['Entry']['title']; ?></td>
+				</tr>                            
                             <?php
                         }
-                    }
-
-                    if(!$retur_existed)
-                    {
-                        ?>
-                    <script type="text/javascript">
-                        $(document).ready(function(){
-                            $('#tabel-pesanan-barang .retur').hide();
-                        });
-                    </script>        
-                    
-                        <?php
-                    }
+                    }   
 				?>
 				</tbody>
 			</table>
@@ -349,6 +432,10 @@
 			$value['model'] = 'Entry';
 			$value['counter'] = 1;
 			$value['input_type'] = 'textarea';
+            if(!empty($this->request->query['retur-beli']))
+            {
+                $value['p'] = 'Cantumkan juga berapa besar surplus modal yang diperoleh akibat RETUR PEMBELIAN ini. (optional)';
+            }
 			$value['value'] = (isset($_POST['data'][$value['model']][$value['counter']]['value'])?$_POST['data'][$value['model']][$value['counter']]['value']:$myEntry[$value['model']]['description']);
 			echo $this->element('input_'.$value['input_type'] , $value);
 
@@ -376,14 +463,17 @@
 			<!-- always use submit button to submit form -->
 			<button class="hide" type="submit"></button>
 
-			<button id="save-button" type="button" class="btn btn-primary"><?php echo $saveButton; ?></button>
+			<button id="save-button" type="button" class="btn btn-primary <?php echo ($view_mode?'hide':''); ?>"><?php echo $saveButton; ?></button>
 			<?php
 				if(empty($myEntry))
 				{
 					echo '<button id="save-as-draft" type="button" class="btn btn-inverse hide">Save as Draft</button>';
 				}
+
+                // $myChildTypeLink move here !!
+                $myChildTypeLink = (!empty($this->request->query['retur-beli'])?'?key=customer':'');
 			?>
-        	<button type="button" class="btn" onclick="javascript: window.location=site+'admin/entries/<?php echo (empty($myType)?'pages':$myType['Type']['slug']).(empty($myChildType)?'':'/'.$myParentEntry['Entry']['slug']).$myChildTypeLink.(empty($myEntry)?'':(empty($myChildTypeLink)?'?':'&').'lang='.(empty($lang)?substr($myEntry['Entry']['lang_code'], 0,2):$lang)); ?>'">Cancel</button>
+        	<button type="button" class="btn" onclick="javascript: window.location=site+'admin/entries/<?php echo (empty($myType)?'pages':$myType['Type']['slug']).(empty($myChildType)?'':'/'.$myParentEntry['Entry']['slug']).$myChildTypeLink.(empty($myEntry)?'':(empty($myChildTypeLink)?'?':'&').'lang='.(empty($lang)?substr($myEntry['Entry']['lang_code'], 0,2):$lang)); ?>'"><?php echo ($view_mode?'&laquo; Back':'Cancel'); ?></button>
 		</div>
 	</fieldset>
 <?php echo $this->Form->end(); ?>

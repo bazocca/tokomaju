@@ -393,15 +393,33 @@
                                 
                                 echo '<p>';
                                 // Try to use Primary EntryMeta first !!
-                                if(!empty($entrydetail['EntryMeta'][0]['value']))
+                                $targetMetaKey = NULL;
+                                foreach($entrydetail['EntryMeta'] as $metakey => $metavalue)
                                 {
-                                    echo $entrydetail['EntryMeta'][0]['value'];
+                                    if(substr($metavalue['key'] , 0 , 5) == 'form-')
+                                    {
+                                        $targetMetaKey = $metakey;
+                                        break;
+                                    }
+                                }
+                                
+                                if(isset($targetMetaKey))
+                                {
+                                    // test if value is a date value or not !!
+                                    if(strtotime($entrydetail['EntryMeta'][$targetMetaKey]['value']))
+                                    {
+                                        echo date_converter($entrydetail['EntryMeta'][$targetMetaKey]['value'] , $mySetting['date_format']);
+                                    }
+                                    else
+                                    {
+                                        echo $entrydetail['EntryMeta'][$targetMetaKey]['value'];
+                                    }
                                 }
                                 else
                                 {
                                     $description = strip_tags($entrydetail['Entry']['description']);
                             	    echo (strlen($description) > 30 ? substr($description,0,30)."..." : $description);
-                                }                                
+                                }    
                                 echo '</p>';
 							}
                         }
@@ -435,7 +453,7 @@
 					$targetURL = 'entries/change_status/'.$value['Entry']['id'];
 					if($value['Entry']['status'] == 0)
 					{
-						echo '<a href="javascript:void(0)" onclick="changeLocation(\''.$targetURL.'\')" class="btn btn-info"><i class="icon-ok icon-white"></i></a>';					
+						echo '<a href="javascript:void(0)" onclick="changeLocation(\''.$targetURL.'\')" class="hide btn btn-info"><i class="icon-ok icon-white"></i></a>';					
 					}
 					else
 					{
