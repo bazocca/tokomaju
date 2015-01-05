@@ -47,24 +47,28 @@
 <div class="inner-header">
 	<div class="title">
 		<h2><?php echo strtoupper($myTitle); ?></h2>
-		<p class="title-description">Backup<!-- , Clean, or Restore --> your entire database / uploaded files.</p>
+		<p class="title-description">Backup or Restore your entire database<!-- / uploaded files-->.</p>
 	</div>
 </div>
 	
 <div class="inner-content">
-	<div class="control-group">
+    <div class="control-group">
 		<div class="controls">
 			<button id="backup" title="Backup all your database" type="button" class="btn btn-primary">Backup Database</button>				
+			<p class="help-block">NB: Klik untuk download backup database file.</p>
 		</div>
 	</div>
 	<div class="control-group hide">
 		<div class="controls">
 			<button id="clean" title="Clear your full database" type="button" class="btn btn-danger">Clean Database</button>
 		</div>
-	</div>
+	</div>	
 	<?php
-		echo $this->Form->create('Entry', array('action'=>'backup/restore','id'=>'restore','enctype'=>'multipart/form-data','class' => 'hide'));
+		echo $this->Form->create('Entry', array('action'=>'backup/restore','id'=>'restore','enctype'=>'multipart/form-data'));
 	?>
+	    <div class="alert alert-info full fl">
+            <strong>Restore Section</strong>
+        </div>
 		<div class="control-group">
 			<div class="controls">
 				<input REQUIRED name="data[fileurl]" type="file" onchange='checkfile(this);'>
@@ -74,6 +78,10 @@
 		<div class="control-group">
 			<div class="controls">
 				<input value="Restore Database" type="submit" class="btn btn-inverse">
+				<p class="help-block">NB: Klik untuk memperbaharui seluruh database program dengan file database yang akan Anda upload.</p>
+                <p class="help-block" style="color:red">
+                    <strong>SARAN: Lakukan backup database terlebih dahulu sebelum melakukan restore database program!!</strong>
+                </p>
 			</div>
 		</div>
 		
@@ -81,7 +89,7 @@
 <!--	<hr>-->
 	<div class="control-group hide">
 		<div class="controls">
-			<button id="backup-files" title="Backup all your uploaded files" type="button" class="btn btn-info">Backup Uploaded Files</button>
+			<button id="backup-files" title="Backup all your uploaded files" type="button" class="btn btn-info">Backup Uploaded Files</button>			
 		</div>
 	</div>		
 </div>

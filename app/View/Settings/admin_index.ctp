@@ -135,7 +135,8 @@
 			$value['validation'] = '';
 			$value['value'] = $mySetting[$value['counter']]['Setting']['value'];
 			$value['model'] = 'Setting';			
-			$value['input_type'] = 'text';
+			$value['input_type'] = 'textarea';
+            $value['p'] = 'Tagline for improving website SEO (Search Engine Optimization).';
 			echo $this->element('input_'.$value['input_type'] , $value);
 			
 			// Description...
@@ -182,58 +183,60 @@
 			unset($value['list']);
 		?>		
 <!-- 		LANGUAGE SETTINGS -->		
-		<div class="control-group" style="margin-bottom: 18px;">            
-			<label style="color: red;" class="control-label">Default Language</label>
-			<div class="controls inline">
-				<select id="default_language" name="data[Setting][15][value]" class="field_type">
-					<?php
-						$langlist = get_list_lang($mySetting[15]['Setting']['value']);
-						foreach ($langlist as $key10 => $value10)
-						{
-							if(strtolower(substr($mySetting[15]['Setting']['value'], 0 , 2))==strtolower(substr($value10, 0,2)))
-							{
-								echo "<option SELECTED value=\"".$value10."\">".lang_unslug($value10)."</option>";
-							}
-							else
-							{
-								echo "<option value=\"".$value10."\">".lang_unslug($value10)."</option>";
-							}
-						}
-					?>
-				</select>
-				<p class="help-block">For more languages, please refer to <a target="_blank" href="http://www.w3schools.com/tags/ref_language_codes.asp">ISO Language Codes</a></p>
-			</div>
-			
-			<div class="controls inline">
-				<input class="normal-checkbox" id="multilanguage" type="checkbox" name="data[Setting][15][multilanguage]" value="yes" <?php echo (strpos($mySetting[15]['Setting']['value'] , chr(13).chr(10))===FALSE?'':'CHECKED'); ?>/>						
-				<label class="control-label label-checkbox">Multi Language</label>
-			</div>
-		</div>
-		
-		<div id="optlang" <?php echo (strpos($mySetting[15]['Setting']['value'] , chr(13).chr(10))===FALSE?'style="display:none"':''); ?>>
-			<div class="container-box small" style="margin-top: -10px;">
-				<?php
-					foreach ($langlist as $key10 => $value10) 
-					{	
-						echo '<div class="control-group group-checkbox">';
-						echo '<input type="hidden" value="'.$value10.'">';
-						echo '<div class="controls inline">';
-						echo '<input class="normal-checkbox" type="checkbox" name="data[Setting][15][optlang]['.$value10.']" value="fixed" '.(stripos($mySetting[15]['Setting']['value'], $value10)===FALSE?'':'CHECKED '.(strtolower(substr($mySetting[15]['Setting']['value'], 0 , 2))==strtolower(substr($value10, 0,2))?'DISABLED':'')).'/>';
-						echo '<label class="control-label label-checkbox">'.lang_unslug($value10).'</label>';
-						echo '</div>';
-						echo '</div>';
-					}
-				?>
-			</div>
-			
-			<div id="lang_interaction" class="control-group">
-				<div class="controls">
-					<input style="display: none" maxlength="2" class="input-xmini" type="text" value="" placeholder="Code"/>
-					<input style="display: none" class="input-medium" type="text" value="" placeholder="Language"/>
-					<a class="btn btn-info add_lang" href="javascript:void(0)">Add More Language...</a>
-					<a style="display: none" class="btn cancel_lang" href="javascript:void(0)">Cancel</a>
-				</div>
-			</div>
+		<div class="hide">
+		    <div class="control-group" style="margin-bottom: 18px;">
+                <label style="color: red;" class="control-label">Default Language</label>
+                <div class="controls inline">
+                    <select id="default_language" name="data[Setting][15][value]" class="field_type">
+                        <?php
+                            $langlist = get_list_lang($mySetting[15]['Setting']['value']);
+                            foreach ($langlist as $key10 => $value10)
+                            {
+                                if(strtolower(substr($mySetting[15]['Setting']['value'], 0 , 2))==strtolower(substr($value10, 0,2)))
+                                {
+                                    echo "<option SELECTED value=\"".$value10."\">".lang_unslug($value10)."</option>";
+                                }
+                                else
+                                {
+                                    echo "<option value=\"".$value10."\">".lang_unslug($value10)."</option>";
+                                }
+                            }
+                        ?>
+                    </select>
+                    <p class="help-block">For more languages, please refer to <a target="_blank" href="http://www.w3schools.com/tags/ref_language_codes.asp">ISO Language Codes</a></p>
+                </div>
+
+                <div class="controls inline">
+                    <input class="normal-checkbox" id="multilanguage" type="checkbox" name="data[Setting][15][multilanguage]" value="yes" <?php echo (strpos($mySetting[15]['Setting']['value'] , chr(13).chr(10))===FALSE?'':'CHECKED'); ?>/>						
+                    <label class="control-label label-checkbox">Multi Language</label>
+                </div>
+            </div>
+
+            <div id="optlang" <?php echo (strpos($mySetting[15]['Setting']['value'] , chr(13).chr(10))===FALSE?'style="display:none"':''); ?>>
+                <div class="container-box small" style="margin-top: -10px;">
+                    <?php
+                        foreach ($langlist as $key10 => $value10) 
+                        {	
+                            echo '<div class="control-group group-checkbox">';
+                            echo '<input type="hidden" value="'.$value10.'">';
+                            echo '<div class="controls inline">';
+                            echo '<input class="normal-checkbox" type="checkbox" name="data[Setting][15][optlang]['.$value10.']" value="fixed" '.(stripos($mySetting[15]['Setting']['value'], $value10)===FALSE?'':'CHECKED '.(strtolower(substr($mySetting[15]['Setting']['value'], 0 , 2))==strtolower(substr($value10, 0,2))?'DISABLED':'')).'/>';
+                            echo '<label class="control-label label-checkbox">'.lang_unslug($value10).'</label>';
+                            echo '</div>';
+                            echo '</div>';
+                        }
+                    ?>
+                </div>
+
+                <div id="lang_interaction" class="control-group">
+                    <div class="controls">
+                        <input style="display: none" maxlength="2" class="input-xmini" type="text" value="" placeholder="Code"/>
+                        <input style="display: none" class="input-medium" type="text" value="" placeholder="Language"/>
+                        <a class="btn btn-info add_lang" href="javascript:void(0)">Add More Language...</a>
+                        <a style="display: none" class="btn cancel_lang" href="javascript:void(0)">Cancel</a>
+                    </div>
+                </div>
+            </div>
 		</div>
 <!-- 		END OF LANGUAGE SETTINGS -->
 		<?php			
@@ -244,6 +247,7 @@
 			$value['value'] = $mySetting[$value['counter']]['Setting']['value'];
 			$value['model'] = 'Setting';			
 			$value['input_type'] = 'text';
+            $value['display'] = 'none';
 			echo $this->element('input_'.$value['input_type'] , $value);
 			
 			// Table View Format...
@@ -257,12 +261,13 @@
 			$value['list'][0]['name'] = 'Simple';
 			$value['list'][1]['id'] = 'complex';
 			$value['list'][1]['name'] = 'Complex';
+            $value['display'] = 'none';
 			$value['p'] = "Table view mode in Admin Panel.";
 			echo $this->element('input_'.$value['input_type'] , $value);
 			unset($value['list']);
 			unset($value['p']);
 		?>
-		<div class="alert alert-info full fl">
+		<div class="alert alert-info full fl hide">
 			<strong>Page Inserts</strong>
 		</div>
 		<?php
@@ -273,6 +278,7 @@
 			$value['value'] = $mySetting[$value['counter']]['Setting']['value'];
 			$value['model'] = 'Setting';			
 			$value['input_type'] = 'textarea';
+            $value['display'] = 'none';
 			$value['p'] = 'Usually you can add external CSS or JavaScript. HTML is OK.';
 			echo $this->element('input_'.$value['input_type'] , $value);
 			unset($value['p']);
@@ -284,6 +290,7 @@
 			$value['value'] = $mySetting[$value['counter']]['Setting']['value'];
 			$value['model'] = 'Setting';			
 			$value['input_type'] = 'textarea';
+            $value['display'] = 'none';
 			$value['p'] = 'Insert codes right after the body tag starts.';
 			echo $this->element('input_'.$value['input_type'] , $value);
 			unset($value['p']);
@@ -295,15 +302,16 @@
 			$value['value'] = $mySetting[$value['counter']]['Setting']['value'];
 			$value['model'] = 'Setting';			
 			$value['input_type'] = 'textarea';
+            $value['display'] = 'none';
 			$value['p'] = 'Insert codes right before the body tag end.';
 			echo $this->element('input_'.$value['input_type'] , $value);
 			unset($value['p']);
 		?>
 		
-		<div class="alert alert-info full fl">
+		<div class="alert alert-info full fl hide">
 			<strong>Media Settings</strong>
 		</div>		
-		<div class="control-group">            
+		<div class="control-group hide">            
 			<label style="color: red;" class="control-label">Display Image</label>
 			<div class="controls dimension">
 				<input REQUIRED name="data[Setting][9][value]" type="text" class="small" value="<?php echo $mySetting[9]['Setting']['value']; ?>" placeholder="Width" /> <span>x</span>
@@ -319,7 +327,7 @@
 			</div>
 		</div>
 		
-		<div class="control-group">            
+		<div class="control-group hide">            
 			<label style="color: red;" class="control-label">Thumbnail Image</label>
 			<div class="controls dimension">
 				<input REQUIRED name="data[Setting][12][value]" type="text" class="small" value="<?php echo $mySetting[12]['Setting']['value']; ?>" placeholder="Width" /> <span>x</span>

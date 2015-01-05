@@ -2155,7 +2155,7 @@ class EntriesController extends AppController {
 	{
 		$mode = $this->request->params['mode'];
 
-		$myTitle = "Backup Database & Files";
+		$myTitle = "Backup & Restore Database";
 		$this->setTitle($myTitle);
 		$this->set('myTitle' , $myTitle);
 
