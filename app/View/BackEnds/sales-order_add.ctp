@@ -497,7 +497,7 @@
 				</div>
 			</div>
 			<div class="controls inline <?php echo (empty($myEntry)?'hide':''); ?>">
-				<?php echo $this->Html->link('View Details',array('controller'=>'entries','action'=>$myType['Type']['slug'].'/'.$myEntry['Entry']['slug'],'admin'=>true, '?'=>array('type' => 'piutang') ),array('class'=>'btn btn-mini btn-primary'));	?>
+				<?php echo $this->Html->link('View Detail',array('controller'=>'entries','action'=>$myType['Type']['slug'].'/'.$myEntry['Entry']['slug'],'admin'=>true, '?'=>array('type' => 'piutang') ),array('class'=>'btn btn-mini btn-primary'));	?>
 			</div>
 		</div>
 		

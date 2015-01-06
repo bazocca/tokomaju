@@ -1667,7 +1667,7 @@ class EntriesController extends AppController {
 		// if form submit is taken...
 		if (!empty($this->request->data))
 		{
-			if(empty($lang))
+            if(empty($lang))
 			{
 				$this->request->data['Entry']['title'] = $this->request->data['Entry'][0]['value'];
 				$this->request->data['Entry']['description'] = $this->request->data['Entry'][1]['value'];

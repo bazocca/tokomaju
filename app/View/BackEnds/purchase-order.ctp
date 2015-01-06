@@ -163,7 +163,7 @@
                         $("input[type=hidden].supplier").val( $(this).find("td.form-supplier input[type=hidden]").val() );
                         
                         // disable select supplier browse button !!
-                        $("input#supplier").nextAll('a').addClass('disabled');
+                        $("input#supplier").nextAll('a.cboxElement').addClass('disabled');
 					}
                     
                     // update browse id add-invoice-barang...

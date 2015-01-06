@@ -153,7 +153,14 @@
                         $value['model'] = 'Entry';
                         $value['counter'] = 0;
                         $value['input_type'] = 'text';
-                        $value['p'] = 'Nomer Resi yg terdaftar.';
+                        $value['p'] = 'Auto generated Resi Number';
+                        $value['readonly'] = 'readonly';
+                        $value['id'] = 'entry_id';
+                        $value['inputsize'] = 'input-medium';
+                        if(!empty($myEntry))
+                        {
+                            $value['display'] = 'none';
+                        }
                         $value['value'] = (isset($_POST['data'][$value['model']][$value['counter']]['value'])?$_POST['data'][$value['model']][$value['counter']]['value']:$myEntry[$value['model']]['title']);
                         echo $this->element('input_'.$value['input_type'] , $value);
                     }

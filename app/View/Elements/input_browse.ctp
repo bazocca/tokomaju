@@ -16,6 +16,23 @@
 		$required = 'REQUIRED';
 	}
 ?>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('a#<?php echo $browse_slug; ?>-view-detail').click(function(e){
+            
+            var nowval = $.trim($(this).closest('div.controls').find('input[type=hidden].<?php echo $shortkey; ?>').val());            
+            if(nowval.length > 0)
+            {
+                $(this).attr('href' , site+'admin/entries/<?php echo $browse_slug; ?>/edit/'+nowval);
+            }
+            else
+            {
+                e.preventDefault();
+                alert('Please browse an item first!');
+            }                
+        });
+    });
+</script>
 <div class="control-group" <?php echo (empty($display)?'':'style="display:none"'); ?>>            
 	<label class="control-label" <?php echo (!empty($required)&&!$view_mode?'style="color: red;"':''); ?>>
         <?php echo string_unslug($shortkey); ?>
@@ -56,6 +73,8 @@
             <?php if(empty($required)): ?>
                 <a class="btn btn-danger removeID" href="javascript:void(0)">Clear</a>  
             <?php endif; ?>
+            
+            <a target="_blank" id="<?php echo $browse_slug; ?>-view-detail" class="btn btn-primary" href="#">View Detail</a>  
 
             <p class="help-block">
                 Want to create new one? Click <?php echo $this->Form->Html->link('here<img alt="External Icon" src="'.$imagePath.'img/external-icon.gif">',array('controller'=>'entries','action'=>$browse_slug.'/add'),array("target"=>"SingleSecondaryWindowName","onclick"=>"javascript:openRequestedSinglePopup(this.href); return false;","escape"=>false)); ?>.<br/>

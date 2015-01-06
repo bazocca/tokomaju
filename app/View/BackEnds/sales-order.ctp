@@ -163,7 +163,7 @@
                         $("input[type=hidden].customer").val( $(this).find("td.form-customer input[type=hidden]").val() );
                         
                         // disable select customer browse button !!
-                        $("input#customer").nextAll('a').addClass('disabled');
+                        $("input#customer").nextAll('a.cboxElement').addClass('disabled');
 					}
                     
                     // update browse id add-invoice-barang...

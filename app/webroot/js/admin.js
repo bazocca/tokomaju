@@ -4,7 +4,7 @@ var jcrop_api = new Array();
 	{
         // Auto generate Code !!
         $('input[type=text].tanggal').change(function(){
-	    	if($('input[type=text]#entry_id').length > 0)
+	    	if($('input[type=text]#entry_id').length > 0 && $('input[type=text]#entry_id').is(':visible'))
             {
                 var temp = $(this).val().split("/");
                 var dateCode = temp[2].substr(temp[2].length-2).toString() + temp[0].toString() + temp[1].toString();            
@@ -46,12 +46,12 @@ var jcrop_api = new Array();
             // release browse button !!
             if($(this).prevAll('input#sales-order').length > 0 && $("input#customer").length > 0)
             {
-                $("input#customer").nextAll('a').removeClass('disabled');                
+                $("input#customer").nextAll('a.cboxElement').removeClass('disabled');                
                 $('#add-invoice-barang').removeAttr('data-invoice');
             }
             else if($(this).prevAll('input#purchase-order').length > 0 && $("input#supplier").length > 0)
             {
-                $("input#supplier").nextAll('a').removeClass('disabled');                
+                $("input#supplier").nextAll('a.cboxElement').removeClass('disabled');                
                 $('#add-invoice-barang').removeAttr('data-invoice');
             }
 	    });

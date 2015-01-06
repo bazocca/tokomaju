@@ -673,8 +673,11 @@ function Zip($source, $destination, $include_dir = false)
 function getFrontCodeId($myTypeSlug)
 {
     $result = '';
+    
     switch ($myTypeSlug) 
     {
+        case 'resi':
+            $result = "RSI";        break;        
         case 'surat-jalan':
             $result = "SRJ";		break;
         case 'purchase-order':
