@@ -98,13 +98,13 @@
 				if( (isset($_POST['data']['Entry'][2]['value'])?$_POST['data']['Entry'][2]['value']:$myEntry['Entry']['main_image']) > 0)
 				{
 				?>
-					<a href='javascript:void(0)' class='remove' onclick='javascript : $.fn.removePicture();'>Remove /</a> <?php echo $this->Form->Html->link('Change Cover',array('action'=>'media_popup_single',1,'mySelectCoverAlbum',(empty($myChildType)?$myType['Type']['slug']:$myChildType['Type']['slug']),'admin'=>false),array('class'=>'get-from-library')); ?>
+					<a href='javascript:void(0)' class='remove' onclick='javascript : $.fn.removePicture();'>Remove /</a> <?php echo $this->Form->Html->link('Change Cover',array('action'=>'media_popup_single',1,'mySelectCoverAlbum',(empty($myChildType)?$myType['Type']['slug']:$myChildType['Type']['slug']),'admin'=>false),array('class'=>'get-from-library select')); ?>
 				<?php
 				}
 				else
 				{
 				?>
-					<a href='javascript:void(0)' class='remove' onclick='javascript : $.fn.removePicture();' style="display:none">Remove / </a> <?php echo $this->Form->Html->link('Select Cover',array('action'=>'media_popup_single',1,'mySelectCoverAlbum',(empty($myChildType)?$myType['Type']['slug']:$myChildType['Type']['slug']),'admin'=>false),array('class'=>'get-from-library')); ?>
+					<a href='javascript:void(0)' class='remove' onclick='javascript : $.fn.removePicture();' style="display:none">Remove / </a> <?php echo $this->Form->Html->link('Select Cover',array('action'=>'media_popup_single',1,'mySelectCoverAlbum',(empty($myChildType)?$myType['Type']['slug']:$myChildType['Type']['slug']),'admin'=>false),array('class'=>'get-from-library select')); ?>
 				<?php
 				}
 			?>			
