@@ -217,11 +217,11 @@
  */
 	Configure::write('Session', array(
         'defaults' => 'php',
-        'timeout' => 60, // The session will timeout after 1 hour of inactivity
-        'cookieTimeout' => 1440, // The session cookie will live for at most 24 hours, this does not effect session timeouts
+        'timeout' => 1440, // The session will timeout after 1 day of inactivity
+        'cookieTimeout' => 10080, // The session cookie will live for at most 1 week, this does not effect session timeouts
         'checkAgent' => false,
         'autoRegenerate' => true, // causes the session expiration time to reset on each page load
-    )); 
+    ));
 
 /**
  * A random string used in security hashing methods.
