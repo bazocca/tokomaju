@@ -982,7 +982,7 @@ class EntriesController extends AppController {
 		// ========================================= >>
 		// EXECUTE MAIN QUERY !!
 		// ========================================= >>
-		$options['order'] = array('Entry.'.(isset($innerFieldMeta)||empty($_SESSION['order_by'])||empty($this->request->params['admin'])?'sort_order ASC':$_SESSION['order_by']));
+		$options['order'] = array('Entry.'.(isset($innerFieldMeta)||empty($_SESSION['order_by'])||empty($this->request->params['admin'])?'sort_order DESC':$_SESSION['order_by']));
         
         // untuk filter tanggal (misalnya di history barang masuk dan keluar di module pindah gudang)
 		if(!empty($this->request->data['date_by']))
