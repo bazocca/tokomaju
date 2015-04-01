@@ -190,6 +190,7 @@ table.list thead tr th.keterangan{ min-width: 180px; }
 table.list > tbody > tr > td{ position: relative; min-width: 60px; /*padding:10px*/}
 table.list > tbody > tr > td:nth-child(1){ padding-left: 5px; }
 table.list > tbody > tr > td.main-title { min-width: 200px; }
+table.list tr.on-checked td {background: #FFFFBB;}
 table.list tr:hover td{ background: #E1E1E1; }
 
 /* CUSTOMABLE CSS HOVER */
@@ -198,13 +199,10 @@ table.list.nohover tr.applyhover td{background: #C1C1C1;}
 table.list.nohover tr.applyhover:hover td{background: #C1C1C1;}
 /* END OF CUSTOMABLE CSS HOVER */
 
-table.list tr:nth-child(even){ background: none !important; }
-
 table.sortable tr, .orderlist{ cursor: move; }
 table.list{ float: left; width: 100%; }
 table.list span.active, .status-active{ color: #693; }
 table.list span.inactive, .status-inactive{ color: #C00; }
-table.list tr:nth-child(even){ background: #e1e1e1; }
 table.list th{ color: black; font-weight: bold; font-size: 11px; text-align: left; padding-left: 5px; }
 table.list td, table.list th{ padding: 5px 5px; vertical-align: top;}
 table.list td{ color: black; font-size: 11px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;}

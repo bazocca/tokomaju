@@ -32,7 +32,11 @@
 					reposition: false,
 					onLoad: function() {
 						$('#cboxClose').show();
-					}
+					},
+                    onComplete: function(){
+                        // apply doubleScroll event !!
+                        $.fn.doubleScroll('autoscroll');
+                    }
 				});
 			});
 		</script>

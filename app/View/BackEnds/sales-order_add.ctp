@@ -192,7 +192,7 @@
 			$(document).ready(function(){
 				$('#cmsAlert').css('display' , 'none');
 				$(".get-from-table").colorbox({ // REFRESH - POPUP ADMIN_DEFAULT.CTP
-					reposition: false,
+					reposition: false,onComplete: function(){$.fn.doubleScroll('autoscroll');},
 					onLoad: function() {
 						$('#cboxClose').show();
 					}

@@ -40,29 +40,6 @@
 	}
 ?>
 <script>
-	$.fn.updateAttachButton = function(){
-		if($('#attach-checked-data').length > 0)
-		{
-			var attach_status = false;
-			$('input.check-record').each(function(i,el){
-				if($(this).attr('checked'))
-				{
-					attach_status = true;
-					return false;
-				}
-			});
-
-			if(attach_status)
-			{
-				$('#attach-checked-data').removeClass('disabled');
-			}
-			else
-			{
-				$('#attach-checked-data').addClass('disabled');	
-			}
-		}
-	}
-
 	$(document).ready(function(){
 
 		// attach checkbox on each record...
@@ -70,11 +47,11 @@
 		{
 			$('table#myTableList thead tr').prepend('<th><input type="checkbox" id="check-all" /></th>');
 			$('table#myTableList tbody tr').each(function(i,el){
-				$(this).prepend('<td style="min-width: 0px;"><input type="checkbox" class="check-record" value="'+$(this).attr('alt')+'" /></td>');
+				$(this).prepend('<td style="min-width: 0px;"><input type="checkbox" class="check-record" value="'+$(this).attr('alt')+'" onclick="javascript:$.fn.updateAttachButton();" /></td>');
 			});
 
 			$('input#check-all').change(function(){
-				$('input.check-record').attr('checked' , $(this).attr('checked')?true:false);
+				$('input.check-record').attr('checked' , $(this).attr('checked')?true:false).change();
 				$.fn.updateAttachButton();
 			});
 		}
@@ -168,10 +145,6 @@
                     }
 
 					$.colorbox.close();
-				}
-				else
-				{
-					$.fn.updateAttachButton();
 				}
 			});
 		<?php endif; ?>

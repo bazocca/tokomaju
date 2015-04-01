@@ -25,7 +25,11 @@ $(document).ready(function(){
 		reposition: false,
 		onLoad: function() {
 		    $('#cboxClose').show();
-		}
+		},
+        onComplete: function(){
+            // apply doubleScroll event !!
+            $.fn.doubleScroll('autoscroll');
+        }
 	});
 	
 	// --------------------------- >>
@@ -91,22 +95,23 @@ $(document).ready(function(){
 	});
 
 	$(document).bind({
+        cbox_cleanup : function(){
+            // delete temp thumbnails from blueImp.
+            if($('form#fileupload tr.template-download').length > 0)
+            {
+                $.ajaxSetup({cache: false});
+                $.get(site+'entry_metas/deleteTempThumbnails');
+            }
+        },
 		cbox_closed : function(){
-
 			// clean variable in "add field MASTER DATABASE popup"
 			this_element = '';
-
-			// delete temp thumbnails from blueImp.
-			$.ajaxSetup({cache: false});
-			$.get(site+'entry_metas/deleteTempThumbnails',function(){
-
-				// media library module
-				if($('div.sidebar ul li a#media').hasClass('active'))
-				{
-					window.location = site + 'admin/entries/'+$('input#myTypeSlug').val();
-				}	
-				
-            });
+            
+            // media library module
+            if($('div.sidebar ul li a#media').hasClass('active'))
+            {
+                window.location = site + 'admin/entries/'+$('input#myTypeSlug').val();
+            }	
 		}
 	});
 });

@@ -18,3 +18,13 @@
  */
 ?>
 <?php echo $content_for_layout; ?>
+<!-- 		ADDITIONAL SCRIPT FOR LAYOUT -->		
+<script>
+    $(document).ready(function(){
+        // apply doubleScroll event !!
+        if($('div.autoscroll table#myTableList').length > 0)
+        {
+            $.fn.doubleScroll('autoscroll');
+        }
+    });
+</script>

@@ -80,6 +80,51 @@ function openRequestedSinglePopup(strUrl)
 	    
 	    return (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom));
 	};
+    
+    /*
+    Top down scrollbar in html table
+    ================================
+    You could create a new dummy element above the real one, with the same amount of content width to get an extra scrollbar, then tie the scrollbars together with onscroll events.
+    */    
+    $.fn.doubleScroll = function(targetClass){        
+        var scrollClass = 'double-scroll-top';
+        var element = document.getElementsByClassName(targetClass)[0];        
+        if($('div.'+targetClass).prev('div.'+scrollClass).length == 0 && element.scrollWidth > element.offsetWidth )
+        {
+            var scrollbar= document.createElement('div');
+            scrollbar.appendChild(document.createElement('div'));
+            scrollbar.className = scrollClass;
+            scrollbar.style.overflow= 'auto';
+            scrollbar.style.overflowY= 'hidden';
+            scrollbar.firstChild.style.width= element.scrollWidth+'px';
+            scrollbar.firstChild.style.height= '1px';
+            scrollbar.firstChild.appendChild(document.createTextNode('\xA0'));
+            scrollbar.onscroll= function() {
+                element.scrollLeft= scrollbar.scrollLeft;
+            };
+            element.onscroll= function() {
+                scrollbar.scrollLeft= element.scrollLeft;
+            };
+            element.parentNode.insertBefore(scrollbar, element);
+        }
+    }
+    
+    /* ENABLE / DISABLE ATTACH BUTTON ON POPUP */
+    $.fn.updateAttachButton = function(){        
+        var attach_status = false;
+        var check_all = true;        
+        $('input.check-record').each(function(i,el){
+            if($(this).attr('checked'))     attach_status = true;
+            else                            check_all = false;
+        });
+        
+        $('input#check-all').attr('checked' , check_all );        
+		if($('#attach-checked-data').length > 0)
+		{
+			if(attach_status)    $('#attach-checked-data').removeClass('disabled');
+			else                 $('#attach-checked-data').addClass('disabled');	
+		}
+	}
 	
 	$.fn.fixedHeaderTable = function(header_class){
 		if ( $('table.fixed_body_scroll').length ) {

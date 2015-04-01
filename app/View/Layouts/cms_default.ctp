@@ -194,6 +194,12 @@
 <!-- 		ADDITIONAL SCRIPT FOR LAYOUT -->		
 		<script>
 			$(document).ready(function(){
+                // apply doubleScroll event !!
+                if($('div.autoscroll table#myTableList').length > 0)
+                {
+                    $.fn.doubleScroll('autoscroll');
+                }
+                
                 // Sidebar Menu Accordion !!
                 $('a.sidebar-menu').attr('title' , 'Click here to expand menu.');
 				$('a.sidebar-menu').parent('li').next("div").find('a.active').closest('div').show();
