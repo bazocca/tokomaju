@@ -1,5 +1,2 @@
-app/tmp/*
-app/[Cc]onfig/database.php
-app/webroot/files/*
-app/webroot/img/upload/*
-!empty
+/app/tmp/*
+/app/Config/database.php
